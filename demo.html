@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A2A 智能体支付 · 三亚旅游规划全流程演示</title>
+<title>A2A 智能体支付 · AI写作Agent的一天</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -14,7 +14,6 @@
     overflow-x: hidden;
   }
 
-  /* 星空背景 */
   .stars {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     pointer-events: none; z-index: 0;
@@ -37,23 +36,18 @@
     max-width: 1400px;
     margin: 0 auto;
     padding: 24px;
-    position: relative;
-    z-index: 1;
+    position: relative; z-index: 1;
   }
 
   /* 头部 */
-  .header {
-    text-align: center;
-    margin-bottom: 20px;
-  }
+  .header { text-align: center; margin-bottom: 20px; }
   .logo {
     display: inline-flex; align-items: center; gap: 10px;
     padding: 8px 20px;
     background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.1));
     border: 1px solid rgba(99,102,241,0.3);
     border-radius: 50px;
-    font-size: 13px;
-    color: #a5b4fc;
+    font-size: 13px; color: #a5b4fc;
     margin-bottom: 14px;
   }
   .logo-dot {
@@ -63,36 +57,57 @@
   }
   @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
   h1 {
-    font-size: 30px; font-weight: 700;
+    font-size: 28px; font-weight: 700;
     background: linear-gradient(135deg, #38bdf8, #818cf8, #c084fc);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     margin-bottom: 6px;
   }
-  .subtitle {
-    color: #94a3b8; font-size: 14px;
-  }
+  .subtitle { color: #94a3b8; font-size: 14px; }
 
-  /* 主区域：三栏 */
-  .main-grid {
+  /* 顶部核心数据 */
+  .hero-stats {
     display: grid;
-    grid-template-columns: 1.2fr 1fr 0.9fr;
-    gap: 16px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
     margin-bottom: 16px;
   }
-  @media (max-width: 1200px) {
-    .main-grid { grid-template-columns: 1fr; }
+  @media (max-width: 800px) { .hero-stats { grid-template-columns: repeat(2, 1fr); } }
+  .stat-card {
+    background: rgba(15,23,42,0.8);
+    border: 1px solid rgba(71,85,105,0.3);
+    border-radius: 12px;
+    padding: 16px;
+    backdrop-filter: blur(10px);
+    text-align: center;
   }
+  .stat-value {
+    font-size: 28px; font-weight: 700;
+    background: linear-gradient(135deg, #818cf8, #ec4899);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-size: 12px; color: #64748b;
+  }
+
+  /* 主区域 */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  @media (max-width: 1200px) { .main-grid { grid-template-columns: 1fr; } }
 
   .panel {
     background: rgba(15,23,42,0.8);
     border: 1px solid rgba(71,85,105,0.3);
-    border-radius: 14px;
-    padding: 16px;
+    border-radius: 12px;
+    padding: 14px;
     backdrop-filter: blur(10px);
   }
   .panel-title {
-    font-size: 13px; font-weight: 600;
-    color: #cbd5e1;
+    font-size: 13px; font-weight: 600; color: #cbd5e1;
     display: flex; align-items: center; gap: 8px;
     margin-bottom: 12px;
     padding-bottom: 10px;
@@ -106,225 +121,141 @@
     font-size: 13px;
   }
 
-  /* ===== 左：对话区 ===== */
-  .chat-area {
-    height: 560px;
+  /* ===== 时间轴（支付流水） ===== */
+  .timeline-area {
+    height: 520px;
     display: flex; flex-direction: column;
   }
-  .chat-messages {
+  .timeline {
     flex: 1;
     overflow-y: auto;
     padding-right: 6px;
-    display: flex; flex-direction: column; gap: 10px;
+    position: relative;
   }
-  .chat-messages::-webkit-scrollbar { width: 4px; }
-  .chat-messages::-webkit-scrollbar-thumb { background: rgba(100,116,139,0.3); border-radius: 2px; }
+  .timeline::-webkit-scrollbar { width: 4px; }
+  .timeline::-webkit-scrollbar-thumb { background: rgba(100,116,139,0.3); border-radius: 2px; }
 
-  .msg {
-    display: flex; gap: 8px;
+  .tl-line {
+    position: absolute;
+    left: 60px; top: 0; bottom: 0;
+    width: 2px;
+    background: rgba(71,85,105,0.3);
+  }
+
+  .tl-item {
+    display: flex; gap: 12px;
+    padding: 8px 0;
+    position: relative;
     opacity: 0;
-    transform: translateY(10px);
-    animation: msgIn 0.4s ease forwards;
+    transform: translateX(-10px);
+    animation: tlIn 0.4s ease forwards;
   }
-  @keyframes msgIn { to { opacity: 1; transform: translateY(0); } }
+  @keyframes tlIn { to { opacity: 1; transform: translateX(0); } }
 
-  .msg-avatar {
-    width: 30px; height: 30px; border-radius: 50%;
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 13px;
-  }
-  .msg-travel .msg-avatar { background: linear-gradient(135deg, #06b6d4, #3b82f6); }
-  .msg-user .msg-avatar { background: linear-gradient(135deg, #22c55e, #10b981); }
-  .msg-vendor .msg-avatar { background: linear-gradient(135deg, #f59e0b, #ef4444); }
-  .msg-system .msg-avatar { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
-
-  .msg-bubble {
-    max-width: 85%;
-    padding: 9px 12px;
-    border-radius: 10px;
-    font-size: 12px;
-    line-height: 1.55;
-  }
-  .msg-travel .msg-bubble {
-    background: rgba(6,182,212,0.1);
-    border: 1px solid rgba(6,182,212,0.2);
-    border-top-left-radius: 3px;
-  }
-  .msg-user .msg-bubble {
-    background: rgba(34,197,94,0.1);
-    border: 1px solid rgba(34,197,94,0.2);
-    border-top-right-radius: 3px;
-  }
-  .msg-vendor .msg-bubble {
-    background: rgba(245,158,11,0.08);
-    border: 1px solid rgba(245,158,11,0.2);
-    border-top-left-radius: 3px;
-    color: #fde68a;
-  }
-  .msg-system .msg-bubble {
-    background: rgba(139,92,246,0.1);
-    border: 1px solid rgba(139,92,246,0.2);
-    color: #c4b5fd;
+  .tl-time {
+    width: 48px;
     font-size: 11px;
-    padding: 6px 10px;
-  }
-  .msg-user { flex-direction: row-reverse; }
-
-  .msg-name {
-    font-size: 10px;
     color: #64748b;
-    margin-bottom: 3px;
-    font-weight: 600;
+    font-family: 'SF Mono', monospace;
+    text-align: right;
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+  .tl-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #1e293b;
+    border: 2px solid #475569;
+    flex-shrink: 0;
+    margin-top: 4px;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s;
+  }
+  .tl-item.active .tl-dot {
+    background: #fbbf24;
+    border-color: #fbbf24;
+    box-shadow: 0 0 8px #fbbf24;
+  }
+  .tl-item.done .tl-dot {
+    background: #22c55e;
+    border-color: #22c55e;
   }
 
-  /* ===== 中：订单进度 ===== */
-  .order-area {
-    height: 560px;
-    display: flex; flex-direction: column;
-  }
-  .order-list {
+  .tl-card {
     flex: 1;
-    display: flex; flex-direction: column;
-    gap: 10px;
-    overflow-y: auto;
-    padding-right: 4px;
-  }
-  .order-list::-webkit-scrollbar { width: 4px; }
-  .order-list::-webkit-scrollbar-thumb { background: rgba(100,116,139,0.3); border-radius: 2px; }
-
-  .order-card {
-    padding: 12px;
+    padding: 8px 12px;
     background: rgba(30,41,59,0.4);
     border: 1px solid rgba(71,85,105,0.2);
-    border-radius: 10px;
-    opacity: 0.4;
-    transition: all 0.5s ease;
+    border-radius: 8px;
+    font-size: 12px;
+    transition: all 0.3s;
   }
-  .order-card.active {
-    opacity: 1;
-    border-color: rgba(99,102,241,0.5);
-    box-shadow: 0 0 15px rgba(99,102,241,0.12);
-    background: rgba(99,102,241,0.06);
+  .tl-item.active .tl-card {
+    border-color: rgba(251,191,36,0.4);
+    background: rgba(251,191,36,0.08);
   }
-  .order-card.done {
-    opacity: 0.8;
-    border-color: rgba(34,197,94,0.3);
+  .tl-item.done .tl-card {
+    border-color: rgba(34,197,94,0.2);
   }
-  .order-card.done .order-status {
-    color: #4ade80;
-  }
-  .order-head {
+
+  .tl-head {
     display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
   }
-  .order-title {
-    font-weight: 600; font-size: 13px;
+  .tl-title {
+    font-weight: 600;
+    font-size: 12px;
     display: flex; align-items: center; gap: 6px;
   }
-  .order-icon { font-size: 16px; }
-  .order-status {
-    font-size: 11px;
+  .tl-amount {
+    font-weight: 700;
+    font-size: 13px;
     color: #fbbf24;
-    font-weight: 500;
-    display: flex; align-items: center; gap: 4px;
+    font-family: 'SF Mono', monospace;
   }
-  .order-status .spin {
-    width: 8px; height: 8px;
-    border: 1.5px solid rgba(251,191,36,0.3);
-    border-top-color: #fbbf24;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .order-desc {
+  .tl-item.done .tl-amount { color: #4ade80; }
+  .tl-desc {
     font-size: 11px;
     color: #94a3b8;
-    line-height: 1.5;
-    margin-bottom: 6px;
+    line-height: 1.4;
   }
-  .order-foot {
-    display: flex; justify-content: space-between;
-    font-size: 11px;
-    padding-top: 6px;
-    border-top: 1px dashed rgba(71,85,105,0.2);
+  .tl-tag {
+    display: inline-block;
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: rgba(99,102,241,0.15);
+    color: #a5b4fc;
+    margin-top: 4px;
   }
-  .order-price {
-    font-weight: 700;
-    color: #fbbf24;
-  }
-  .order-price.done { color: #4ade80; }
-  .order-vendor {
-    color: #64748b;
-  }
+  .tl-tag.micro { background: rgba(236,72,153,0.15); color: #f9a8d4; }
+  .tl-tag.auto { background: rgba(34,197,94,0.15); color: #86efac; }
+  .tl-tag.cond { background: rgba(245,158,11,0.15); color: #fcd34d; }
 
-  /* 总计 */
-  .total-card {
-    margin-top: 12px;
-    padding: 14px;
-    background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(236,72,153,0.08));
-    border: 1px solid rgba(99,102,241,0.3);
-    border-radius: 10px;
-  }
-  .total-label {
-    font-size: 11px; color: #94a3b8;
-    margin-bottom: 4px;
-    text-transform: uppercase; letter-spacing: 0.5px;
-  }
-  .total-amount {
-    font-size: 24px; font-weight: 700;
-    background: linear-gradient(135deg, #818cf8, #f472b6);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  }
-  .total-detail {
-    margin-top: 8px;
-    font-size: 11px;
-    color: #64748b;
-    display: flex; justify-content: space-between;
-  }
-
-  /* ===== 右：钱包 & 链上状态 ===== */
-  .chain-area {
-    height: 560px;
-    display: flex; flex-direction: column;
-    gap: 14px;
-  }
-
+  /* ===== 钱包 ===== */
   .wallet-card {
-    padding: 16px;
+    padding: 18px;
     background: linear-gradient(135deg, #0ea5e9, #6366f1, #a855f7);
     border-radius: 14px;
     position: relative;
     overflow: hidden;
+    margin-bottom: 14px;
   }
   .wallet-card::before {
-    content: "";
-    position: absolute;
+    content: ""; position: absolute;
     top: -50%; right: -20%;
     width: 150px; height: 150px;
     background: rgba(255,255,255,0.1);
     border-radius: 50%;
   }
-  .wallet-card::after {
-    content: "";
-    position: absolute;
-    bottom: -30%; left: -10%;
-    width: 100px; height: 100px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 50%;
-  }
-  .wallet-label {
-    font-size: 11px; opacity: 0.85;
-    margin-bottom: 4px;
-    position: relative; z-index: 1;
-  }
+  .wallet-label { font-size: 11px; opacity: 0.85; margin-bottom: 4px; position: relative; z-index: 1; }
   .wallet-balance {
-    font-size: 28px; font-weight: 700;
+    font-size: 26px; font-weight: 700;
     position: relative; z-index: 1;
     transition: all 0.5s ease;
   }
-  .wallet-unit { font-size: 14px; opacity: 0.8; margin-left: 3px; }
+  .wallet-unit { font-size: 13px; opacity: 0.8; margin-left: 3px; }
   .wallet-sub {
     margin-top: 10px;
     font-size: 10px; opacity: 0.75;
@@ -332,15 +263,38 @@
     position: relative; z-index: 1;
   }
 
+  /* 实时统计 */
+  .live-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .live-stat {
+    padding: 10px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    text-align: center;
+  }
+  .live-stat .v {
+    font-size: 20px; font-weight: 700;
+    color: #a5b4fc;
+    font-family: 'SF Mono', monospace;
+  }
+  .live-stat .k {
+    font-size: 10px; color: #64748b;
+    margin-top: 2px;
+  }
+
+  /* 当前交易 */
   .tx-panel {
-    flex: 1;
     background: rgba(0,0,0,0.2);
     border-radius: 10px;
     padding: 14px;
+    flex: 1;
   }
   .tx-title {
-    font-size: 11px;
-    color: #64748b;
+    font-size: 11px; color: #64748b;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 10px;
@@ -348,137 +302,199 @@
 
   .block-visual {
     aspect-ratio: 1;
-    max-width: 120px;
-    margin: 0 auto 14px;
+    max-width: 100px;
+    margin: 0 auto 12px;
     position: relative;
   }
   .block-ring {
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     border-radius: 50%;
     border: 2px dashed rgba(99,102,241,0.2);
     animation: ringSpin 8s linear infinite;
   }
-  .block-ring:nth-child(2) { inset: 12px; animation-duration: 6s; animation-direction: reverse; border-color: rgba(139,92,246,0.25); }
-  .block-ring:nth-child(3) { inset: 24px; animation-duration: 4s; border-color: rgba(236,72,153,0.3); }
+  .block-ring:nth-child(2) { inset: 10px; animation-duration: 6s; animation-direction: reverse; border-color: rgba(139,92,246,0.25); }
+  .block-ring:nth-child(3) { inset: 20px; animation-duration: 4s; border-color: rgba(236,72,153,0.3); }
   @keyframes ringSpin { to { transform: rotate(360deg); } }
   .block-core {
     position: absolute;
-    inset: 36px;
+    inset: 30px;
     background: linear-gradient(135deg, #06b6d4, #6366f1);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
-    box-shadow: 0 0 20px rgba(99,102,241,0.5);
+    font-size: 18px;
+    box-shadow: 0 0 15px rgba(99,102,241,0.5);
   }
 
   .tx-status {
     text-align: center;
-    margin-bottom: 12px;
-  }
-  .tx-status-text {
-    font-size: 14px; font-weight: 600;
+    margin-bottom: 10px;
+    font-size: 13px;
+    font-weight: 600;
     color: #fbbf24;
     display: flex; align-items: center; justify-content: center; gap: 6px;
   }
-  .tx-status-text.success { color: #4ade80; }
-  .tx-status-text .spin {
-    width: 12px; height: 12px;
+  .tx-status.success { color: #4ade80; }
+  .tx-status .spin {
+    width: 11px; height: 11px;
     border: 2px solid rgba(251,191,36,0.3);
     border-top-color: #fbbf24;
     border-radius: 50%;
     animation: spin 1s linear infinite;
   }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
   .tx-info {
-    font-size: 11px;
-    font-family: 'SF Mono', 'Fira Code', monospace;
-    line-height: 1.8;
+    font-size: 10px;
+    font-family: 'SF Mono', monospace;
+    line-height: 1.7;
   }
   .tx-info .row {
     display: flex; justify-content: space-between;
-    padding: 2px 0;
+    padding: 1px 0;
   }
   .tx-info .k { color: #64748b; }
-  .tx-info .v { color: #e2e8f0; }
-  .tx-info .hash { color: #a5b4fc; font-size: 10px; word-break: break-all; }
+  .tx-info .v { color: #e2e8f0; font-size: 10px; }
+  .tx-info .hash { color: #a5b4fc; font-size: 9px; word-break: break-all; }
 
   .gas-meter {
     height: 3px;
     background: rgba(71,85,105,0.3);
     border-radius: 2px;
     overflow: hidden;
-    margin-top: 8px;
+    margin-top: 6px;
   }
   .gas-fill {
     height: 100%;
     width: 0%;
     background: linear-gradient(90deg, #22c55e, #eab308, #ef4444);
-    transition: width 0.3s;
+    transition: width 0.2s;
   }
 
-  /* ===== 底部控制 ===== */
+  /* ===== 右侧：对比+对话 ===== */
+  .right-col {
+    display: flex; flex-direction: column; gap: 14px;
+    height: 520px;
+  }
+
+  .chat-mini {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 4px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .chat-mini::-webkit-scrollbar { width: 3px; }
+  .chat-mini::-webkit-scrollbar-thumb { background: rgba(100,116,139,0.3); border-radius: 2px; }
+
+  .c-msg {
+    opacity: 0;
+    transform: translateY(5px);
+    animation: cIn 0.3s ease forwards;
+    font-size: 11px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    line-height: 1.45;
+  }
+  @keyframes cIn { to { opacity: 1; transform: translateY(0); } }
+  .c-user {
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.2);
+    align-self: flex-end;
+    max-width: 90%;
+  }
+  .c-agent {
+    background: rgba(6,182,212,0.1);
+    border: 1px solid rgba(6,182,212,0.2);
+    max-width: 90%;
+  }
+  .c-system {
+    background: rgba(139,92,246,0.08);
+    border: 1px solid rgba(139,92,246,0.2);
+    color: #c4b5fd;
+    font-size: 10px;
+    text-align: center;
+  }
+
+  /* 对比卡 */
+  .compare-card {
+    background: rgba(15,23,42,0.8);
+    border: 1px solid rgba(71,85,105,0.3);
+    border-radius: 12px;
+    padding: 14px;
+    backdrop-filter: blur(10px);
+  }
+  .compare-card h3 {
+    font-size: 14px;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .compare-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 11px;
+  }
+  .compare-col {
+    padding: 8px;
+    border-radius: 7px;
+    text-align: center;
+  }
+  .compare-col.old {
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.2);
+  }
+  .compare-col.new {
+    background: rgba(34,197,94,0.08);
+    border: 1px solid rgba(34,197,94,0.2);
+  }
+  .compare-col .lbl { font-size: 9px; color: #64748b; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .compare-col .val { font-weight: 700; font-size: 13px; }
+  .compare-col.old .val { color: #fca5a5; }
+  .compare-col.new .val { color: #86efac; }
+
+  /* 底部控制 */
   .control-panel {
     background: rgba(15,23,42,0.8);
     border: 1px solid rgba(71,85,105,0.3);
-    border-radius: 14px;
-    padding: 16px 20px;
+    border-radius: 12px;
+    padding: 14px 20px;
     backdrop-filter: blur(10px);
     display: flex;
     align-items: center;
     gap: 20px;
     flex-wrap: wrap;
   }
-
   .btn-primary {
-    padding: 12px 28px;
+    padding: 11px 26px;
     background: linear-gradient(135deg, #06b6d4, #6366f1);
-    border: none;
-    border-radius: 10px;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
+    border: none; border-radius: 10px;
+    color: #fff; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all 0.3s;
     display: flex; align-items: center; gap: 8px;
   }
-  .btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 20px rgba(6,182,212,0.4);
-  }
-  .btn-primary:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(6,182,212,0.4); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
 
   .btn-secondary {
-    padding: 10px 18px;
+    padding: 9px 16px;
     background: rgba(71,85,105,0.2);
     border: 1px solid rgba(100,116,139,0.3);
-    border-radius: 10px;
+    border-radius: 8px;
     color: #cbd5e1;
-    font-size: 13px;
+    font-size: 12px;
     cursor: pointer;
     transition: all 0.3s;
   }
-  .btn-secondary:hover {
-    background: rgba(71,85,105,0.4);
-  }
-  .btn-secondary:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-secondary:hover { background: rgba(71,85,105,0.4); }
 
-  .progress-bar-wrap {
-    flex: 1;
-    min-width: 200px;
-  }
+  .progress-bar-wrap { flex: 1; min-width: 200px; }
   .progress-label {
     display: flex; justify-content: space-between;
     font-size: 11px; color: #94a3b8;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
   }
   .progress-bar {
-    height: 6px;
+    height: 5px;
     background: rgba(71,85,105,0.3);
     border-radius: 3px;
     overflow: hidden;
@@ -488,23 +504,8 @@
     width: 0%;
     background: linear-gradient(90deg, #06b6d4, #6366f1, #ec4899);
     border-radius: 3px;
-    transition: width 0.5s ease;
+    transition: width 0.3s ease;
   }
-
-  .stat-chips {
-    display: flex; gap: 8px;
-    flex-wrap: wrap;
-  }
-  .stat-chip {
-    padding: 6px 12px;
-    background: rgba(15,23,42,0.6);
-    border: 1px solid rgba(71,85,105,0.3);
-    border-radius: 8px;
-    font-size: 11px;
-    display: flex; flex-direction: column; gap: 2px;
-  }
-  .stat-chip .k { color: #64748b; }
-  .stat-chip .v { color: #e2e8f0; font-weight: 600; font-size: 13px; }
 </style>
 </head>
 <body>
@@ -518,113 +519,185 @@
       <div class="logo-dot"></div>
       A2A Payment OS · Live Demo
     </div>
-    <h1>🌴 三亚3日游 · AI旅行规划全流程</h1>
-    <div class="subtitle">一个Agent对接6个服务商Agent，自动比价、自动下单、自动付款 — 全程无人干预</div>
+    <h1>🤖 AI写作Agent的一天 · 微支付全景</h1>
+    <div class="subtitle">47笔自动支付、最小单笔3分钱、零手续费——传统支付体系做不了的生意</div>
+  </div>
+
+  <!-- 核心数据 -->
+  <div class="hero-stats">
+    <div class="stat-card">
+      <div class="stat-value" id="statCount">0</div>
+      <div class="stat-label">全天自动支付笔数</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="statAmount">¥ 0</div>
+      <div class="stat-label">累计支付金额</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="statAvg">¥ 0</div>
+      <div class="stat-label">平均每笔金额</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="statSave">¥ 0</div>
+      <div class="stat-label">相比传统支付省下手续费</div>
+    </div>
   </div>
 
   <!-- 主区域 -->
   <div class="main-grid">
 
-    <!-- 左：A2A对话 -->
+    <!-- 左：时间轴支付流水 -->
     <div class="panel">
       <div class="panel-title">
-        <div class="icon">💬</div>
-        A2A 多智能体对话
+        <div class="icon">⏱️</div>
+        实时支付流水 · 09:00 - 18:00
       </div>
-      <div class="chat-area">
-        <div class="chat-messages" id="chatMessages">
-          <!-- 动态插入 -->
+      <div class="timeline-area">
+        <div class="timeline" id="timeline">
+          <div class="tl-line"></div>
         </div>
       </div>
     </div>
 
-    <!-- 中：订单卡片 -->
-    <div class="panel">
-      <div class="panel-title">
-        <div class="icon">📋</div>
-        订单清单 · 6项服务
-      </div>
-      <div class="order-area">
-        <div class="order-list" id="orderList">
-          <!-- 动态插入 -->
-        </div>
-
-        <div class="total-card">
-          <div class="total-label">行程总预算</div>
-          <div class="total-amount" id="totalAmount">¥ 0.00</div>
-          <div class="total-detail">
-            <span id="paidCount">已支付 0 项</span>
-            <span id="savingTip">AI议价省 ¥0</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 右：钱包+交易 -->
+    <!-- 中：钱包 + 当前交易 -->
     <div class="panel">
       <div class="panel-title">
         <div class="icon">💎</div>
-        数字人民币钱包
+        数字人民币·AI写作子钱包
       </div>
-      <div class="chain-area">
+      <div style="display:flex;flex-direction:column;gap:14px;height:520px;">
 
         <div class="wallet-card">
-          <div class="wallet-label">平安AI旅行·子钱包</div>
+          <div class="wallet-label">写作Agent · 独立子钱包</div>
           <div class="wallet-balance" id="walletBalance">
-            12,800.00 <span class="wallet-unit">元</span>
+            500.00 <span class="wallet-unit">元</span>
           </div>
           <div class="wallet-sub">
             <span>张小明</span>
-            <span>**** **** **** 8823</span>
+            <span>**** **** **** 6621</span>
+          </div>
+        </div>
+
+        <div class="live-stats">
+          <div class="live-stat">
+            <div class="v" id="liveCount">0</div>
+            <div class="k">已完成笔数</div>
+          </div>
+          <div class="live-stat">
+            <div class="v" id="liveMin">¥0</div>
+            <div class="k">最小单笔</div>
           </div>
         </div>
 
         <div class="tx-panel">
-          <div class="tx-title">当前交易状态</div>
-          <div class="block-visual" id="blockVisual">
+          <div class="tx-title">当前支付状态</div>
+          <div class="block-visual">
             <div class="block-ring"></div>
             <div class="block-ring"></div>
             <div class="block-ring"></div>
             <div class="block-core">💠</div>
           </div>
-          <div class="tx-status">
-            <div class="tx-status-text" id="txStatusText">
-              等待开始
-            </div>
-          </div>
+          <div class="tx-status" id="txStatus">待开始</div>
           <div class="tx-info" id="txInfo">
-            <div class="row"><span class="k">交易流水号</span><span class="v hash">—</span></div>
-            <div class="row"><span class="k">付款方</span><span class="v">—</span></div>
+            <div class="row"><span class="k">流水号</span><span class="v hash">—</span></div>
             <div class="row"><span class="k">收款方</span><span class="v">—</span></div>
             <div class="row"><span class="k">金额</span><span class="v">—</span></div>
-            <div class="row"><span class="k">节点确认</span><span class="v">— / 6</span></div>
+            <div class="row"><span class="k">确认节点</span><span class="v">— / 6</span></div>
             <div class="gas-meter"><div class="gas-fill" id="gasFill"></div></div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- 右：对话 + 对比 -->
+    <div class="right-col">
+      <div class="panel" style="flex:1;display:flex;flex-direction:column;">
+        <div class="panel-title">
+          <div class="icon">💬</div>
+          Agent 工作对话
+        </div>
+        <div class="chat-mini" id="chatMini">
+          <!-- 动态插入 -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 对比卡片 -->
+  <div class="compare-card" id="compareCard">
+    <h3>⚡ 为什么这些支付传统体系做不了？</h3>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+      <div class="compare-row" style="display:block;">
+        <div class="compare-col old" style="margin-bottom:6px;">
+          <div class="lbl">传统支付</div>
+          <div class="val">最低¥0.1/笔</div>
+        </div>
+        <div class="compare-col new">
+          <div class="lbl">A2A 数币支付</div>
+          <div class="val">¥0 手续费</div>
+        </div>
+        <div style="font-size:10px;color:#94a3b8;text-align:center;margin-top:4px;">手续费</div>
+      </div>
+      <div class="compare-row" style="display:block;">
+        <div class="compare-col old" style="margin-bottom:6px;">
+          <div class="lbl">传统支付</div>
+          <div class="val">T+1 到账</div>
+        </div>
+        <div class="compare-col new">
+          <div class="lbl">A2A 数币支付</div>
+          <div class="val">2秒到账</div>
+        </div>
+        <div style="font-size:10px;color:#94a3b8;text-align:center;margin-top:4px;">到账速度</div>
+      </div>
+      <div class="compare-row" style="display:block;">
+        <div class="compare-col old" style="margin-bottom:6px;">
+          <div class="lbl">传统支付</div>
+          <div class="val">需KYC开户</div>
+        </div>
+        <div class="compare-col new">
+          <div class="lbl">A2A 数币支付</div>
+          <div class="val">子钱包授权</div>
+        </div>
+        <div style="font-size:10px;color:#94a3b8;text-align:center;margin-top:4px;">开户门槛</div>
+      </div>
+      <div class="compare-row" style="display:block;">
+        <div class="compare-col old" style="margin-bottom:6px;">
+          <div class="lbl">传统支付</div>
+          <div class="val">人工审核退款</div>
+        </div>
+        <div class="compare-col new">
+          <div class="lbl">A2A 数币支付</div>
+          <div class="val">秒级智能合约</div>
+        </div>
+        <div style="font-size:10px;color:#94a3b8;text-align:center;margin-top:4px;">退款效率</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;padding:8px 12px;background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.2);border-radius:8px;font-size:11px;color:#a5b4fc;line-height:1.5;">
+      💡 <b>核心洞察：</b>不是A2A支付"抢"了传统支付的生意，而是传统支付根本做不了这些分/厘级的微交易。
+      A2A数字人民币开辟的是一块<b>全新的市场</b>——机器与机器之间的经济活动。
+    </div>
   </div>
 
   <!-- 底部控制 -->
-  <div class="control-panel">
-    <div class="stat-chips">
-      <div class="stat-chip">
-        <span class="k">参与Agent</span>
-        <span class="v">7 个</span>
+  <div class="control-panel" style="margin-top:14px;">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <div class="stat-chip" style="padding:6px 12px;background:rgba(15,23,42,0.6);border:1px solid rgba(71,85,105,0.3);border-radius:8px;font-size:11px;">
+        <span style="color:#64748b;">🤖 参与Agent：</span>
+        <b style="color:#e2e8f0;">1 + 12个服务商</b>
       </div>
-      <div class="stat-chip">
-        <span class="k">A2A支付笔数</span>
-        <span class="v">6 笔</span>
+      <div class="stat-chip" style="padding:6px 12px;background:rgba(15,23,42,0.6);border:1px solid rgba(71,85,105,0.3);border-radius:8px;font-size:11px;">
+        <span style="color:#64748b;">💰 初始预算：</span>
+        <b style="color:#e2e8f0;">¥500</b>
       </div>
-      <div class="stat-chip">
-        <span class="k">预计耗时</span>
-        <span class="v">~40 秒</span>
+      <div class="stat-chip" style="padding:6px 12px;background:rgba(15,23,42,0.6);border:1px solid rgba(71,85,105,0.3);border-radius:8px;font-size:11px;">
+        <span style="color:#64748b;">⏱ 时长：</span>
+        <b style="color:#e2e8f0;">工作日9小时</b>
       </div>
     </div>
 
     <div class="progress-bar-wrap">
       <div class="progress-label">
-        <span>规划进度</span>
+        <span>模拟进度</span>
         <span id="progressText">0%</span>
       </div>
       <div class="progress-bar">
@@ -635,149 +708,129 @@
     <button class="btn-secondary" id="resetBtn">↺ 重置</button>
     <button class="btn-primary" id="startBtn">
       <span id="btnIcon">▶</span>
-      <span id="btnText">开始规划</span>
+      <span id="btnText">开始一天的工作</span>
     </button>
   </div>
 
 </div>
 
 <script>
-// ===== 数据定义 =====
-const orders = [
-  {
-    id: 1,
-    icon: '✈️',
-    title: '往返机票',
-    desc: '深圳→三亚 10月15日去/17日返 南航CZxxxx',
-    vendor: '机票Agent·南方航空',
-    originalPrice: 1680,
-    price: 1480,
-    saving: 200,
-    bargain: '比价了4家航司，选了早班机+折扣组合',
-    step: 1
-  },
-  {
-    id: 2,
-    icon: '🏨',
-    title: '酒店住宿 2晚',
-    desc: '亚龙湾·海边度假酒店 海景大床房含早',
-    vendor: '酒店Agent·亚龙湾瑞吉',
-    originalPrice: 2580,
-    price: 2180,
-    saving: 400,
-    bargain: '拿到了Agency协议价，比OTA便宜15%',
-    step: 2
-  },
-  {
-    id: 3,
-    icon: '🏝️',
-    title: '景区门票 3处',
-    desc: '蜈支洲岛+呀诺达+亚特兰蒂斯水族馆',
-    vendor: '景区Agent·海南旅游通',
-    originalPrice: 896,
-    price: 780,
-    saving: 116,
-    bargain: '联票套餐比单买省13%，还含接送',
-    step: 3
-  },
-  {
-    id: 4,
-    icon: '🍽️',
-    title: '特色餐厅 3顿',
-    desc: '林姐海鲜+嗲嗲椰子鸡+全海景日料',
-    vendor: '美食Agent·大众点评',
-    originalPrice: 1200,
-    price: 960,
-    saving: 240,
-    bargain: '预约了靠窗位+团购套餐组合',
-    step: 4
-  },
-  {
-    id: 5,
-    icon: '🚗',
-    title: '租车 3天',
-    desc: '特斯拉Model 3 含保险 机场取还',
-    vendor: '租车Agent·一嗨租车',
-    originalPrice: 1299,
-    price: 999,
-    saving: 300,
-    bargain: '争取到了新用户首租7折+免服务费',
-    step: 5
-  },
-  {
-    id: 6,
-    icon: '🛟',
-    title: '潜水体验',
-    desc: '蜈支洲岛深潜一次 含教练+照片视频',
-    vendor: '玩乐Agent·当地向导',
-    originalPrice: 680,
-    price: 580,
-    saving: 100,
-    bargain: '多送了一次浮潜和水下拍照',
-    step: 6
-  }
+// ===== 支付场景数据 =====
+// 模拟一个AI写作Agent一天内触发的所有A2A支付
+const payments = [
+  // 上午
+  { time: '09:02', icon: '📰', title: '解锁付费文章', vendor: '财新·单篇', amount: 0.99, tag: 'micro', desc: 'AI自主判断有参考价值，直接解锁', category: '内容' },
+  { time: '09:05', icon: '🔍', title: 'OCR识别×3张', vendor: '文字识别API', amount: 0.03, tag: 'micro', desc: '3张图片识别文字，按次计费 ¥0.01/次', category: 'API' },
+  { time: '09:08', icon: '🖼️', title: '商用配图1张', vendor: '图库素材Agent', amount: 3.50, tag: 'auto', desc: 'AI自己选图、自己议价、自己付费', category: '素材' },
+  { time: '09:12', icon: '🔤', title: '翻译5000字', vendor: '翻译API', amount: 1.20, tag: 'micro', desc: '英译中，按token计费', category: 'API' },
+  { time: '09:18', icon: '📊', title: '行业数据摘要', vendor: '行业研报Agent', amount: 8.00, tag: 'auto', desc: 'AI发现知识盲区，自主购买补充', category: '数据' },
+  { time: '09:25', icon: '🎨', title: '生成封面图', vendor: 'AI生图API', amount: 2.80, tag: 'micro', desc: '按生成张数和模型档位实时扣费', category: 'API' },
+  { time: '09:31', icon: '✏️', title: '错别字校对', vendor: '校对服务API', amount: 0.50, tag: 'micro', desc: '按字数计费，千字以下最低收费', category: 'API' },
+  { time: '09:38', icon: '📑', title: '竞品分析报告', vendor: '竞品研究Agent', amount: 15.00, tag: 'auto', desc: 'AI判断需要竞品视角，自主发起采购', category: '研究' },
+  { time: '09:45', icon: '🔍', title: '文章查重检测', vendor: '查重服务API', amount: 0.80, tag: 'micro', desc: '一次查重，防止抄袭风险', category: 'API' },
+  { time: '09:52', icon: '🔤', title: '字体商用授权', vendor: '字体Agent', amount: 5.00, tag: 'cond', desc: '智能合约：使用范围内自动授权', category: '素材' },
+  { time: '10:01', icon: '🎵', title: '背景音乐授权', vendor: '音乐素材Agent', amount: 3.00, tag: 'cond', desc: '按项目授权，过期自动失效', category: '素材' },
+  { time: '10:08', icon: '🗣️', title: '语音转文字', vendor: '语音识别API', amount: 0.45, tag: 'micro', desc: '15分钟采访录音转文字', category: 'API' },
+  { time: '10:15', icon: '📈', title: '舆情数据1天', vendor: '舆情监测Agent', amount: 6.00, tag: 'cond', desc: '订阅制，每天自动扣费', category: '数据' },
+  { time: '10:22', icon: '🔍', title: 'SEO关键词分析', vendor: 'SEO工具API', amount: 2.00, tag: 'micro', desc: '批量查询关键词搜索量', category: 'API' },
+  { time: '10:30', icon: '📰', title: '付费专栏解锁', vendor: '知乎盐选', amount: 1.99, tag: 'micro', desc: 'AI判断内容有引用价值', category: '内容' },
+  { time: '10:38', icon: '🗺️', title: '地图数据调用', vendor: '地图API', amount: 0.05, tag: 'micro', desc: '文章中引用了地图，按次计费5分钱', category: 'API' },
+  { time: '10:45', icon: '📧', title: '邮件发送×50封', vendor: '邮件服务API', amount: 0.50, tag: 'micro', desc: '文章推送，千分之几一封', category: 'API' },
+  { time: '10:52', icon: '🔒', title: '敏感词过滤', vendor: '内容安全API', amount: 0.20, tag: 'micro', desc: '发布前合规检查，按字符计费', category: 'API' },
+  { time: '11:00', icon: '🖼️', title: '图片压缩×20张', vendor: '图像处理API', amount: 0.40, tag: 'micro', desc: '2分钱/张，压缩优化体积', category: 'API' },
+  { time: '11:08', icon: '📊', title: '数据可视化图表', vendor: '图表生成API', amount: 1.50, tag: 'micro', desc: '生成3张交互式数据图表', category: 'API' },
+  { time: '11:15', icon: '📝', title: '法律条文检索', vendor: '法律数据库Agent', amount: 4.00, tag: 'auto', desc: '文章涉及法律风险，自主查询核实', category: '数据' },
+  { time: '11:22', icon: '🌐', title: '网页截图×8个', vendor: '截图服务API', amount: 0.80, tag: 'micro', desc: '一毛钱一张，截取引用来源页', category: 'API' },
+  { time: '11:30', icon: '🤖', title: '模型调用×5000token', vendor: '大模型API', amount: 0.15, tag: 'micro', desc: '写作过程中的模型推理费用', category: 'API' },
+
+  // 中午
+  { time: '13:30', icon: '📰', title: '午间新闻摘要', vendor: '新闻资讯Agent', amount: 0.50, tag: 'cond', desc: '每日自动订阅，午间推送', category: '内容' },
+  { time: '13:45', icon: '🎬', title: '短视频脚本参考', vendor: '剧本素材Agent', amount: 2.00, tag: 'auto', desc: 'AI参考了同行脚本结构', category: '素材' },
+
+  // 下午
+  { time: '14:02', icon: '🎨', title: '插画生成×3张', vendor: 'AI生图API', amount: 4.50, tag: 'micro', desc: '为长文生成配套插图', category: 'API' },
+  { time: '14:10', icon: '🔍', title: '学术论文检索', vendor: '论文数据库Agent', amount: 6.00, tag: 'auto', desc: '需要引用权威数据，AI自主检索付费论文', category: '数据' },
+  { time: '14:18', icon: '🌐', title: 'IP代理×10次', vendor: '数据采集API', amount: 1.00, tag: 'micro', desc: '采集公开数据时切换IP', category: 'API' },
+  { time: '14:25', icon: '📊', title: 'Excel公式生成', vendor: 'Excel助手API', amount: 0.30, tag: 'micro', desc: '帮用户生成复杂数据透视表', category: 'API' },
+  { time: '14:32', icon: '✒️', title: '手写字体转换', vendor: '字体工具API', amount: 0.80, tag: 'micro', desc: '生成个性化手写体签名', category: '素材' },
+  { time: '14:40', icon: '🎙️', title: 'AI配音3分钟', vendor: '语音合成API', amount: 0.60, tag: 'micro', desc: '文章转音频版，每分钟2毛钱', category: 'API' },
+  { time: '14:48', icon: '📐', title: '排版格式检查', vendor: '排版工具API', amount: 0.25, tag: 'micro', desc: '检查排版规范和格式错误', category: 'API' },
+  { time: '14:55', icon: '🔗', title: '死链检测×200个', vendor: '链接检测API', amount: 0.20, tag: 'micro', desc: '检查文章中引用链接有效性', category: 'API' },
+  { time: '15:02', icon: '🖼️', title: '图片去水印', vendor: '图像处理API', amount: 1.00, tag: 'micro', desc: '处理素材图中的水印', category: 'API' },
+  { time: '15:10', icon: '📋', title: '多语言排版', vendor: '排版服务Agent', amount: 3.50, tag: 'auto', desc: '英文版本自动排版适配', category: '服务' },
+  { time: '15:18', icon: '🔍', title: '版权图片溯源', vendor: '版权检测API', amount: 2.00, tag: 'auto', desc: '检查素材图是否有版权风险', category: 'API' },
+  { time: '15:25', icon: '📈', title: '历史数据回测', vendor: '数据分析Agent', amount: 12.00, tag: 'auto', desc: '对文中观点做数据验证', category: '数据' },
+  { time: '15:33', icon: '🎯', title: '标题AB测试', vendor: '标题优化API', amount: 0.80, tag: 'micro', desc: '生成5个备选标题并预测点击率', category: 'API' },
+  { time: '15:40', icon: '📧', title: '邮件模板渲染', vendor: '邮件模板API', amount: 0.10, tag: 'micro', desc: '生成响应式Newsletter邮件', category: 'API' },
+  { time: '15:48', icon: '🗂️', title: '云存储10GB', vendor: '存储服务', amount: 0.15, tag: 'cond', desc: '当月存储费用，按天结算', category: '基础设施' },
+  { time: '15:55', icon: '🔄', title: 'CDN流量', vendor: 'CDN服务', amount: 0.08, tag: 'cond', desc: '图片素材分发流量费', category: '基础设施' },
+  { time: '16:03', icon: '🧠', title: '模型推理×20K token', vendor: '大模型API', amount: 0.60, tag: 'micro', desc: '润色和终稿优化阶段', category: 'API' },
+  { time: '16:10', icon: '📊', title: '读者画像分析', vendor: '数据分析Agent', amount: 5.00, tag: 'auto', desc: '预测目标读者偏好，调整文风', category: '数据' },
+  { time: '16:18', icon: '🔍', title: 'SEO排名查询', vendor: 'SEO工具API', amount: 1.20, tag: 'micro', desc: '查询目标关键词竞争度', category: 'API' },
+  { time: '16:25', icon: '📰', title: '竞争对手文章', vendor: '内容监测Agent', amount: 3.00, tag: 'cond', desc: '订阅竞品内容动向，每周结算', category: '数据' },
+  { time: '16:33', icon: '🎨', title: '封面精修', vendor: '图像增强API', amount: 1.50, tag: 'micro', desc: '提升封面图清晰度和质感', category: 'API' },
+  { time: '16:40', icon: '✅', title: '最终稿质检', vendor: '质量检测API', amount: 0.50, tag: 'micro', desc: '错别字+格式+合规三重检查', category: 'API' },
 ];
 
-const totalOriginal = orders.reduce((s, o) => s + o.originalPrice, 0);
-const totalFinal = orders.reduce((s, o) => s + o.price, 0);
-const totalSaving = totalOriginal - totalFinal;
+const totalAmount = payments.reduce((s, p) => s + p.amount, 0);
+const minAmount = Math.min(...payments.map(p => p.amount));
 
-let currentOrder = 0;
+// 计算传统支付手续费（每笔最低0.1元 + 0.6%）
+function traditionalFee(amount) {
+  return Math.max(0.1, amount * 0.006);
+}
+const totalTraditionalFee = payments.reduce((s, p) => s + traditionalFee(p.amount), 0);
+
+let currentIndex = 0;
 let isPlaying = false;
-let walletBalance = 12800;
+let walletBalance = 500;
+let totalSpent = 0;
 
-// ===== 初始化订单列表 =====
-function renderOrders() {
-  const list = document.getElementById('orderList');
-  list.innerHTML = orders.map(o => `
-    <div class="order-card" data-order="${o.id}">
-      <div class="order-head">
-        <div class="order-title">
-          <span class="order-icon">${o.icon}</span>
-          ${o.title}
-        </div>
-        <div class="order-status" id="status-${o.id}">等待中</div>
+// ===== 工具函数 =====
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function randomHash() {
+  const chars = '0123456789abcdef';
+  let h = 'DC';
+  for (let i = 0; i < 6; i++) h += chars[Math.floor(Math.random() * 16)];
+  h += '...';
+  for (let i = 0; i < 4; i++) h += chars[Math.floor(Math.random() * 16)];
+  return h;
+}
+
+// 时间轴添加一条
+function addTimelineItem(p, status = 'pending') {
+  const tl = document.getElementById('timeline');
+  const item = document.createElement('div');
+  item.className = `tl-item ${status}`;
+  item.dataset.index = currentIndex;
+  const tagLabels = { micro: '微支付', auto: '自主决策', cond: '条件支付' };
+  item.innerHTML = `
+    <div class="tl-time">${p.time}</div>
+    <div class="tl-dot"></div>
+    <div class="tl-card">
+      <div class="tl-head">
+        <div class="tl-title">${p.icon} ${p.title}</div>
+        <div class="tl-amount">¥${p.amount.toFixed(2)}</div>
       </div>
-      <div class="order-desc">${o.desc}</div>
-      <div class="order-foot">
-        <span class="order-vendor">${o.vendor}</span>
-        <span class="order-price" id="price-${o.id}">¥ ${o.price.toLocaleString()}</span>
-      </div>
+      <div class="tl-desc">${p.desc}<br><span style="color:#64748b;">${p.vendor}</span></div>
+      <span class="tl-tag ${p.tag}">${tagLabels[p.tag] || ''}</span>
     </div>
-  `).join('');
+  `;
+  tl.appendChild(item);
+  tl.scrollTop = tl.scrollHeight;
+  return item;
 }
 
-// ===== 对话消息 =====
-function addMsg(type, name, text) {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      const chat = document.getElementById('chatMessages');
-      const msg = document.createElement('div');
-      msg.className = `msg msg-${type}`;
-      const avatars = {
-        travel: '🏝️',
-        user: '👤',
-        vendor: '🤖',
-        system: '⚡'
-      };
-      const nameHtml = name ? `<div class="msg-name">${name}</div>` : '';
-      msg.innerHTML = `
-        <div class="msg-avatar">${avatars[type] || '🤖'}</div>
-        <div>
-          ${nameHtml}
-          <div class="msg-bubble">${text}</div>
-        </div>
-      `;
-      chat.appendChild(msg);
-      chat.scrollTop = chat.scrollHeight;
-      resolve();
-    }, 0);
-  });
+function setTimelineStatus(index, status) {
+  const item = document.querySelector(`.tl-item[data-index="${index}"]`);
+  if (item) {
+    item.classList.remove('pending', 'active', 'done');
+    item.classList.add(status);
+  }
 }
 
-// ===== 交易状态 =====
 function setTxStatus(text, spinning, success = false) {
-  const el = document.getElementById('txStatusText');
+  const el = document.getElementById('txStatus');
   if (spinning) {
     el.innerHTML = `<span class="spin"></span>${text}`;
     el.classList.remove('success');
@@ -790,61 +843,47 @@ function setTxStatus(text, spinning, success = false) {
   }
 }
 
-function updateTxInfo({ hash, from, to, amount, blocks, gasPct }) {
+function updateTxInfo({ hash, to, amount, blocks, gasPct }) {
   document.getElementById('txInfo').innerHTML = `
-    <div class="row"><span class="k">交易流水号</span><span class="v hash">${hash}</span></div>
-    <div class="row"><span class="k">付款方</span><span class="v">${from}</span></div>
+    <div class="row"><span class="k">流水号</span><span class="v hash">${hash}</span></div>
     <div class="row"><span class="k">收款方</span><span class="v">${to}</span></div>
     <div class="row"><span class="k">金额</span><span class="v">${amount}</span></div>
-    <div class="row"><span class="k">节点确认</span><span class="v">${blocks}</span></div>
+    <div class="row"><span class="k">确认节点</span><span class="v">${blocks}</span></div>
     <div class="gas-meter"><div class="gas-fill" id="gasFill"></div></div>
   `;
   document.getElementById('gasFill').style.width = gasPct + '%';
 }
 
-function randomHash() {
-  const chars = '0123456789abcdef';
-  let h = 'DC';
-  for (let i = 0; i < 6; i++) h += chars[Math.floor(Math.random() * 16)];
-  h += '...';
-  for (let i = 0; i < 4; i++) h += chars[Math.floor(Math.random() * 16)];
-  return h;
-}
-
-// ===== 订单状态更新 =====
-function setOrderActive(id) {
-  const card = document.querySelector(`.order-card[data-order="${id}"]`);
-  if (card) {
-    card.classList.add('active');
-    const status = document.getElementById(`status-${id}`);
-    if (status) status.innerHTML = '<span class="spin"></span>处理中';
-  }
-}
-function setOrderDone(id) {
-  const card = document.querySelector(`.order-card[data-order="${id}"]`);
-  if (card) {
-    card.classList.remove('active');
-    card.classList.add('done');
-    const status = document.getElementById(`status-${id}`);
-    if (status) status.textContent = '✓ 已支付';
-    const price = document.getElementById(`price-${id}`);
-    if (price) price.classList.add('done');
-  }
-}
-
-function updateTotal(paidCount) {
-  const paid = orders.slice(0, paidCount).reduce((s, o) => s + o.price, 0);
-  document.getElementById('totalAmount').textContent = '¥ ' + paid.toLocaleString() + '.00';
-  document.getElementById('paidCount').textContent = `已支付 ${paidCount} / ${orders.length} 项`;
-  const saved = orders.slice(0, paidCount).reduce((s, o) => s + o.saving, 0);
-  document.getElementById('savingTip').textContent = `AI议价省 ¥${saved}`;
-}
-
 function updateWallet(amount) {
   walletBalance -= amount;
+  totalSpent += amount;
   document.getElementById('walletBalance').innerHTML =
-    walletBalance.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) +
-    ' <span class="wallet-unit">元</span>';
+    walletBalance.toFixed(2) + ' <span class="wallet-unit">元</span>';
+
+  // 更新统计
+  const paidCount = currentIndex + 1;
+  document.getElementById('statCount').textContent = paidCount;
+  document.getElementById('statAmount').textContent = '¥' + totalSpent.toFixed(2);
+  document.getElementById('statAvg').textContent = '¥' + (totalSpent / paidCount).toFixed(2);
+
+  // 计算省了多少手续费
+  let saved = 0;
+  for (let i = 0; i <= currentIndex; i++) {
+    saved += traditionalFee(payments[i].amount);
+  }
+  document.getElementById('statSave').textContent = '¥' + saved.toFixed(2);
+
+  document.getElementById('liveCount').textContent = paidCount;
+  document.getElementById('liveMin').textContent = '¥' + minAmount.toFixed(2);
+}
+
+function addChat(type, text) {
+  const chat = document.getElementById('chatMini');
+  const msg = document.createElement('div');
+  msg.className = `c-msg c-${type}`;
+  msg.textContent = text;
+  chat.appendChild(msg);
+  chat.scrollTop = chat.scrollHeight;
 }
 
 function setProgress(pct) {
@@ -852,183 +891,132 @@ function setProgress(pct) {
   document.getElementById('progressText').textContent = Math.round(pct) + '%';
 }
 
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
 // ===== 主流程 =====
-async function startDemo() {
+async function startDay() {
   if (isPlaying) return;
   isPlaying = true;
 
   const btn = document.getElementById('startBtn');
   btn.disabled = true;
-  document.getElementById('btnText').textContent = '规划中...';
-  document.getElementById('btnIcon').textContent = '⏱';
+  document.getElementById('btnText').textContent = '工作中...';
+  document.getElementById('btnIcon').textContent = '🤖';
 
-  const chat = document.getElementById('chatMessages');
-  chat.innerHTML = '';
-  walletBalance = 12800;
-  document.getElementById('walletBalance').innerHTML = '12,800.00 <span class="wallet-unit">元</span>';
+  // 重置
+  walletBalance = 500;
+  totalSpent = 0;
+  currentIndex = 0;
+  document.getElementById('walletBalance').innerHTML = '500.00 <span class="wallet-unit">元</span>';
+  document.getElementById('timeline').innerHTML = '<div class="tl-line"></div>';
+  document.getElementById('chatMini').innerHTML = '';
+  document.getElementById('statCount').textContent = '0';
+  document.getElementById('statAmount').textContent = '¥ 0';
+  document.getElementById('statAvg').textContent = '¥ 0';
+  document.getElementById('statSave').textContent = '¥ 0';
+  document.getElementById('liveCount').textContent = '0';
+  document.getElementById('liveMin').textContent = '¥0';
   setProgress(0);
-  setTxStatus('等待开始', false);
-  updateTxInfo({ hash: '—', from: '—', to: '—', amount: '—', blocks: '— / 6', gasPct: 0 });
-  updateTotal(0);
-  renderOrders();
+  setTxStatus('待开始', false);
+  updateTxInfo({ hash: '—', to: '—', amount: '—', blocks: '— / 6', gasPct: 0 });
 
-  const totalSteps = orders.length + 4; // 开头3步 + 结尾1步
-  let step = 0;
+  // 开场对话
+  addChat('user', '今天写一篇"AI重塑内容创作"的深度稿，5000字左右');
+  await sleep(500);
+  addChat('agent', '收到！我来规划大纲、收集素材、完成写作。过程中会调用一些服务，从你的AI写作子钱包自动扣款，单笔超过¥20我会跟你确认。');
+  await sleep(500);
+  addChat('system', 'AI写作Agent开始工作，唤醒12个服务商Agent...');
+  await sleep(500);
 
-  // 1. 用户需求
-  await addMsg('user', '我', '国庆后想去三亚玩3天，15号出发17号回，两个人，预算一人5000左右，帮我规划一下');
-  step++; setProgress(step / totalSteps * 100);
-  await sleep(800);
+  // 逐笔支付
+  for (let i = 0; i < payments.length; i++) {
+    const p = payments[i];
+    currentIndex = i;
 
-  // 2. Agent接单
-  await addMsg('travel', '旅行规划Agent', '好的，我来为您规划三亚3日行程。先确认一下需求：\n\n✈️ 10月15日出发 / 17日返回\n👥 2人\n💰 人均预算5000元（总10000元）\n\n我现在对接各服务商Agent比价，给您出最优方案。');
-  step++; setProgress(step / totalSteps * 100);
-  await sleep(1200);
+    // 添加时间轴条目
+    addTimelineItem(p, 'active');
+    setTxStatus('支付意图生成', true);
 
-  // 3. 系统提示
-  await addMsg('system', '', '🔄 已唤醒 6 个服务商Agent，开始并行比价与协商...');
-  step++; setProgress(step / totalSteps * 100);
-  await sleep(1000);
-
-  // 逐个处理每个订单
-  for (let i = 0; i < orders.length; i++) {
-    const o = orders[i];
-
-    // 点亮订单卡片
-    setOrderActive(o.id);
-
-    // 旅行Agent询价
-    await addMsg('travel', '旅行规划Agent', `【${o.icon} ${o.title}】正在跟${o.vendor.split('·')[0]}谈价格...`);
-    await sleep(600);
-
-    // 服务商Agent回复
-    await addMsg('vendor', o.vendor, `您好，${o.desc}，原价 ¥${o.originalPrice.toLocaleString()}，需要预订吗？`);
-    await sleep(700);
-
-    // 旅行Agent砍价
-    await addMsg('travel', '旅行规划Agent', `客户是我的长期合作方，${o.bargain}，能给什么价？`);
-    await sleep(600);
-
-    // 服务商Agent同意
-    await addMsg('vendor', o.vendor, `行，给到您 ¥${o.price.toLocaleString()} 协议价，这是我们的底价了。`);
-    await sleep(500);
-
-    // 旅行Agent确认并发起支付
-    await addMsg('travel', '旅行规划Agent', `成交。我从数字人民币子钱包付款，确认到账后请立即锁定库存。`);
-    await sleep(400);
-
-    // === 支付流程 ===
-    setTxStatus('Agent 支付意图生成', true);
     const hash = randomHash();
     updateTxInfo({
       hash: hash,
-      from: '张小明·AI旅行子钱包',
-      to: o.vendor,
-      amount: '¥ ' + o.price.toLocaleString(),
+      to: p.vendor,
+      amount: '¥' + p.amount.toFixed(2),
       blocks: '0 / 6',
-      gasPct: 10
+      gasPct: 5
     });
-    await sleep(600);
 
     // 策略校验
-    setTxStatus('智能合约规则校验中', true);
+    await sleep(80);
+    setTxStatus('智能合约校验中', true);
     updateTxInfo({
-      hash: hash,
-      from: '张小明·AI旅行子钱包',
-      to: o.vendor,
-      amount: '¥ ' + o.price.toLocaleString(),
-      blocks: '0 / 6',
-      gasPct: 25
+      hash: hash, to: p.vendor,
+      amount: '¥' + p.amount.toFixed(2),
+      blocks: '0 / 6', gasPct: 25
     });
-    await sleep(500);
 
     // 签名
+    await sleep(60);
     setTxStatus('国密SM2签名中', true);
     updateTxInfo({
-      hash: hash,
-      from: '张小明·AI旅行子钱包',
-      to: o.vendor,
-      amount: '¥ ' + o.price.toLocaleString(),
-      blocks: '0 / 6',
-      gasPct: 40
+      hash: hash, to: p.vendor,
+      amount: '¥' + p.amount.toFixed(2),
+      blocks: '0 / 6', gasPct: 40
     });
-    await sleep(400);
 
-    // 节点确认动画
+    // 节点确认
     setTxStatus('数币联盟链共识中', true);
     for (let j = 1; j <= 6; j++) {
-      await sleep(100);
+      await sleep(30);
       const pct = 40 + (j / 6) * 50;
       updateTxInfo({
-        hash: hash,
-        from: '张小明·AI旅行子钱包',
-        to: o.vendor,
-        amount: '¥ ' + o.price.toLocaleString(),
-        blocks: j + ' / 6',
-        gasPct: pct
+        hash: hash, to: p.vendor,
+        amount: '¥' + p.amount.toFixed(2),
+        blocks: j + ' / 6', gasPct: pct
       });
     }
 
-    // 支付完成
-    setTxStatus('支付成功 ✓', false, true);
+    // 完成
+    setTxStatus('到账 ✓', false, true);
     updateTxInfo({
-      hash: hash,
-      from: '张小明·AI旅行子钱包',
-      to: o.vendor,
-      amount: '¥ ' + o.price.toLocaleString(),
-      blocks: '6 / 6 ✓',
-      gasPct: 100
+      hash: hash, to: p.vendor,
+      amount: '¥' + p.amount.toFixed(2),
+      blocks: '6 / 6 ✓', gasPct: 100
     });
 
-    setOrderDone(o.id);
-    updateWallet(o.price);
-    updateTotal(i + 1);
-    step++;
-    setProgress(step / totalSteps * 100);
+    setTimelineStatus(i, 'done');
+    updateWallet(p.amount);
+    setProgress(((i + 1) / payments.length) * 100);
 
-    await sleep(400);
-
-    // 服务商确认到账
-    await addMsg('system', '', `✅ ${o.vendor} 确认到账，订单已锁定`);
-    await sleep(300);
+    // 间隔，后面快一点
+    await sleep(i < 5 ? 120 : i < 20 ? 50 : 30);
   }
 
-  // 全部完成，Agent给出汇总
-  await sleep(500);
-  await addMsg('travel', '旅行规划Agent',
-    `🎉 规划完成！6项服务全部预订成功，确认信息如下：\n\n` +
-    `📅 行程：10月15-17日（3天2晚）\n` +
-    `✈️ 机票：深圳→三亚往返 南航\n` +
-    `🏨 酒店：亚龙湾瑞吉 海景大床含早\n` +
-    `🏝️ 景点：蜈支洲岛+呀诺达+亚特兰蒂斯\n` +
-    `🍽️ 餐厅：3家特色餐厅均已预约\n` +
-    `🚗 租车：特斯拉Model 3 机场取还\n` +
-    `🛟 体验：蜈支洲岛深潜一次\n\n` +
-    `💰 <b>总花费：¥${totalFinal.toLocaleString()}</b>\n` +
-    `💸 预算内，AI议价共省 <b>¥${totalSaving.toLocaleString()}</b>（省了 ${Math.round(totalSaving/totalOriginal*100)}%）\n\n` +
-    `行程单稍后发您微信，出行前一天会再发提醒。祝您旅途愉快！🌴`
+  // 完成总结
+  await sleep(300);
+  addChat('agent',
+    `✅ 稿件完成！\n` +
+    `📝 5200字深度稿\n` +
+    `🖼️ 配插图6张\n` +
+    `🎯 已做SEO优化\n\n` +
+    `全天共完成 <b>${payments.length}笔</b> 自动支付，\n` +
+    `总花费 <b>¥${totalAmount.toFixed(2)}</b>，\n` +
+    `比用传统支付省了 <b>¥${totalTraditionalFee.toFixed(2)}</b> 手续费。`
   );
+  addChat('system', '💡 最低一笔仅0.03元，传统支付体系手续费都要0.1元，这笔生意传统支付根本做不了');
 
-  setProgress(100);
-
-  // 完成
-  document.getElementById('btnText').textContent = '规划完成';
-  document.getElementById('btnIcon').textContent = '🌴';
+  document.getElementById('btnText').textContent = '全天工作完成';
+  document.getElementById('btnIcon').textContent = '✅';
   isPlaying = false;
 }
 
 // ===== 事件 =====
-document.getElementById('startBtn').addEventListener('click', startDemo);
+document.getElementById('startBtn').addEventListener('click', startDay);
 document.getElementById('resetBtn').addEventListener('click', () => {
   if (isPlaying) return;
   location.reload();
 });
 
-// 初始化
-renderOrders();
-updateTotal(0);
+// 初始统计
+document.getElementById('statSave').textContent = '¥' + totalTraditionalFee.toFixed(2) + ' (预估)';
 </script>
 
 </body>
