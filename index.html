@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Payment OS · 外行可视化课程</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a18;--bg2:#0f0f25;--bg3:#161632;
+  --text:#e0e0f0;--text2:#a0a0c0;--text3:#7070a0;
+  --primary:#6688ff;--primary2:#4466dd;--primary-glow:rgba(102,136,255,0.3);
+  --accent:#ff8844;--accent2:#ffaa66;
+  --success:#44dd88;--danger:#ff5566;--warning:#ffcc44;
+  --border:#2a2a55;--border2:#3a3a66;
+  --card:#12122a;--card2:#1a1a35;
+  --radius:12px;
+}
+html,body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7;font-size:15px;overflow-x:hidden}
+
+/* 背景星空 */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(60,80,180,0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(180,80,180,0.1) 0%, transparent 50%);
+}
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.4;
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+    radial-gradient(1px 1px at 40px 70px, #aaf, transparent),
+    radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 130px 80px, #ccf, transparent),
+    radial-gradient(1px 1px at 160px 120px, #fff, transparent);
+  background-size: 200px 200px;
+  animation:twinkle 4s ease-in-out infinite alternate;
+}
+@keyframes twinkle{from{opacity:0.3}to{opacity:0.6}}
+
+/* 布局 */
+.app{display:flex;min-height:100vh;position:relative;z-index:1}
+
+/* 侧边导航 */
+.sidebar{
+  width:260px;min-width:260px;
+  background:linear-gradient(180deg,var(--bg2),var(--bg));
+  border-right:1px solid var(--border);
+  padding:20px 0;
+  position:sticky;top:0;height:100vh;
+  overflow-y:auto;
+}
+.sidebar-logo{
+  padding:0 20px 20px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:10px;
+}
+.sidebar-logo h1{
+  font-size:16px;font-weight:700;
+  background:linear-gradient(135deg,var(--primary),#aa66ff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.sidebar-logo p{font-size:11px;color:var(--text3);margin-top:4px}
+
+.lesson-nav{list-style:none}
+.lesson-nav li{
+  padding:10px 20px;
+  cursor:pointer;
+  font-size:13px;
+  color:var(--text2);
+  border-left:3px solid transparent;
+  transition:all 0.2s;
+  display:flex;align-items:center;gap:10px;
+}
+.lesson-nav li:hover{background:var(--bg3);color:var(--text)}
+.lesson-nav li.active{
+  background:var(--bg3);
+  color:var(--primary);
+  border-left-color:var(--primary);
+  font-weight:600;
+}
+.lesson-nav .lesson-num{
+  width:22px;height:22px;border-radius:50%;
+  background:var(--bg3);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;flex-shrink:0;
+}
+.lesson-nav li.active .lesson-num{
+  background:var(--primary);border-color:var(--primary);color:#fff;
+}
+
+.progress-bar{
+  margin:20px;padding:12px;
+  background:var(--bg3);border-radius:8px;
+  border:1px solid var(--border);
+}
+.progress-bar .label{font-size:11px;color:var(--text3);margin-bottom:6px}
+.progress-bar .track{
+  height:6px;background:var(--bg);border-radius:3px;overflow:hidden;
+}
+.progress-bar .fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--primary),#aa66ff);
+  border-radius:3px;
+  transition:width 0.5s ease;
+}
+
+/* 主内容区 */
+.main{flex:1;padding:40px 50px;max-width:1000px}
+
+.lesson{display:none;animation:fadeIn 0.4s ease}
+.lesson.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.lesson-header{margin-bottom:30px}
+.lesson-tag{
+  display:inline-block;
+  padding:4px 12px;border-radius:20px;
+  background:var(--primary-glow);
+  color:var(--primary);font-size:12px;font-weight:600;
+  margin-bottom:12px;
+}
+.lesson h2{
+  font-size:28px;font-weight:700;
+  background:linear-gradient(135deg,#fff,#aac);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-bottom:8px;
+}
+.lesson .subtitle{color:var(--text2);font-size:15px}
+
+/* 故事卡片 */
+.story-card{
+  background:linear-gradient(135deg,var(--card),var(--card2));
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:24px;
+  margin:20px 0;
+  position:relative;
+  overflow:hidden;
+}
+.story-card::before{
+  content:'💡';
+  position:absolute;top:15px;right:20px;
+  font-size:28px;opacity:0.3;
+}
+.story-card h4{color:var(--accent2);margin-bottom:10px;font-size:15px}
+.story-card p{color:var(--text2)}
+
+/* 概念翻转卡 */
+.flip-cards{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:16px;margin:20px 0;
+}
+.flip-card{
+  perspective:1000px;
+  height:140px;
+  cursor:pointer;
+}
+.flip-card-inner{
+  position:relative;width:100%;height:100%;
+  transition:transform 0.6s;
+  transform-style:preserve-3d;
+}
+.flip-card.flipped .flip-card-inner{transform:rotateY(180deg)}
+.flip-front,.flip-back{
+  position:absolute;inset:0;
+  backface-visibility:hidden;
+  border-radius:var(--radius);
+  padding:16px;
+  display:flex;flex-direction:column;justify-content:center;
+  border:1px solid var(--border);
+}
+.flip-front{
+  background:linear-gradient(135deg,var(--card),var(--bg3));
+}
+.flip-front .icon{font-size:28px;margin-bottom:8px}
+.flip-front h4{font-size:14px;color:var(--primary)}
+.flip-front p{font-size:12px;color:var(--text3);margin-top:4px}
+.flip-back{
+  background:linear-gradient(135deg,var(--primary2),#7744cc);
+  transform:rotateY(180deg);
+  color:#fff;
+}
+.flip-back h5{font-size:13px;margin-bottom:6px}
+.flip-back p{font-size:12px;opacity:0.9;line-height:1.5}
+
+/* 时间轴 */
+.timeline{
+  position:relative;margin:30px 0;padding-left:30px;
+}
+.timeline::before{
+  content:'';position:absolute;left:8px;top:0;bottom:0;
+  width:2px;background:linear-gradient(180deg,var(--primary),#aa66ff,var(--accent));
+  border-radius:1px;
+}
+.timeline-item{
+  position:relative;margin-bottom:24px;
+  padding:16px 20px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  transition:all 0.3s;
+}
+.timeline-item:hover{border-color:var(--primary);transform:translateX(4px)}
+.timeline-item::before{
+  content:'';position:absolute;
+  left:-26px;top:22px;
+  width:12px;height:12px;border-radius:50%;
+  background:var(--primary);
+  box-shadow:0 0 0 3px var(--bg),0 0 0 4px var(--primary);
+}
+.timeline-item .phase{
+  font-size:11px;color:var(--accent);font-weight:700;
+  text-transform:uppercase;letter-spacing:1px;
+}
+.timeline-item h4{font-size:16px;margin:4px 0 6px}
+.timeline-item p{font-size:13px;color:var(--text2)}
+.timeline-item .milestone{
+  margin-top:10px;padding-top:10px;
+  border-top:1px dashed var(--border);
+  font-size:12px;color:var(--success);
+}
+
+/* 对比表格 */
+.compare-table{
+  width:100%;border-collapse:collapse;margin:20px 0;
+  background:var(--card);border-radius:var(--radius);
+  overflow:hidden;border:1px solid var(--border);
+}
+.compare-table th,.compare-table td{
+  padding:12px 16px;text-align:left;
+  border-bottom:1px solid var(--border);
+  font-size:13px;
+}
+.compare-table th{
+  background:var(--bg3);color:var(--primary);
+  font-weight:600;font-size:12px;
+  text-transform:uppercase;letter-spacing:0.5px;
+}
+.compare-table tr:last-child td{border-bottom:none}
+.compare-table tr:hover{background:var(--bg3)}
+.compare-table .label{color:var(--text2);font-weight:500;min-width:100px}
+
+/* 王牌卡片 */
+.cards-3{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:16px;margin:20px 0;
+}
+.ace-card{
+  background:linear-gradient(180deg,var(--card),var(--bg3));
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:20px;
+  text-align:center;
+  transition:all 0.3s;
+}
+.ace-card:hover{
+  transform:translateY(-4px);
+  border-color:var(--primary);
+  box-shadow:0 10px 30px var(--primary-glow);
+}
+.ace-card .suit{
+  width:60px;height:60px;margin:0 auto 12px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--primary),#aa66ff);
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;
+}
+.ace-card h4{font-size:15px;margin-bottom:8px}
+.ace-card p{font-size:12px;color:var(--text2);line-height:1.6}
+
+/* 模块网格 */
+.modules-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:12px;margin:20px 0;
+}
+.module-item{
+  display:flex;gap:12px;
+  padding:14px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:8px;
+  transition:all 0.2s;
+  cursor:pointer;
+}
+.module-item:hover{border-color:var(--primary);background:var(--bg3)}
+.module-item .mod-icon{
+  width:40px;height:40px;border-radius:8px;
+  background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+  border:1px solid var(--border2);
+}
+.module-item h5{font-size:13px;margin-bottom:3px}
+.module-item p{font-size:11px;color:var(--text3);line-height:1.5}
+
+/* 流程图 */
+.flow-steps{
+  display:flex;align-items:center;justify-content:center;
+  flex-wrap:wrap;gap:8px;margin:24px 0;
+}
+.flow-step{
+  padding:10px 16px;
+  background:linear-gradient(135deg,var(--card),var(--bg3));
+  border:1px solid var(--border);
+  border-radius:8px;
+  font-size:12px;font-weight:600;
+  text-align:center;min-width:80px;
+}
+.flow-step:first-child{border-color:var(--primary);color:var(--primary)}
+.flow-step:last-child{border-color:var(--success);color:var(--success)}
+.flow-arrow{color:var(--text3);font-size:18px}
+
+/* 价值三层 */
+.value-pyramid{
+  display:flex;flex-direction:column;align-items:center;
+  gap:10px;margin:24px 0;
+}
+.value-layer{
+  padding:20px;
+  border-radius:var(--radius);
+  text-align:center;
+  position:relative;
+  transition:all 0.3s;
+  cursor:pointer;
+}
+.value-layer:hover{transform:scale(1.02)}
+.value-layer.short{
+  width:60%;
+  background:linear-gradient(135deg,#2a4a6a,#1a3a5a);
+  border:1px solid #3a6a9a;
+}
+.value-layer.mid{
+  width:80%;
+  background:linear-gradient(135deg,#4a3a6a,#3a2a5a);
+  border:1px solid #6a4a9a;
+}
+.value-layer.long{
+  width:100%;
+  background:linear-gradient(135deg,#6a3a5a,#5a2a4a);
+  border:1px solid #9a4a7a;
+}
+.value-layer .period{
+  font-size:11px;opacity:0.7;margin-bottom:4px;
+}
+.value-layer h4{font-size:16px;margin-bottom:6px}
+.value-layer p{font-size:13px;opacity:0.85;line-height:1.6}
+.value-layer .amount{
+  margin-top:8px;font-size:20px;font-weight:700;
+  background:linear-gradient(90deg,#fff,#aac);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+/* Q&A 手风琴 */
+.qa-list{margin:20px 0}
+.qa-item{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:8px;
+  margin-bottom:8px;
+  overflow:hidden;
+}
+.qa-q{
+  padding:14px 18px;
+  cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;
+  font-weight:500;font-size:14px;
+  transition:background 0.2s;
+}
+.qa-q:hover{background:var(--bg3)}
+.qa-q .toggle{
+  width:20px;height:20px;border-radius:50%;
+  background:var(--bg3);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;flex-shrink:0;
+  transition:transform 0.3s;
+}
+.qa-item.open .qa-q .toggle{transform:rotate(45deg);background:var(--primary);border-color:var(--primary)}
+.qa-a{
+  max-height:0;overflow:hidden;
+  transition:max-height 0.4s ease,padding 0.3s;
+  padding:0 18px;
+  color:var(--text2);font-size:13px;
+}
+.qa-item.open .qa-a{
+  max-height:400px;
+  padding:0 18px 14px;
+}
+
+/* 导航按钮 */
+.lesson-nav-btns{
+  display:flex;justify-content:space-between;
+  margin-top:40px;padding-top:20px;
+  border-top:1px solid var(--border);
+}
+.nav-btn{
+  padding:10px 20px;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:8px;
+  color:var(--text2);
+  cursor:pointer;
+  font-size:13px;
+  transition:all 0.2s;
+}
+.nav-btn:hover{background:var(--primary);border-color:var(--primary);color:#fff}
+.nav-btn:disabled{opacity:0.3;cursor:not-allowed}
+.nav-btn:disabled:hover{background:var(--bg3);border-color:var(--border);color:var(--text2)}
+
+/* 统计数据条 */
+.stats-row{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:12px;margin:20px 0;
+}
+.stat-item{
+  padding:16px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:8px;
+  text-align:center;
+}
+.stat-item .num{
+  font-size:24px;font-weight:700;
+  background:linear-gradient(135deg,var(--primary),#aa66ff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.stat-item .label{font-size:11px;color:var(--text3);margin-top:4px}
+
+/* 比喻卡 */
+.analogy-card{
+  background:linear-gradient(135deg,var(--bg3),var(--card));
+  border-left:4px solid var(--accent);
+  border-radius:0 var(--radius) var(--radius) 0;
+  padding:18px 22px;
+  margin:20px 0;
+  position:relative;
+}
+.analogy-card .tag{
+  position:absolute;top:-10px;left:16px;
+  padding:2px 10px;
+  background:var(--accent);color:#fff;
+  font-size:10px;font-weight:700;
+  border-radius:10px;
+}
+.analogy-card h5{color:var(--accent2);margin-bottom:8px;font-size:14px}
+.analogy-card p{color:var(--text2);font-size:13px;line-height:1.7}
+
+/* 阶段切换器 */
+.phase-tabs{
+  display:flex;gap:6px;margin:20px 0 16px;
+  background:var(--bg3);
+  padding:6px;
+  border-radius:10px;
+  border:1px solid var(--border);
+}
+.phase-tab{
+  flex:1;padding:10px 8px;
+  text-align:center;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:12px;font-weight:500;
+  color:var(--text3);
+  transition:all 0.2s;
+}
+.phase-tab:hover{color:var(--text)}
+.phase-tab.active{
+  background:var(--primary);
+  color:#fff;
+  box-shadow:0 2px 8px var(--primary-glow);
+}
+
+.phase-content{display:none;animation:fadeIn 0.3s ease}
+.phase-content.active{display:block}
+.phase-content h4{font-size:16px;margin-bottom:10px;color:var(--primary)}
+.phase-content .goal{
+  padding:10px 14px;
+  background:rgba(68,221,136,0.1);
+  border:1px solid rgba(68,221,136,0.3);
+  border-radius:8px;
+  margin-bottom:12px;
+  font-size:13px;color:var(--success);
+}
+.phase-content ul{list-style:none;padding:0}
+.phase-content ul li{
+  padding:8px 0 8px 20px;
+  position:relative;
+  font-size:13px;color:var(--text2);
+  border-bottom:1px dashed var(--border);
+}
+.phase-content ul li:last-child{border-bottom:none}
+.phase-content ul li::before{
+  content:'✓';position:absolute;left:0;
+  color:var(--primary);font-weight:700;
+}
+
+/* 响应式 */
+@media(max-width:900px){
+  .sidebar{display:none}
+  .main{padding:20px}
+  .cards-3{grid-template-columns:1fr}
+  .modules-grid{grid-template-columns:1fr}
+  .lesson h2{font-size:22px}
+}
+
+/* 打印 */
+@media print{
+  .sidebar,.lesson-nav-btns,.phase-tabs{display:none}
+  .lesson{display:block!important;margin-bottom:40px;page-break-after:always}
+  body{background:#fff;color:#000}
+}
+
+/* 顶部进度 */
+.top-progress{
+  position:fixed;top:0;left:0;right:0;height:3px;
+  background:var(--bg3);z-index:100;
+}
+.top-progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--primary),#aa66ff,var(--accent));
+  transition:width 0.5s ease;
+  width:0%;
+}
+</style>
+</head>
+<body>
+
+<div class="top-progress"><div class="top-progress-fill" id="topProgress"></div></div>
+
+<div class="app">
+  <!-- 侧边导航 -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <h1>Agent Payment OS</h1>
+      <p>外行可视化课程 · 8讲</p>
+    </div>
+    <ul class="lesson-nav" id="lessonNav">
+      <li class="active" data-lesson="1"><span class="lesson-num">1</span>从一个故事开始</li>
+      <li data-lesson="2"><span class="lesson-num">2</span>为什么是现在</li>
+      <li data-lesson="3"><span class="lesson-num">3</span>为什么是平安</li>
+      <li data-lesson="4"><span class="lesson-num">4</span>我们做什么</li>
+      <li data-lesson="5"><span class="lesson-num">5</span>链上执行</li>
+      <li data-lesson="6"><span class="lesson-num">6</span>为什么是我们</li>
+      <li data-lesson="7"><span class="lesson-num">7</span>四步路线图</li>
+      <li data-lesson="8"><span class="lesson-num">8</span>到底值多少</li>
+      <li data-lesson="9"><span class="lesson-num">?</span>常见问题</li>
+    </ul>
+    <div class="progress-bar">
+      <div class="label">学习进度 <span id="progressText">1/9</span></div>
+      <div class="track"><div class="fill" id="progressFill" style="width:11%"></div></div>
+    </div>
+  </aside>
+
+  <!-- 主内容 -->
+  <main class="main">
+
+    <!-- 第1课 -->
+    <section class="lesson active" id="lesson1">
+      <div class="lesson-header">
+        <span class="lesson-tag">第 1 课 · 入门</span>
+        <h2>从一个生活故事开始</h2>
+        <p class="subtitle">用"保姆和副卡"的比喻，5分钟搞懂我们在做什么</p>
+      </div>
+
+      <div class="story-card">
+        <h4>🤔 想象一个场景</h4>
+        <p>你家请了一个保姆，叫"小安"。小安很能干，会买菜、会交水电费、会帮你订机票。<br><br>
+        但有个问题：<strong style="color:var(--danger)">每次花钱，她都得停下来问你</strong>——"主人，菜钱28块，你付一下？""主人，电费156，你转一下账？"<br><br>
+        你烦不烦？当然烦。你请保姆不就是为了省心吗？结果每笔钱都要你手动确认，那保姆的价值就大打折扣了。<br><br>
+        <strong style="color:var(--success)">怎么办？</strong>你给她一张额度合适的<strong>副卡</strong>，说："日常开销你自己刷，单笔不超过500、每月不超过3000，你自己看着办，月底给我看账单就行。"<br><br>
+        于是保姆终于能<strong style="color:var(--primary)">真正独立干活</strong>了。</p>
+      </div>
+
+      <div class="analogy-card">
+        <span class="tag">核心类比</span>
+        <h5>把"保姆"换成"AI智能体（Agent）"</h5>
+        <p>
+          AI Agent 就是那个越来越能干的"保姆"<br>
+          她已经会写报告、会分析数据、会订机票了<br>
+          但她还不会自己花钱——每次支付都得人类手动确认<br>
+          <strong>我们要做的，就是给 AI Agent 一张安全可控的"副卡"，让她能真正独立地完成任务</strong>
+        </p>
+      </div>
+
+      <h3 style="margin:30px 0 10px;font-size:18px">三个核心问题（点卡片翻面看答案）</h3>
+      <div class="flip-cards">
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-card-inner">
+            <div class="flip-front">
+              <div class="icon">🤷</div>
+              <h4>我们做的是什么？</h4>
+              <p>点击翻面 →</p>
+            </div>
+            <div class="flip-back">
+              <h5>给AI发"智能副卡"</h5>
+              <p>让AI智能体能够安全地自己付钱，从"只能出主意"升级为"能真办事"</p>
+            </div>
+          </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-card-inner">
+            <div class="flip-front">
+              <div class="icon">🔥</div>
+              <h4>为什么重要？</h4>
+              <p>点击翻面 →</p>
+            </div>
+            <div class="flip-back">
+              <h5>不会花钱 = 残废的助手</h5>
+              <p>AI越来越能干，但不会花钱就永远只是个"顾问"，不能真正独立完成任务</p>
+            </div>
+          </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-card-inner">
+            <div class="flip-front">
+              <div class="icon">🏦</div>
+              <h4>跟平安什么关系？</h4>
+              <p>点击翻面 →</p>
+            </div>
+            <div class="flip-back">
+              <h5>平安有"发卡资格"</h5>
+              <p>平安付有全国性支付牌照，我们帮平安设计并发行这张"AI副卡"</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lesson-nav-btns">
+        <button class="nav-btn" disabled>← 上一课</button>
+        <button class="nav-btn" onclick="goLesson(2)">下一课：为什么是现在 →</button>
+      </div>
+    </section>
+
+    <!-- 第2课 -->
+    <section class="lesson" id="lesson2">
+      <div class="lesson-header">
+        <span class="lesson-tag">第 2 课 · 时机</span>
+        <h2>为什么是现在</h2>
+        <p class="subtitle">风口从何而来——AI正从"说"变成"做"</p>
+      </div>
+
+      <div class="analogy-card">
+        <span class="tag">成长类比</span>
+        <h5>AI的进化，就像一个人的成长</h5>
+        <p>从"只会说话的顾问" → "办公室里的实习生" → "可以出门办事的助理"——到了第三步，就必须会花钱了</p>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="phase">2020 年前</div>
+          <h4>📚 只会回答问题</h4>
+          <p>相当于一个知识渊博的顾问，光说不练</p>
+          <div class="milestone">❌ 不需要支付能力</div>
+        </div>
+        <div class="timeline-item">
+          <div class="phase">2023 - 2025</div>
+          <h4>💻 会写代码、做PPT、分析数据</h4>
+          <p>相当于一个能干的实习生，但还在办公室里干活，不用自己掏钱</p>
+          <div class="milestone">❌ 不需要支付能力</div>
+        </div>
+        <div class="timeline-item">
+          <div class="phase">2026 年 · 转折点</div>
+          <h4>🚀 会订酒店、买东西、调用别的AI服务</h4>
+          <p>相当于一个可以独立出门办事的助理——出门就要花钱</p>
+          <div class="milestone">✅ 必须有支付能力！</div>
+        </div>
+      </div>
+
+      <h3 style="margin:30px 0 10px;font-size:18px">行业已经在行动了</h3>
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="num">2026.4</div>
+          <div class="label">银联发布APOP<br>智能体支付协议</div>
+        </div>
+        <div class="stat-item">
+          <div class="num">4大</div>
+          <div class="label">国际支付巨头<br>全部布局</div>
+        </div>
+        <div class="stat-item">
+          <div class="num">600万</div>
+          <div class="label">南昌首批<br>词元券补贴</div>
+        </div>
+        <div class="stat-item">
+          <div class="num">1-2年</div>
+          <div class="label">标准制定<br>窗口期</div>
+        </div>
+      </div>
+
+      <div class="story-card" style="border-left:4px solid var(--danger)">
+        <h4>⏰ 一个残酷的现实</h4>
+        <p>支付行业的规律是：<strong>谁先定标准，谁吃最大的蛋糕</strong>。<br><br>
+        - 银联当年定下POS机标准 → 所有商户都得接入银联<br>
+        - 支付宝微信定下二维码标准 → 全国小商小贩都得用二维码<br><br>
+        现在AI支付的标准正在制定中，<strong>窗口可能只有1-2年</strong>。等标准定死了再进去，就只能当"使用者"，不能当"定义者"了。</p>
+      </div>
+
+      <div class="lesson-nav-btns">
+        <button class="nav-btn" onclick="goLesson(1)">← 上一课</button>
+        <button class="nav-btn" onclick="goLesson(3)">下一课：为什么是平安 →</button>
+      </div>
+    </section>
+
+    <!-- 第3课 -->
+    <section class="lesson" id="lesson3">
+      <div class="lesson-header">
+        <span class="lesson-tag">第 3 课 · 优势</span>
+        <h2>为什么是平安</h2>
+        <p class="subtitle">不是随便哪家公司都能做这件事——平安握有三张王牌</p>
+      </div>
+
+      <div class="cards-3">
+        <div class="ace-card">
+          <div class="suit">🎴</div>
+          <h4>支付牌照</h4>
+          <p>平安付持有全国性支付牌照，2026年4月刚刚续展为长期有效。没有牌照，一切都是空谈</p>
+        </div>
+        <div class="ace-card">
+          <div class="suit">🎴</div>
+          <h4>全金融牌照</h4>
+          <p>银行、保险、证券、信托、跨境外汇支付……几乎所有金融牌照齐全，未来扩展无瓶颈</p>
+        </div>
+        <div class="ace-card">
+          <div class="suit">🎴</div>
+          <h4>自有AI场景</h4>
+          <p>97个业务场景在用AI，日均Token消耗1200亿，自己就是最大的客户，先练手再对外</p>
+        </div>
+      </div>
+
+      <div class="story-card" style="margin-top:30px">
+        <h4>📉 但平安付有一个痛点</h4>
+        <p>平安付年交易量超<strong>3.8万亿</strong>，服务商户超<strong>100万家</strong>。但普通人听到"平安付"是什么反应？<br><br>
+        <em style="color:var(--text3)">"平安？不是卖保险的吗？还有支付业务？"</em><br><br>
+        平安付一直是<strong>"生态内的管道"</strong>——主要服务平安自己的保险缴费、积分兑换这些内部场景。C端消费者几乎感知不到它的存在。</p>
+      </div>
+
+      <div class="analogy-card">
+        <span class="tag">战略跃迁</span>
+        <h5>A2A支付 = 平安付的历史性机会</h5>
+        <p>
+          从"服务内部业务的资金管道"<br>
+          <strong style="font-size:18px">⬇️ 跃升 ⬇️</strong><br>
+          到"AI Agent 经济的支付执行层基础设施"<br><br>
+          就像阿里云本来是给淘宝做技术支持的，结果做成了比淘宝更有价值的业务
+        </p>
+      </div>
+
+      <div class="lesson-nav-btns">
+        <button class="nav-btn" onclick="goLesson(2)">← 上一课</button>
+        <button class="nav-btn" onclick="goLesson(4)">下一课：我们做什么 →</button>
+      </div>
+    </section>
+
+    <!-- 第4课 -->
+    <section class="lesson" id="lesson4">
+      <div class="lesson-header">
+        <span class="lesson-tag">第 4 课 · 产品</span>
+        <h2>我们到底做什么</h2>
+        <p class="subtitle">用"写字楼物业管家"的比喻，讲清楚7大模块</p>
+      </div>
+
+      <div class="analogy-card">
+        <span class="tag">核心比喻</span>
+        <h5>Agent Payment OS = 给AI用的"企业支付管理系统"</h5>
+        <p>
+          想象一个大型写字楼，几百家公司、几千员工。每个人都要花钱，但每个人直接管钱会很乱。<br>
+          所以需要一套企业支付管理系统：工牌、预算、审批、报销、审计……<br>
+          <strong>Agent Payment OS 就是给AI智能体用的这套系统。</strong>
+        </p>
+      </div>
+
+      <h3 style="margin:20px 0 10px;font-size:18px">七大模块（点击查看详情）</h3>
+      <div class="modules-grid">
+        <div class="module-item">
+          <div class="mod-icon">🪪</div>
+          <div>
+            <h5>身份服务</h5>
+            <p>每个AI是谁、属于哪家公司、有什么权限 → 相当于工牌系统</p>
+          </div>
+        </div>
+        <div class="module-item">
+          <div class="mod-icon">📋</div>
+          <div>
+            <h5>策略引擎</h5>
+            <p>什么能花、什么不能花、额度多少 → 相当于公司报销制度</p>
+          </div>
+        </div>
+        <div class="module-item">
+          <div class="mod-icon">🛡️</div>
+          <div>
+            <h5>风控引擎</h5>
+            <p>检测异常交易，自动熔断 → 相当于保安 + 反欺诈</p>
+          </div>
+        </div>
+        <div class="module-item">
+          <div class="mod-icon">✍️</div>
+          <div>
+            <h5>签名引擎</h5>
+            <p>确认这笔钱是授权的 → 相当于财务章 + U盾</p>
+          </div>
+        </div>
+        <div class="module-item">
+          <div class="mod-icon">🔑</div>
+          <div>
+            <h5>钱包 & 密钥</h5>
+            <p>钱放哪、谁管钥匙 → 相当于保险柜 + 钥匙管理</p>
+          </div>
+        </div>
+        <div class="module-item">
+          <div class="mod-icon">💸</div>
+          <div>
+            <h5>执行引擎</h5>
+            <p>真正把钱付出去 → 相当于出纳</p>
+          </div>
+        </div>
+        <div class="module-item" style="grid-column:span 2">
+          <div class="mod-icon">📊</div>
+          <div>
+            <h5>审计 & 对账</h5>
+            <p>每笔钱都有记录，出了问题能查到是谁的责任 → 相当于审计 + 财务对账</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="margin:30px 0 10px;font-size:18px">支付流程 5 步走（IMPS模型）</h3>
+      <div class="flow-steps">
+        <div class="flow-step">Intent<br><small style="color:var(--text3);font-weight:400">AI说要付钱</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Mandate<br><small style="color:var(--text3);font-weight:400">检查权限额度</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Policy<br><small style="color:var(--text3);font-weight:400">风控策略评估</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Signature<br><small style="color:var(--text3);font-weight:400">签名确认支付</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Settlement<br><small style="color:var(--text3);font-weight:400">结算 & 审计</small></div>
+      </div>
+
+      <div class="story-card" style="border-left:4px solid var(--success)">
+        <h4>🔒 最重要的安全原则</h4>
+        <p><strong>AI全程碰不到钱，也碰不到钥匙。</strong><br><br>
+        就像员工只能拿工牌消费，不能直接去开公司保险柜。钱在保险柜里，钥匙在财务手里，每笔支出都要走流程。<br>
+        AI也一样——它只能发出"我要付钱"的请求，真正的资金操作由支付系统来执行。</p>
+      </div>
+
+      <div class="lesson-nav-btns">
+        <button class="nav-btn" onclick="goLesson(3)">← 上一课</button>
+        <button class="nav-btn" onclick="goLesson(5)">下一课：链上执行 →</button>
+      </div>
+    </section>
+
+    <!-- 第5课 -->
+    <section class="lesson" id="lesson5">
+      <div class="lesson-header">
+        <span class="lesson-tag">第 5 课 · 技术</span>
+        <h2>最难懂的"链上执行"</h2>
+        <p class="subtitle">用"快递系统"讲明白为什么要用区块链</p>
+      </div>
+
+      <div class="story-card">
+        <h4>🤔 外行最常问的问题</h4>
+        <p><em>"好好的传统支付不行吗？为什么要扯上区块链？"</em><br><br>
+        答案是：<strong>因为机器支付和人类支付完全不一样。</strong>就像寄一封平信用邮局没问题，但每天几千万个小包裹，邮局根本处理不过来——你需要的是自动分拣快递系统。</p>
+      </div>
+
+      <h3 style="margin:20px 0 10px;font-size:18px">人类支付 vs 机器支付</h3>
+      <table class="compare-table">
+        <tr><th>维度</th><th>人类支付</th><th>机器支付（A2A）</th></tr>
+        <tr><td class="label">单笔金额</td><td>几十、几百、几千元</td><td>几分钱、几厘钱甚至更小</td></tr>
+        <tr><td class="label">交易频率</td><td>一天几次、几十次</td><td>一秒几千次、几万次</td></tr>
+        <tr><td class="label">结算速度</td><td>T+1 很正常</td><td>需要实时、秒级到账</td></tr>
+        <tr><td class="label">信任问题</td><td>有客服、可以找人工</td><td>两台机器之间怎么建立信任？</td></tr>
+      </table>
+
+      <div class="analogy-card">
+        <span class="tag">类比理解</span>
+        <h5>传统银行 = 邮局 &nbsp;|&nbsp; 区块链 = 自动快递分拣</h5>
+        <p>
+          寄一封信（人类付几百块）→ 邮局完全够用<br>
+          每天几千万个小包裹（AI微支付）→ 邮局扛不住，需要自动分拣系统<br><br>
+          <strong>区块链就是AI支付时代的"自动分拣系统"</strong>
+        </p>
+      </div>
+
+      <h3 style="margin:20px 0 10px;font-size:18px">链上执行的 4 大优势</h3>
+      <div class="flip-cards">
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-card-inner">
+            <div class="flip-front">
+              <div class="icon">💰</div>
+              <h4>微支付能力</h4>
+              <p>为什么传统支付做不了？</p>
+            </div>
+            <div class="flip-back">
+              <h5>手续费比金额还低</h5>
+              <p>传统支付手续费最低几毛钱。如果只付几分钱，手续费比金额还高。区块链手续费可以低到千分之一分。</p>
+            </div>
+          </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-card-inner">
+            <div class="flip-front">
+              <div class="icon">⏰</div>
+              <h4>7×24不间断</h4>
+              <p>AI不睡觉</p>
+            </div>
+            <div class="flip-back">
+              <h5>永远在线</h5>
+              <p>传统支付有工作时间，周末大额转账可能延迟。区块链不休息，AI凌晨3点发起支付也能秒到账。</p>
+            </div>
+          </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-card-inner">
+            <div class="flip-front">
+              <div class="icon">⚙️</div>
+              <h4>可编程性</h4>
+              <p>条件自动执行</p>
+            </div>
+            <div class="flip-back">
+              <h5>满足条件才付钱</h5>
+              <p>你可以设置"只有对方把货送到了才自动打款"——逻辑直接写在代码里，自动执行，不需要人工干预。</p>
+            </div>
+          </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-card-inner">
+            <div class="flip-front">
+              <div class="icon">🔍</div>
+              <h4>可审计性</h4>
+              <p>公开透明账本</p>
+            </div>
+            <div class="flip-back">
+              <h5>谁都能查，谁都改不了</h5>
+              <p>每一笔交易都有记录，像一个公开的账本。透明度极高，出了问题一查就清楚。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="story-card" style="border-left:4px solid var(--primary);margin-top:20px">
+        <h4>🤝 不是替代，而是互补</h4>
+        <p>我们不是要用区块链取代平安付的法币通道，而是在法币通道之上，加一层"链上执行层"：<br><br>
+        • <strong>大额、重要的支付</strong>：走传统法币通道（安全、合规）<br>
+        • <strong>小额、高频的AI支付</strong>：走链上执行（快速、便宜）<br>
+        • 两者可以互相兑换，形成闭环</p>
+      </div>
+
+      <div class="lesson-nav-btns">
+        <button class="nav-btn" onclick="goLesson(4)">← 上一课</button>
+        <button class="nav-btn" onclick="goLesson(6)">下一课：为什么是我们 →</button>
+      </div>
+    </section>
+
+    <!-- 第6课 -->
+    <section class="lesson" id="lesson6">
+      <div class="lesson-header">
+        <span class="lesson-tag">第 6 课 · 壁垒</span>
+        <h2>为什么是"我们"来做</h2>
+        <p class="subtitle">三大核心壁垒——标准、架构、安全</p>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="phase">壁垒一</div>
+          <h4>📜 我们在参与制定标准</h4>
+          <p>正在参与中国信通院的Token标准编制工作。信通院是工信部直属科研机构，它制定的标准全行业都要参考执行。</p>
+          <div class="milestone">标准制定者 vs 标准适配者 —— 完全不同的竞争位势</div>
+        </div>
+        <div class="timeline-item">
+          <div class="phase">壁垒二</div>
+          <h4>🏗️ 架构理念领先：每个AI独立钱包</h4>
+          <p>很多公司的做法是"一个大金库，所有AI从里面出钱"——一旦被攻破，全军覆没。<br>
+          我们是每个AI独立钱包+各自额度，一个AI出问题最多损失它那点钱，风险隔离到最小单元。</p>
+          <div class="milestone">就像员工有工牌和额度，不是所有人共用一把保险柜钥匙</div>
+        </div>
+        <div class="timeline-item">
+          <div class="phase">壁垒三</div>
+          <h4>🛡️ 金融级安全能力</h4>
+          <p>不是简单的"调用一下支付接口"，而是一整套金融级风控体系：<br>
+          <strong>Allow</strong>（放行）/ <strong>Deny</strong>（拒绝）/ <strong>Pending Review</strong>（人工复核）/ <strong>Circuit Breaker</strong>（熔断）</p>
+          <div class="milestone">把传统金融几十年的风控经验，适配到AI支付场景</div>
+        </div>
+      </div>
+
+      <div class="story-card" style="margin-top:30px">
+        <h4>💡 一句话总结我们的价值</h4>
+        <p style="text-align:center;font-size:18px;margin-top:10px">
+          <strong style="color:var(--primary)">平安提供牌照、场景、客户</strong><br>
+          <span style="color:var(--text3);margin:8px 0">+</span><br>
+          <strong style="color:var(--accent)">我们提供标准话语权 + 链上执行技术 + 金融级安全</strong><br>
+          <span style="color:var(--text3);margin:8px 0">=</span><br>
+          <strong style="color:var(--success)">A2A支付时代的基础设施定义者</strong>
+        </p>
+      </div>
+
+      <div class="lesson-nav-btns">
+        <button class="nav-btn" onclick="goLesson(5)">← 上一课</button>
+        <button class="nav-btn" onclick="goLesson(7)">下一课：四步路线图 →</button>
+      </div>
+    </section>
+
+    <!-- 第7课 -->
+    <section class="lesson" id="lesson7">
+      <div class="lesson-header">
+        <span class="lesson-tag">第 7 课 · 路线</span>
+        <h2>四步走路线图</h2>
+        <p class="subtitle">从Demo验证到全面商业化，3年分4阶段推进</p>
+      </div>
+
+      <div class="phase-tabs" id="phaseTabs">
+        <div class="phase-tab active" onclick="switchPhase(1)">阶段一<br><small style="opacity:0.7">1-3月 · Demo</small></div>
+        <div class="phase-tab" onclick="switchPhase(2)">阶段二<br><small style="opacity:0.7">4-9月 · PoC</small></div>
+        <div class="phase-tab" onclick="switchPhase(3)">阶段三<br><small style="opacity:0.7">10-18月 · 试点</small></div>
+        <div class="phase-tab" onclick="switchPhase(4)">阶段四<br><small style="opacity:0.7">19-36月 · 商业化</small></div>
+      </div>
+
+      <div class="phase-content active" id="phase1">
+        <h4>🔬 阶段一：Demo验证（第1-3个月）</h4>
+        <div class="goal">🎯 目标：验证Agent自动支付链路的技术可行性</div>
+        <ul>
+          <li>Agent钱包创建 → 支付意图 → 策略校验 → 签名 → 链上交易 完整Demo</li>
+          <li>基于银联APOP沙箱环境的法币支付执行原型</li>
+          <li>技术白皮书（架构图、数据模型、API规范）</li>
+        </ul>
+        <div class="milestone" style="margin-top:12px;padding:10px 14px;background:rgba(255,136,68,0.1);border:1px solid rgba(255,136,68,0.3);border-radius:8px;font-size:13px;color:var(--accent2)">
+          🏁 里程碑：完成一笔"AI自主发起 → 策略引擎审批 → 通过平安付通道付款"的完整交易
+        </div>
+      </div>
+
+      <div class="phase-content" id="phase2">
+        <h4>🧪 阶段二：PoC集成（第4-9个月）</h4>
+        <div class="goal">🎯 目标：在平安内部场景完成端到端验证</div>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:10px">场景选择（按优先级从易到难）：</p>
+        <ul>
+          <li><strong>AI API按调用付费</strong>：平安脑平台的Token调用计量与结算（最简单，双方都是内部）</li>
+          <li><strong>企业内部Agent协作结算</strong>：不同业务Agent之间的任务结算或资源结算</li>
+          <li><strong>数据服务订阅</strong>：Agent按时间/调用量/数据包自动付费</li>
+        </ul>
+        <p style="font-size:13px;color:var(--text2);margin-top:12px">交付：API/SDK + Webhook + 风控配置 + 审计日志 + 单客户隔离部署</p>
+      </div>
+
+      <div class="phase-content" id="phase3">
+        <h4>🚀 阶段三：试点运行（第10-18个月）</h4>
+        <div class="goal">🎯 目标：选择1-2个低风险场景进行小规模商业试点</div>
+        <ul>
+          <li>平安体系内API服务付费（如平安医疗AI能力对内部Agent的按调用计费）</li>
+          <li>面向中小企业客户的AI数据服务订阅结算</li>
+        </ul>
+        <div class="stats-row" style="margin-top:12px">
+          <div class="stat-item">
+            <div class="num">≥99.5%</div>
+            <div class="label">支付成功率</div>
+          </div>
+          <div class="stat-item">
+            <div class="num">≤1%</div>
+            <div class="label">风控误报率</div>
+          </div>
+          <div class="stat-item">
+            <div class="num">≤3秒</div>
+            <div class="label">单笔处理时间</div>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--text3);text-align:center">达到金融级可靠性，才能放心让客户用</p>
+      </div>
+
+      <div class="phase-content" id="phase4">
+        <h4>💰 阶段四：商业化部署（第19-36个月）</h4>
+        <div class="goal">🎯 目标：向平安体系外客户输出A2A支付执行层能力</div>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:10px">三条商业化路径：</p>
+        <ul>
+          <li><strong>通过金融壹账通对外输出</strong>：打包为标准化产品，向中小金融机构销售</li>
+          <li><strong>面向AI应用平台</strong>：向AI应用开发商提供SDK/API</li>
+          <li><strong>跨境微支付场景</strong>：利用平安付跨境外汇资质，做低金额高频跨境服务</li>
+        </ul>
+        <div class="stats-row" style="margin-top:12px">
+          <div class="stat-item">
+            <div class="num">≥10,000</div>
+            <div class="label">接入Agent数</div>
+          </div>
+          <div class="stat-item">
+            <div class="num">≥100万</div>
+            <div class="label">月交易笔数</div>
+          </div>
+          <div class="stat-item">
+            <div class="num">≥10亿</div>
+            <div class="label">年交易规模</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lesson-nav-btns">
+        <button class="nav-btn" onclick="goLesson(6)">← 上一课</button>
+        <button class="nav-btn" onclick="goLesson(8)">下一课：到底值多少 →</button>
+      </div>
+    </section>
+
+    <!-- 第8课 -->
+    <section class="lesson" id="lesson8">
+      <div class="lesson-header">
+        <span class="lesson-tag">第 8 课 · 价值</span>
+        <h2>这件事到底值多少钱</h2>
+        <p class="subtitle">短期省钱、中期赚钱、长期卡位——三层价值金字塔</p>
+      </div>
+
+      <div class="value-pyramid">
+        <div class="value-layer short">
+          <div class="period">⏱️ 短期 · 1-2年</div>
+          <h4>帮平安省钱</h4>
+          <p>为平安AI场景提供自主可控的A2A支付能力，让AI辅助的573亿销售额中的支付环节实现自动化，降低人工确认成本</p>
+        </div>
+        <div class="value-layer mid">
+          <div class="period">📈 中期 · 2-3年</div>
+          <h4>帮平安赚钱</h4>
+          <p>通过金融壹账通对外输出，为平安开辟新的科技收入来源。金融壹账通退市后正处于"从亏损到盈利"的关键转型期</p>
+          <div class="amount">8000万 ~ 1.2亿 / 年（第3年）</div>
+        </div>
+        <div class="value-layer long">
+          <div class="period">🏆 长期 · 3-5年</div>
+          <h4>帮平安占位置</h4>
+          <p>平安付从"C端隐形"的生态内管道，跃升为AI时代资金流通的关键节点。这一跃迁的战略价值远超传统支付业务本身</p>
+          <div class="amount">AI经济的"支付入口"级价值</div>
+        </div>
+      </div>
+
+      <h3 style="margin:30px 0 10px;font-size:18px">三年财务预测（保守估计）</h3>
+      <table class="compare-table">
+        <tr><th>指标</th><th>第1年</th><th>第2年</th><th>第3年</th></tr>
+        <tr><td class="label">部署客户数</td><td>2-3 家</td><td>8-12 家</td><td>20-30 家</td></tr>
+        <tr><td class="label">接入Agent数</td><td>500</td><td>5,000</td><td>30,000</td></tr>
+        <tr><td class="label">年交易规模</td><td>—</td><td>2 亿</td><td>15 亿</td></tr>
+        <tr><td class="label">年收入</td><td>300-500万</td><td>2000-3000万</td><td>8000万-1.2亿</td></tr>
+        <tr><td class="label">主要收入来源</td><td>部署费</td><td>调用费 + 部署费</td><td>交易分润 + 调用费</td></tr>
+      </table>
+
+      <div class="analogy-card" style="margin-top:30px">
+        <span class="tag">终极结论</span>
+        <h5>一句话总结全部价值</h5>
+        <p style="text-align:center;font-size:16px;margin-top:8px">
+          <strong>短期帮平安省钱</strong> &nbsp;·&nbsp;
+          <strong>中期帮平安赚钱</strong> &nbsp;·&nbsp;
+          <strong>长期帮平安在AI时代占一个关键位置</strong>
+        </p>
+      </div>
+
+      <div class="lesson-nav-btns">
+        <button class="nav-btn" onclick="goLesson(7)">← 上一课</button>
+        <button class="nav-btn" onclick="goLesson(9)">常见问题 FAQ →</button>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="lesson" id="lesson9">
+      <div class="lesson-header">
+        <span class="lesson-tag">附录 · FAQ</span>
+        <h2>外行最常问的 6 个问题</h2>
+        <p class="subtitle">点击问题展开答案</p>
+      </div>
+
+      <div class="qa-list">
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)">
+            <span>🔒 AI支付安全吗？会不会AI被黑了乱花钱？</span>
+            <span class="toggle">+</span>
+          </div>
+          <div class="qa-a">
+            安全的关键是"权限隔离"。每个AI有自己的额度，就像给孩子发零花钱，一次最多给那么多，就算被骗了损失也有限。<br><br>
+            而且有多重风控——策略检查、风控引擎、人工复核，层层把关。AI全程碰不到钱，也碰不到钥匙，它只能发请求，真正的资金操作由独立的支付系统来执行。
+          </div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)">
+            <span>🪙 这是不是又一个区块链炒作项目？</span>
+            <span class="toggle">+</span>
+          </div>
+          <div class="qa-a">
+            不是。区块链在这里只是一个技术工具，就像建房子用的砖。我们的核心价值是"给AI做一套安全的支付系统"，区块链只是实现手段之一，不是目的。<br><br>
+            我们有真实的业务场景（平安内部97个AI场景）、真实的客户（金融壹账通渠道）、真实的收入模式（部署费+调用费+交易分润），不是靠炒币赚钱。
+          </div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)">
+            <span>💳 支付宝微信会不会直接做？它们做了我们还有机会吗？</span>
+            <span class="toggle">+</span>
+          </div>
+          <div class="qa-a">
+            这是一个很好的问题。支付宝微信确实很强，但它们擅长的是"C端人类支付"。A2A是机器支付，场景完全不一样——就像当年移动支付起来的时候，银联也有很大优势，但支付宝微信还是做起来了，因为场景不一样。<br><br>
+            而且我们的差异化是"链上执行+法币通道"的完整闭环，支付宝微信不一定有动力去做链上这一层。更何况，我们背靠平安的金融牌照和合规体系，这是纯互联网公司不具备的优势。
+          </div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)">
+            <span>📊 三年真的能做到年营收过亿吗？感觉太乐观了</span>
+            <span class="toggle">+</span>
+          </div>
+          <div class="qa-a">
+            我们的预测其实很保守——第三年1亿营收，对应年交易规模15亿，分润比例不到万分之七。如果A2A支付真的爆发了，交易规模可能远不止15亿。<br><br>
+            而且第一年收入就有300-500万，主要靠部署费，这是比较确定的——平安内部2-3个场景做PoC，每个项目的部署费用都是实实在在的。
+          </div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)">
+            <span>❓ 平安为什么不自己做，要跟我们合作？</span>
+            <span class="toggle">+</span>
+          </div>
+          <div class="qa-a">
+            三个原因：<br><br>
+            ① <strong>标准话语权</strong>：我们在参与信通院的Token标准制定，平安自己做的话可能只是"标准适配者"，不是"定义者"。<br><br>
+            ② <strong>时间窗口</strong>：我们有完整的链上执行技术积累，平安从零开始做至少要晚1-2年。而标准窗口期只有1-2年，晚了就没位置了。<br><br>
+            ③ <strong>跨界团队</strong>：我们的团队懂AI也懂金融安全，这种跨界团队在大公司内部很难凑齐——AI团队不懂金融风控，金融团队不懂区块链技术。<br><br>
+            更重要的是：不是"我们替平安做"，而是"我们和平安一起做"。平安提供牌照、场景、客户，我们提供技术和标准话语权，双赢。
+          </div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)">
+            <span>⚠️ 最大的风险是什么？</span>
+            <span class="toggle">+</span>
+          </div>
+          <div class="qa-a">
+            最大的风险不是技术，是<strong>时机</strong>。如果行业发展比预期慢，可能2-3年内还起不来。<br><br>
+            但反过来说，如果行业爆发了，谁先入场谁就占最大的便宜。我们的策略是"轻装上阵、分阶段投入"——先花小钱做Demo验证，跑通了再加大投入，风险可控。<br><br>
+            退一步说，就算对外商业化没那么快，光是给平安内部97个AI场景提供支付能力，这个项目本身就有价值——降低人工成本、提高效率，这笔账算得过来。
+          </div>
+        </div>
+      </div>
+
+      <div class="lesson-nav-btns">
+        <button class="nav-btn" onclick="goLesson(8)">← 回到第8课</button>
+        <button class="nav-btn" onclick="goLesson(1)">🔄 重新开始</button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+// 课程切换
+let currentLesson = 1;
+const totalLessons = 9;
+
+function goLesson(n) {
+  if (n < 1 || n > totalLessons) return;
+  currentLesson = n;
+  
+  // 更新内容
+  document.querySelectorAll('.lesson').forEach((el, i) => {
+    el.classList.toggle('active', i === n - 1);
+  });
+  
+  // 更新导航
+  document.querySelectorAll('.lesson-nav li').forEach((el, i) => {
+    el.classList.toggle('active', i === n - 1);
+  });
+  
+  // 更新进度
+  const progress = (n / totalLessons) * 100;
+  document.getElementById('progressFill').style.width = progress + '%';
+  document.getElementById('topProgress').style.width = progress + '%';
+  document.getElementById('progressText').textContent = n + '/' + totalLessons;
+  
+  // 滚动到顶部
+  document.querySelector('.main').scrollTop = 0;
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// 导航点击
+document.querySelectorAll('.lesson-nav li').forEach(li => {
+  li.addEventListener('click', () => {
+    const n = parseInt(li.dataset.lesson);
+    goLesson(n);
+  });
+});
+
+// 阶段切换
+function switchPhase(n) {
+  document.querySelectorAll('.phase-tab').forEach((el, i) => {
+    el.classList.toggle('active', i === n - 1);
+  });
+  document.querySelectorAll('.phase-content').forEach((el, i) => {
+    el.classList.toggle('active', i === n - 1);
+  });
+}
+
+// Q&A 切换
+function toggleQA(el) {
+  const item = el.parentElement;
+  item.classList.toggle('open');
+}
+
+// 初始化
+goLesson(1);
+</script>
+</body>
+</html>
