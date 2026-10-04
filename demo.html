@@ -549,8 +549,8 @@
       <div class="logo-dot"></div>
       Agent Payment OS · Live Demo
     </div>
-    <h1>智能体自动支付 · 全流程演示</h1>
-    <div class="subtitle">数字人民币 × AI Agent · 小额高频场景自动支付，全程无人干预</div>
+    <h1>Agent-to-Agent 自动支付 · 全流程演示</h1>
+    <div class="subtitle">数字人民币 × AI Agent · 两个AI之间自动协商、自动成交、自动付款，全程无人干预</div>
   </div>
 
   <!-- 主区域 -->
@@ -559,8 +559,8 @@
     <!-- 左：Agent对话 -->
     <div class="panel">
       <div class="panel-title">
-        <div class="icon">🤖</div>
-        AI 投研助手
+        <div class="icon">🤖→🤖</div>
+        A2A 对话过程
       </div>
       <div class="chat-area">
         <div class="chat-messages" id="chatMessages">
@@ -713,10 +713,10 @@
     </div>
 
     <div class="scenario-select" id="scenarioSelect">
-      <div class="scenario-chip active" data-scenario="coffee">☕ 买咖啡</div>
-      <div class="scenario-chip" data-scenario="parking">🚗 停车缴费</div>
-      <div class="scenario-chip" data-scenario="news">📰 付费文章</div>
-      <div class="scenario-chip" data-scenario="data">🎨 AI生图</div>
+      <div class="scenario-chip active" data-scenario="quant">📊 买行情数据</div>
+      <div class="scenario-chip" data-scenario="content">🖼️ 买图片素材</div>
+      <div class="scenario-chip" data-scenario="research">📑 买研报</div>
+      <div class="scenario-chip" data-scenario="devops">🔌 买API调用</div>
     </div>
 
     <div class="progress-bar-wrap">
@@ -741,76 +741,76 @@
 <script>
 // ===== 场景数据 =====
 const scenarios = {
-  coffee: {
-    name: '买咖啡',
-    agent: 'AI 办公助手',
-    userMsg: '下午三点了，帮我买杯咖啡提提神',
-    agentFirst: '好的，老规矩瑞幸生椰拿铁对吧？',
-    agentSecond: '查到附近3家门店，最近的200米，生椰拿铁 19.9 元。用你的数字人民币钱包自动支付可以吗？',
-    userConfirm: '可以，以后下午茶20块以内直接买。',
-    agentPay: '好的，已设置「下午茶自动支付」规则（单笔≤20元、每日≤1次），现在下单。',
-    agentDone: '✅ 支付完成！19.9元已从数字人民币钱包扣除。咖啡10分钟后到，取餐码 8723。',
-    receiver: '瑞幸咖啡·科技园店',
-    amount: '19.90',
-    purpose: '生椰拿铁（下午茶）',
+  quant: {
+    name: '量化交易Agent买行情',
+    agent: 'AI 量化交易 Agent',
+    userMsg: '帮我做一下新能源板块下周的回测',
+    agentFirst: '好的，我来加载新能源板块的历史数据并运行回测模型。',
+    agentSecond: '检测到本地行情数据只更新到上周，需要从「超算行情服务Agent」购买最新Level-2逐笔数据，预计花费 ¥3.50。我已按规则自动发起支付（单笔≤¥10、日限额≤¥50）。',
+    userConfirm: '继续，不用每次都问我',
+    agentPay: '好的，已向行情数据Agent发送支付请求，对方Agent确认收款后会推送数据。',
+    agentDone: '✅ 支付完成！行情数据Agent已推送最新逐笔数据。回测已启动，预计2分钟出结果。\n\n核心发现：新能源板块过去20日动量因子显著为正（t值2.31），下周胜率预测 62%。',
+    receiver: '超算行情服务 Agent',
+    amount: '3.50',
+    purpose: 'Level-2 逐笔行情 · 新能源板块',
     priority: '低',
-    chain: '数字人民币·平安智能合约子钱包'
+    chain: '数字人民币·AI数据服务子钱包'
   },
-  parking: {
-    name: '停车缴费',
-    agent: 'AI 出行助手',
-    userMsg: '我到停车场出口了',
-    agentFirst: '好的，我来处理停车缴费。',
-    agentSecond: '检测到车辆「粤B·8888A」停了3小时20分，应缴 18.5 元。用数字人民币自动支付？',
-    userConfirm: '付吧。',
-    agentPay: '好的，发起数字人民币无感支付，停车场闸机将在收到到账通知后自动抬杆。',
-    agentDone: '✅ 支付完成！18.5元已扣除。闸机已抬杆，祝您一路平安。全程耗时 1.2 秒。',
-    receiver: '科技园地下停车场',
-    amount: '18.50',
-    purpose: '停车费 · 3小时20分',
+  content: {
+    name: '内容Agent买素材',
+    agent: 'AI 内容创作 Agent',
+    userMsg: '写一篇重阳节公众号推文，要图文并茂',
+    agentFirst: '好的，我来构思文案，同时找配图素材。',
+    agentSecond: '写好了文案，需要5张重阳节主题的高清配图。「图库素材Agent」报价 ¥12.80（会员折扣价），比另一家便宜¥4.2。我已自动下单。',
+    userConfirm: '做得好，下次也这样货比三家',
+    agentPay: '好的，正在与素材Agent完成支付，对方收到款项后将释放原图下载链接。',
+    agentDone: '✅ 支付完成！素材Agent已交付5张高清图。公众号排版已完成，标题《岁岁重阳，今又暖阳》，你预览一下可以就发。',
+    receiver: '图库素材 Agent',
+    amount: '12.80',
+    purpose: '高清配图 ×5张（会员价）',
+    priority: '低',
+    chain: '数字人民币·内容创作子钱包'
+  },
+  research: {
+    name: '研究Agent买研报',
+    agent: 'AI 行业研究 Agent',
+    userMsg: '帮我分析一下人形机器人赛道的投资机会',
+    agentFirst: '好的，我先盘点一下当前掌握的信息，看看有没有知识缺口。',
+    agentSecond: '扫描发现：国内人形机器人量产进度和产业链图谱是我的知识盲区。「券商研报Agent」有一份《人形机器人产业全景2026》，售价 ¥28.00，深度评级A。已自动购买补充知识。',
+    userConfirm: '对，该花钱的时候要舍得花',
+    agentPay: '好的，已向研报Agent支付，对方正在生成定向版报告（标注信息来源）。',
+    agentDone: '✅ 支付完成！研报已消化吸收。核心结论：\n\n1. 2026年是人形机器人量产元年，特斯拉Optimus Q3产能爬坡\n2. 国内供应链：减速器看绿的/双环、传感器看柯力/汉威\n3. 短期看好核心零部件，中长期看整机品牌和应用场景\n\n完整分析报告稍后给你。',
+    receiver: '券商研报 Agent',
+    amount: '28.00',
+    purpose: '人形机器人产业全景报告',
     priority: '正常',
-    chain: '数字人民币·无感支付子钱包'
+    chain: '数字人民币·研究服务子钱包'
   },
-  news: {
-    name: '付费文章',
-    agent: 'AI 阅读助手',
-    userMsg: '这篇财新深度报道帮我看看值不值得看',
-    agentFirst: '我来看一下文章摘要和价值评估。',
-    agentSecond: '这篇《城投债隐忧调查》是深度调查报道，单篇付费 8 元。内容质量评级A-，对你的工作相关度很高。自动解锁？',
-    userConfirm: '解锁，10块以内的好文章直接开。',
-    agentPay: '好的，已设置「深度报道自动解锁」规则（单笔≤10元、单日≤3篇），现在支付。',
-    agentDone: '✅ 支付完成！8元已扣除。文章全文已为你整理成3000字摘要，核心结论是...',
-    receiver: '财新周刊·单篇付费',
-    amount: '8.00',
-    purpose: '深度报道解锁',
+  devops: {
+    name: '开发Agent买API',
+    agent: 'AI 开发 Agent',
+    userMsg: '给这个手机号查一下归属地和运营商',
+    agentFirst: '好的，我来调用手机号码归属地查询API。',
+    agentSecond: '需要调用「API市场Agent」的号码归属地接口，每次调用 ¥0.05。在我的预算内（单日¥20以内），自动执行。',
+    userConfirm: '行',
+    agentPay: '好的，发起微支付，API Agent收到后返回结果。',
+    agentDone: '✅ 支付完成（¥0.05）！API Agent返回：\n\n📱 138****8888\n📍 归属地：广东深圳\n🏢 运营商：中国移动\n📶 卡类型：全球通\n\n还需要我继续查什么？',
+    receiver: 'API 市场 Agent',
+    amount: '0.05',
+    purpose: '手机号归属地查询 · 1次',
     priority: '低',
-    chain: '数字人民币·内容付费子钱包'
-  },
-  data: {
-    name: 'AI生图',
-    agent: 'AI 设计助手',
-    userMsg: '帮我生成5张产品宣传图，风格要高级点',
-    agentFirst: '好的，我用最新的生图模型来做，高端商业风格。',
-    agentSecond: '5张高清商业图，调用高端模型预计费用 6.5 元（按token计费）。用你的数字人民币AI钱包自动扣？',
-    userConfirm: '扣吧，好用以后都走这个。',
-    agentPay: '好的，已设置「AI生图自动支付」规则（单笔≤20元、单日≤50元），开始生成。',
-    agentDone: '✅ 支付完成！实际消耗 5.8 元，比预估少。5张图已生成好了，你看看哪张满意？',
-    receiver: 'AI 画图服务',
-    amount: '5.80',
-    purpose: '商业产品图 ×5张',
-    priority: '低',
-    chain: '数字人民币·AI算力子钱包'
+    chain: '数字人民币·微支付子钱包'
   }
 };
 
-let currentScenario = 'coffee';
+let currentScenario = 'quant';
 let isPlaying = false;
 let timeline = [];
 
 // ===== 初始化 =====
 function initDemo() {
   const s = scenarios[currentScenario];
-  const balances = { coffee: '2,580.00', parking: '3,120.50', news: '856.80', data: '1,200.00' };
+  const balances = { quant: '2,580.00', content: '1,260.30', research: '3,800.00', devops: '520.00' };
   document.getElementById('balanceAmount').innerHTML = balances[currentScenario] + ' <span class="balance-unit">元（数字人民币）</span>';
 
   // 重置聊天
@@ -1054,7 +1054,7 @@ async function startDemo() {
 
   // 更新余额
   const balanceEl = document.getElementById('balanceAmount');
-  const origBals = { coffee: 2580, parking: 3120.5, news: 856.8, data: 1200 };
+  const origBals = { quant: 2580, content: 1260.3, research: 3800, devops: 520 };
   const origBal = origBals[currentScenario] || 2580;
   const amt = parseFloat(s.amount.replace(/,/g, ''));
   const newBal = origBal - amt;
@@ -1062,6 +1062,15 @@ async function startDemo() {
 
   step++; setProgress(step / totalSteps * 100);
   await sleep(800);
+
+  // 9.1 收款方Agent确认到账并发货
+  const vendorMsgs = {
+    quant: '行情数据Agent：收款确认 ✅ 正在推送新能源板块Level-2逐笔数据，共234MB',
+    content: '素材Agent：收款确认 ✅ 5张高清重阳节配图已解锁，附AI修元数据',
+    research: '研报Agent：收款确认 ✅ 《人形机器人产业全景2026》定向版已生成，共86页',
+    devops: 'API市场Agent：收款确认 ✅ 号码归属地接口调用成功，返回结果如下'
+  };
+  await addMsg('system', vendorMsgs[currentScenario] || '收款方Agent：确认到账，正在交付服务');
 
   // 10. Agent汇报结果
   await addMsg('agent', s.agentDone);
