@@ -1,0 +1,817 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>北京五环路 · 14节点改造方案与卫星影像</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#080c16;--bg2:rgba(14,22,40,.85);--bg3:rgba(20,30,52,.6);
+    --bd:rgba(80,130,200,.15);--bd2:rgba(80,130,200,.3);
+    --p:#4f8cff;--pl:#7ab0ff;--t:#e4e9f2;--t2:#8a94a8;--t3:#5c6680;
+    --n:#00d4aa;--e:#a855f7;--s:#f59e0b;--w:#ef4444;
+    --nb:rgba(0,212,170,.1);--eb:rgba(168,85,247,.1);--sb:rgba(245,158,11,.1);--wb:rgba(239,68,68,.1);
+  }
+  html{scroll-behavior:smooth}
+  body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--t);line-height:1.7;overflow-x:hidden}
+  .bgd{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(circle at 15% 20%,rgba(79,140,255,.06) 0%,transparent 45%),radial-gradient(circle at 85% 75%,rgba(0,212,170,.04) 0%,transparent 45%)}
+  .ctn{max-width:1200px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
+
+  /* Hero */
+  .hero{padding:60px 0 30px;text-align:center}
+  .hero-badge{display:inline-block;padding:5px 16px;background:rgba(79,140,255,.1);border:1px solid rgba(79,140,255,.3);border-radius:18px;font-size:12px;color:var(--pl);margin-bottom:18px;letter-spacing:1px}
+  .hero h1{font-size:38px;font-weight:800;line-height:1.3;margin-bottom:12px;background:linear-gradient(135deg,#4f8cff 0%,#00d4aa 50%,#f59e0b 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .hero-sub{font-size:16px;color:var(--t2);max-width:680px;margin:0 auto 30px}
+
+  /* Ring Map Nav */
+  .ring-nav{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:40px}
+  .ring-nav-item{padding:8px 16px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--bd);background:var(--bg3);transition:all .2s;text-decoration:none;color:var(--t)}
+  .ring-nav-item:hover{border-color:var(--bd2);transform:translateY(-1px)}
+  .ring-nav-item.sn{border-left:3px solid var(--n)}
+  .ring-nav-item.se{border-left:3px solid var(--e)}
+  .ring-nav-item.ss{border-left:3px solid var(--s)}
+  .ring-nav-item.sw{border-left:3px solid var(--w)}
+
+  /* Node Card */
+  .node-card{background:var(--bg2);border:1px solid var(--bd);border-radius:16px;margin-bottom:32px;overflow:hidden;transition:all .2s}
+  .node-card:hover{border-color:var(--bd2)}
+  .node-header{padding:24px 28px;display:flex;align-items:center;gap:16px;border-bottom:1px solid var(--bd)}
+  .node-icon{width:48px;height:48px;min-width:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px}
+  .node-header h2{font-size:22px;font-weight:700;margin:0 0 2px}
+  .node-header .loc{font-size:13px;color:var(--t2)}
+  .seg-tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;margin-left:8px}
+  .sn{background:var(--nb);color:var(--n)}.se{background:var(--eb);color:var(--e)}
+  .ss{background:var(--sb);color:var(--s)}.sw{background:var(--wb);color:var(--w)}
+
+  .node-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+  .node-info{padding:24px 28px}
+  .node-img{padding:20px;display:flex;align-items:flex-start;justify-content:center;background:rgba(0,0,0,.15)}
+  .node-img img{width:100%;max-width:420px;border-radius:10px;border:1px solid var(--bd)}
+  .node-img .img-cap{font-size:11px;color:var(--t3);text-align:center;margin-top:8px}
+
+  .info-section{margin-bottom:18px}
+  .info-section:last-child{margin-bottom:0}
+  .info-section h4{font-size:14px;font-weight:600;color:var(--pl);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+  .info-section p,.info-section li{font-size:13px;color:var(--t2);line-height:1.7}
+  .info-section ul{list-style:none;padding:0}
+  .info-section li{padding:2px 0 2px 14px;position:relative}
+  .info-section li::before{content:'▸';position:absolute;left:0;color:var(--p)}
+
+  .data-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .data-chip{background:rgba(79,140,255,.08);border:1px solid rgba(79,140,255,.15);border-radius:8px;padding:6px 12px;font-size:12px}
+  .data-chip .num{font-weight:700;color:var(--pl);font-size:14px}
+  .data-chip .txt{color:var(--t2)}
+
+  .status-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600}
+  .status-done{background:rgba(0,212,170,.12);color:var(--n)}
+  .status-build{background:rgba(245,158,11,.12);color:var(--s)}
+  .status-plan{background:rgba(168,85,247,.12);color:var(--e)}
+
+  .highlight{background:linear-gradient(135deg,rgba(79,140,255,.06),rgba(0,212,170,.06));border:1px solid var(--bd2);border-radius:12px;padding:16px 20px;margin-top:14px}
+  .highlight p{font-size:13px;color:var(--t);line-height:1.7}
+  .highlight strong{color:var(--pl)}
+
+  .section-title{font-size:28px;font-weight:700;margin-bottom:8px}
+  .section-desc{font-size:15px;color:var(--t2);margin-bottom:28px;max-width:700px}
+  .section-label{display:inline-block;padding:4px 12px;background:var(--nb);border:1px solid rgba(0,212,170,.2);border-radius:12px;font-size:12px;color:var(--n);margin-bottom:10px}
+
+  section{padding:50px 0;position:relative}
+
+  /* Summary Table */
+  .summary-table{width:100%;border-collapse:separate;border-spacing:0;background:var(--bg2);border:1px solid var(--bd);border-radius:14px;overflow:hidden;margin-bottom:30px}
+  .summary-table th{padding:12px 16px;text-align:left;font-size:12px;font-weight:600;background:rgba(79,140,255,.08);border-bottom:1px solid var(--bd);color:var(--t)}
+  .summary-table td{padding:10px 16px;font-size:13px;color:var(--t2);border-bottom:1px solid rgba(100,150,220,.06);vertical-align:top}
+  .summary-table tr:last-child td{border-bottom:none}
+  .summary-table td:first-child{font-weight:600;color:var(--t);white-space:nowrap}
+
+  footer{text-align:center;padding:24px 0;color:var(--t3);font-size:11px;border-top:1px solid var(--bd);margin-top:20px}
+
+  @media(max-width:900px){
+    .node-body{grid-template-columns:1fr}
+    .node-img{order:-1;padding:16px}
+    .hero h1{font-size:28px}
+    .ring-nav{gap:6px}
+    .ring-nav-item{font-size:12px;padding:6px 10px}
+  }
+</style>
+</head>
+<body>
+<div class="bgd"></div>
+<div class="ctn">
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-badge">城市更新 · 节点改造方案</div>
+  <h1>北京五环路 · 14节点改造方案<br>卫星影像与规划详解</h1>
+  <p class="hero-sub">逐节点梳理改造方案、卫星影像对照、关键数据与实施进度<br>为道路设计审查提供空间决策依据</p>
+</div>
+
+<!-- 节点导航 -->
+<div class="ring-nav">
+  <a class="ring-nav-item sn" href="#n1">上清桥</a>
+  <a class="ring-nav-item sn" href="#n2">箭亭桥</a>
+  <a class="ring-nav-item sn" href="#n3">来广营</a>
+  <a class="ring-nav-item sn" href="#n4">歇甲村</a>
+  <a class="ring-nav-item se" href="#n5">五元桥</a>
+  <a class="ring-nav-item se" href="#n6">远通桥</a>
+  <a class="ring-nav-item se" href="#n7">五方桥</a>
+  <a class="ring-nav-item ss" href="#n8">亦庄桥</a>
+  <a class="ring-nav-item ss" href="#n9">德茂</a>
+  <a class="ring-nav-item ss" href="#n10">狼垡桥</a>
+  <a class="ring-nav-item sw" href="#n11">衙门口桥</a>
+  <a class="ring-nav-item sw" href="#n12">首钢园</a>
+  <a class="ring-nav-item sw" href="#n13">看丹站</a>
+  <a class="ring-nav-item sw" href="#n14">闵西桥</a>
+</div>
+
+<!-- 总览表 -->
+<section>
+  <div class="section-label">总览</div>
+  <h2 class="section-title">14节点改造状态一览</h2>
+  <p class="section-desc">三种改造范式并行推进：交通微改造、产业功能注入、TOD综合开发</p>
+  <div style="overflow-x:auto">
+  <table class="summary-table">
+    <thead><tr><th>节点</th><th>区段</th><th>改造类型</th><th>投资/规模</th><th>状态</th></tr></thead>
+    <tbody>
+      <tr><td>上清桥</td><td>北</td><td>健康工程整体修缮</td><td>纳入25亿整体</td><td><span class="status-badge status-plan">设计招标中</span></td></tr>
+      <tr><td>箭亭桥</td><td>北</td><td>京张遗址公园二期·桥下空间活化</td><td>23.08万㎡(南段)</td><td><span class="status-badge status-done">已竣工开放</span></td></tr>
+      <tr><td>来广营/五元桥</td><td>东</td><td>积水点治理+光智空间产业注入</td><td>积水治理700万</td><td><span class="status-badge status-build">施工中</span></td></tr>
+      <tr><td>歇甲村</td><td>北五环外</td><td>轨道微中心TOD综合开发</td><td>64万㎡建筑规模</td><td><span class="status-badge status-build">建设中</span></td></tr>
+      <tr><td>五元桥(光智空间)</td><td>东</td><td>AI创新街区·产业功能注入</td><td>目标千亿集群</td><td><span class="status-badge status-build">加速建设中</span></td></tr>
+      <tr><td>远通桥</td><td>东</td><td>新增南向西匝道860m·立交改造</td><td>减少绕行5.6km</td><td><span class="status-badge status-done">已通车</span></td></tr>
+      <tr><td>五方桥/化工桥</td><td>东/南</td><td>排水改造+鲁店北路新建</td><td>排水700万+道路2.39亿</td><td><span class="status-badge status-build">招标中</span></td></tr>
+      <tr><td>亦庄桥</td><td>南</td><td>积水治理+五环一体化规划</td><td>纳入整体规划</td><td><span class="status-badge status-plan">规划研究中</span></td></tr>
+      <tr><td>德茂</td><td>南</td><td>轨道微中心·医药创新公园配套</td><td>5.5km²园区</td><td><span class="status-badge status-build">建设中</span></td></tr>
+      <tr><td>狼垡桥</td><td>南</td><td>京雄高速市内接线+京良路改扩建</td><td>48.1亿元</td><td><span class="status-badge status-plan">2026年底开工</span></td></tr>
+      <tr><td>衙门口桥</td><td>西</td><td>首程时代中心+市郊铁路站点</td><td>44万㎡综合体</td><td><span class="status-badge status-done">已建成运营</span></td></tr>
+      <tr><td>首钢园</td><td>西</td><td>工业遗存活化·数字产业区</td><td>779亿年营收</td><td><span class="status-badge status-done">深化运营中</span></td></tr>
+      <tr><td>看丹站</td><td>西</td><td>TOD综合体·轨道微中心</td><td>9.05万㎡/8.62亿</td><td><span class="status-badge status-build">封顶·2027竣工</span></td></tr>
+      <tr><td>闵西桥</td><td>西</td><td>新建菱形立交4条匝道2.91km</td><td>监理已招标</td><td><span class="status-badge status-plan">前期阶段</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ======== 北五环 ======== -->
+<section>
+  <div class="section-label">北五环 · 科创服务带</div>
+  <h2 class="section-title">北五环节点改造方案</h2>
+  <p class="section-desc">海淀-昌平段，依托中关村科学城和G6科创走廊，以科创服务、空间缝合和居住区职住平衡为核心主题。</p>
+</section>
+
+<!-- 节点1：上清桥 -->
+<div class="node-card" id="n1">
+  <div class="node-header">
+    <div class="node-icon" style="background:var(--nb)">🛣️</div>
+    <div>
+      <h2>上清桥 <span class="seg-tag sn">北五环</span></h2>
+      <div class="loc">海淀区 · 北五环与学清路/上清桥交汇</div>
+    </div>
+  </div>
+  <div class="node-body">
+    <div class="node-info">
+      <div class="info-section">
+        <h4>📍 现状描述</h4>
+        <p>上清桥是北五环通往清河、上地等科技产业密集区的重要节点，周边高校和科技园区密集。学清路（上清桥-清华东路）已纳入市管城市道路大修储备项目。</p>
+      </div>
+      <div class="info-section">
+        <h4>🔧 改造方案</h4>
+        <ul>
+          <li>纳入五环路健康工程整体设计范畴，在统一框架下完成道路桥梁维修、绿化提升、排水改造</li>
+          <li>周边学清路（上清桥-清华东路）已完成大修工程设计</li>
+          <li>衔接清河滨水绿廊，强化慢行系统与科创园区连通</li>
+        </ul>
+      </div>
+      <div class="info-section">
+        <h4>📊 关键数据</h4>
+        <div class="data-row">
+          <div class="data-chip"><span class="num">25亿</span><br><span class="txt">健康工程总投资</span></div>
+          <div class="data-chip"><span class="num">355万㎡</span><br><span class="txt">改造总面积</span></div>
+        </div>
+      </div>
+      <div class="info-section">
+        <h4>⏱️ 实施进度</h4>
+        <p><span class="status-badge status-plan">设计招标中</span> 待健康工程设计招标完成后统一推进，预计2027年进入施工阶段</p>
+      </div>
+    </div>
+    <div class="node-img">
+      <div>
+        <img src="https://s.coze.cn/image/eTUh-LbGLWI/" alt="上清桥区域卫星影像" loading="lazy">
+        <div class="img-cap">▲ 上清桥区域卫星影像 · 多层互通立交与周边科创园区</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 节点2：箭亭桥 -->
+<div class="node-card" id="n2">
+  <div class="node-header">
+    <div class="node-icon" style="background:var(--nb)">🌳</div>
+    <div>
+      <h2>箭亭桥 <span class="seg-tag sn">北五环</span></h2>
+      <div class="loc">海淀区 · 北五环与京张铁路遗址公园北端</div>
+    </div>
+  </div>
+  <div class="node-body">
+    <div class="node-info">
+      <div class="info-section">
+        <h4>📍 现状描述</h4>
+        <p>箭亭桥区域长期受京张铁路路基、地铁13号线高架和五环路三重空间隔断影响，桥下空间被围栏封闭，东西片区通行严重受阻。</p>
+      </div>
+      <div class="info-section">
+        <h4>🔧 改造方案</h4>
+        <ul>
+          <li><strong>京张铁路遗址公园二期</strong>为载体实施更新，北段南起清华东路，北至箭亭桥桥下</li>
+          <li>盘活箭亭桥、13号线高架桥下闲置封闭空间</li>
+          <li>打通3条鱼骨状慢行道（步行/慢跑/骑行三条独立无断点通道）</li>
+          <li>连通公园与清河滨水绿廊，实现东西片区互联互通</li>
+          <li>二期全长9公里，构建"三道一绿"连续慢行体系</li>
+          <li>保留百年铁轨、龙门吊等工业遗存融入景观设计</li>
+        </ul>
+      </div>
+      <div class="info-section">
+        <h4>✨ 设计亮点</h4>
+        <div class="highlight">
+          <p>消解铁路与高架造成的<strong>城市空间隔断</strong>，实现"缝合城市"；海绵城市理念，不新增大规模土方；对接周边<strong>70个社区约45万居民</strong>需求，布局全龄友好设施。</p>
+        </div>
+      </div>
+      <div class="info-section">
+        <h4>⏱️ 实施进度</h4>
+        <p><span class="status-badge status-done">已竣工开放</span> 2026年8月6日正式竣工开放，南段面积23.08万㎡</p>
+      </div>
+    </div>
+    <div class="node-img">
+      <div>
+        <img src="https://s.coze.cn/image/1kdlnAsw7Zs/" alt="箭亭桥京张遗址公园改造效果" loading="lazy">
+        <div class="img-cap">▲ 京张铁路遗址公园改造效果 · 废弃铁路空间变身线性公园</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 节点3：来广营 -->
+<div class="node-card" id="n3">
+  <div class="node-header">
+    <div class="node-icon" style="background:var(--nb)">🏗️</div>
+    <div>
+      <h2>来广营/五元桥 <span class="seg-tag sn">北五环</span></h2>
+      <div class="loc">朝阳区 · 东五环与机场高速辅路/京密路交汇</div>
+    </div>
+  </div>
+  <div class="node-body">
+    <div class="node-info">
+      <div class="info-section">
+        <h4>📍 现状描述</h4>
+        <p>五元桥区域是首都机场高速辅路与五环匝道交汇口，早高峰通勤拥堵突出——"短短几百米的路程，每天早上要堵一二十分钟"。</p>
+      </div>
+      <div class="info-section">
+        <h4>🔧 改造方案</h4>
+        <ul>
+          <li><strong>积水点治理</strong>：纳入五环路积水点治理专项，对五元桥内环K5+200处排水设施改造</li>
+          <li><strong>来广营东路</strong>（广善路-电子城大街）施工中，2025年11月竣工</li>
+          <li>紧邻<strong>光智空间</strong>AI创新街区（2.67km²），产业注入带动区域升级</li>
+          <li>五元桥立交改造仍在配合市级研究阶段</li>
+        </ul>
+      </div>
+      <div class="info-section">
+        <h4>⏱️ 实施进度</h4>
+        <p><span class="status-badge status-build">施工中</span> 积水点治理2025年11月启动；来广营东路2025年11月竣工；立交改造研究中</p>
+      </div>
+    </div>
+    <div class="node-img">
+      <div>
+        <img src="https://s.coze.cn/image/lrYGqeH3tW8/" alt="五元桥区域卫星影像" loading="lazy">
+        <div class="img-cap">▲ 五元桥区域卫星正射影像 · 多层互通立交与周边城区</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 节点4：歇甲村 -->
+<div class="node-card" id="n4">
+  <div class="node-header">
+    <div class="node-icon" style="background:var(--nb)">🚇</div>
+    <div>
+      <h2>歇甲村（天通苑东） <span class="seg-tag sn">北五环外</span></h2>
+      <div class="loc">昌平区 · 北五环外天通苑东部</div>
+    </div>
+  </div>
+  <div class="node-body">
+    <div class="node-info">
+      <div class="info-section">
+        <h4>📍 现状描述</h4>
+        <p>歇甲村位于天通苑大型居住区东侧，属于回天地区城市更新重要组成。人口密度高，公共服务和交通基础设施长期不足。</p>
+      </div>
+      <div class="info-section">
+        <h4>🔧 改造方案</h4>
+        <ul>
+          <li><strong>轨道微中心TOD开发</strong>：17号线+18号线+R6线三线交汇</li>
+          <li>总建筑规模近<strong>64万㎡</strong>，先规划后建设的"白纸"区域</li>
+          <li>集办公、商业、酒店、公寓于一体的微中心</li>
+          <li>衔接中关村科学城、未来科学城、回天地区三大产业圈</li>
+          <li>霍营综合交通枢纽：13号线扩能+8号线+市郊铁路东北环线三线换乘</li>
+          <li>站点周边800m范围毛容积率约1.2，300m范围约2.3</li>
+        </ul>
+      </div>
+      <div class="info-section">
+        <h4>⏱️ 实施进度</h4>
+        <p><span class="status-badge status-build">建设中</span> 回天地区第三轮行动计划2026年4月发布，立汤路改造预计2025年底完成</p>
+      </div>
+    </div>
+    <div class="node-img">
+      <div>
+        <img src="https://s.coze.cn/image/qydcwWjFGhs/" alt="天通苑歇甲村区域卫星影像" loading="lazy">
+        <div class="img-cap">▲ 天通苑区域航拍 · 超大型居住社区空间格局</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== 东五环 ======== -->
+<section>
+  <div class="section-label">东五环 · 数字经济高地</div>
+  <h2 class="section-title">东五环节点改造方案</h2>
+  <p class="section-desc">朝阳区段，以光智空间AI创新街区为核心引擎，从电子工业摇篮向数字经济高地转型。</p>
+</section>
+
+<!-- 节点5：光智空间 -->
+<div class="node-card" id="n5">
+  <div class="node-header">
+    <div class="node-icon" style="background:var(--eb)">🤖</div>
+    <div>
+      <h2>五元桥（光智空间） <span class="seg-tag se">东五环</span></h2>
+      <div class="loc">朝阳区东北部 · 东至东五环/南至坝河/西至京密快速/北至五元桥</div>
+    </div>
+  </div>
+  <div class="node-body">
+    <div class="node-info">
+      <div class="info-section">
+        <h4>📍 现状描述</h4>
+        <p>前身为1956年新中国第一颗电子管诞生的酒仙桥地区，中国电子工业的摇篮。如今已集聚中关村互联网3.0产业园、电子城IC/PIC创新中心、798·751 AIGC创意设计园等八大核心园区。</p>
+      </div>
+      <div class="info-section">
+        <h4>🔧 改造方案</h4>
+        <ul>
+          <li>北京首批四个人工智能创新街区之一，"光算融合、智启新境"特色定位</li>
+          <li>核心区2.67km²，五大功能分区：原始创新区/核心算力支撑区/技术研发与应用验证区/场景互动体验区/技术研发拓展区</li>
+          <li>重点推进量算融合项目（国内首个量智融合算力平台）、光智视界项目</li>
+          <li>聚焦光子计算、量子计算等下一代算力形态</li>
+          <li>"上下楼就是上下游，左右邻就是产业链"协同生态</li>
+        </ul>
+      </div>
+      <div class="info-section">
+        <h4>📊 关键数据</h4>
+        <div class="data-row">
+          <div class="data-chip"><span class="num">2.67km²</span><br><span class="txt">核心区面积</span></div>
+          <div class="data-chip"><span class="num">500+</span><br><span class="txt">2027年企业目标</span></div>
+          <div class="data-chip"><span class="num">千亿级</span><br><span class="txt">2030年产业集群</span></div>
+          <div class="data-chip"><span class="num">7km²</span><br><span class="txt">远期拓展面积</span></div>
+        </div>
+      </div>
+      <div class="info-section">
+        <h4>⏱️ 实施进度</h4>
+        <p><span class="status-badge status-build">加速建设中</span> 2026年1月发布建设计划，4月全球四大征集。目标2027年≥500家企业，2030年千亿集群</p>
+      </div>
+    </div>
+    <div class="node-img">
+      <div>
+        <img src="https://s.coze.cn/image/n3OCzGDsdN8/" alt="光智空间区域夜景卫星影像" loading="lazy">
+        <div class="img-cap">▲ 光智空间区域夜景 · 酒仙桥-五元桥片区城市灯光</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 节点6：远通桥 -->
+<div class="node-card" id="n6">
+  <div class="node-header">
+    <div class="node-icon" style="background:var(--eb)">🔀</div>
+    <div>
+      <h2>远通桥 <span class="seg-tag se">东五环</span></h2>
+      <div class="loc">朝阳区/通州区交界 · 东五环与京通快速路交汇</div>
+    </div>
+  </div>
+  <div class="node-body">
+    <div class="node-info">
+      <div class="info-section">
+        <h4>📍 现状描述</h4>
+        <p>远通桥建成于2002年，原设计未规划南向西转向匝道。随着城市副中心快速发展，东南五环驶来车辆需绕行双桥立交才能驶入京通快速路进京方向，导致早晚高峰长期拥堵。</p>
+      </div>
+      <div class="info-section">
+        <h4>🔧 改造方案</h4>
+        <ul>
+          <li><strong>新建南向西匝道全长860米</strong>，单向双车道，城市快速路标准</li>
+          <li>克服施工空间受限、跨越11次既有构筑物等复杂挑战</li>
+          <li>先后完成五环路、南水北调、京通快速路、地铁八通线等上跨施工</li>
+          <li>实现东五环与京通快速路全方向互通</li>
+        </ul>
+      </div>
+      <div class="info-section">
+        <h4>✨ "微改造"典范</h4>
+        <div class="highlight">
+          <p>以精准投入破解交通关键梗阻——通车后<strong>减少绕行5.6公里</strong>，节约通行时间<strong>约15分钟</strong>，显著提升广渠快速路、京哈高速等东部路网通达性。</p>
+        </div>
+      </div>
+      <div class="info-section">
+        <h4>⏱️ 实施进度</h4>
+        <p><span class="status-badge status-done">已通车</span> 2025年12月28日12:00正式通车</p>
+      </div>
+    </div>
+    <div class="node-img">
+      <div>
+        <img src="https://s.coze.cn/image/0k448a53cZk/" alt="远通桥区域卫星影像" loading="lazy">
+        <div class="img-cap">▲ 远通桥区域航拍 · 东五环与京通快速路交汇枢纽</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 节点7：五方桥 -->
+<div class="node-card" id="n7">
+  <div class="node-header">
+    <div class="node-icon" style="background:var(--eb)">💧</div>
+    <div>
+      <h2>五方桥/化工桥 <span class="seg-tag se">东/南五环</span></h2>
+      <div class="loc">朝阳区 · 南五环与通惠排干渠/京哈高速交汇</div>
+    </div>
+  </div>
+  <div class="node-body">
+    <div class="node-info">
+      <div class="info-section">
+        <h4>🔧 改造方案</h4>
+        <ul>
+          <li><strong>五方桥积水点治理</strong>：改造扩建排水边沟、新建拦水墙、雨水口、检查井和管线，投资约700万元</li>
+          <li><strong>鲁店北路（化工桥-长营路）</strong>：全长约3.9km，红线宽45m，双向6车道，桥梁89.5m</li>
+          <li>鲁店北路投资估算2.39亿元</li>
+          <li>向南连接亦庄经开区承接产业外溢</li>
+        </ul>
+      </div>
+      <div class="info-section">
+        <h4>⏱️ 实施进度</h4>
+        <p><span class="status-badge status-build">招标中</span> 积水点治理2025年11月启动（工期21天）；鲁店北路2026年8月招标</p>
+      </div>
+    </div>
+    <div class="node-img">
+      <div>
+        <img src="https://s.coze.cn/image/B2Nh1Tjr-h8/" alt="五方桥/化工桥区域卫星影像" loading="lazy">
+        <div class="img-cap">▲ 五方桥区域航拍 · 立交桥与河道交织的城市空间</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== 南五环 ======== -->
+<section>
+  <div class="section-label">南五环 · 医药智造引擎</div>
+  <h2 class="section-title">南五环节点改造方案</h2>
+  <p class="section-desc">大兴-经开区段，以亦庄新城和国际医药创新公园为核心，打造万亿级先进制造产业集群。</p>
+</section>
+
+<!-- 节点8：亦庄桥 -->
+<div class="node-card" id="n8">
+  <div class="node-header">
+    <div class="node-icon" style="background:var(--sb)">💊</div>
+    <div>
+      <h2>亦庄桥 <span class="seg-tag ss">南五环</span></h2>
+      <div class="loc">大兴区/经开区 · 南五环与荣华路/博兴路交汇</div>
+    </div>
+  </div>
+  <div class="node-body">
+    <div class="node-info">
+      <div class="info-section">
+        <h4>📍 现状描述</h4>
+        <p>亦庄桥是北京经开区与中心城区连接的重要节点，区域内已集聚大量高端制造业企业。东侧匝道存在积水问题。</p>
+      </div>
+      <div class="info-section">
+        <h4>🔧 改造方案</h4>
+        <ul>
+          <li><strong>积水点治理</strong>已纳入专项工程</li>
+          <li>经开区2025年提出"开展五环路区域一体化规划研究"</li>
+          <li>推动亦庄线至5号线、10号线联络线建设</li>
+          <li>2026年重点推进五环路建设，提升与中关村等区域联通能力</li>
+          <li>亦庄区域9条市政道路已通车，道路总长增长39%</li>
+          <li>打通2条断头路</li>
+        </ul>
+      </div>
+      <div class="info-section">
+        <h4>📊 关键数据</h4>
+        <div class="data-row">
+          <div class="data-chip"><span class="num">1万亿</span><br><span class="txt">2030年工业产值目标</span></div>
+          <div class="data-chip"><span class="num">8个</span><br><span class="txt">千亿级产业集群</span></div>
+          <div class="data-chip"><span class="num">500万㎡+</span><br><span class="txt">新增产业空间</span></div>
+        </div>
+      </div>
+      <div class="info-section">
+        <h4>⏱️ 实施进度</h4>
+        <p><span class="status-badge status-plan">规划研究中</span> 积水治理已启动；一体化规划研究已启动；轨道联络线规划研究中</p>
+      </div>
+    </div>
+    <div class="node-img">
+      <div>
+        <img src="https://s.coze.cn/image/JeffeMDxyFc/" alt="亦庄桥区域卫星影像" loading="lazy">
+        <div class="img-cap">▲ 亦庄桥区域航拍 · 大型互通立交与周边产业园区</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 节点9：德茂 -->
+<div class="node-card" id="n9">
+  <div class="node-header">
+    <div class="node-icon" style="background:var(--sb)">🏠</div>
+    <div>
+      <h2>德茂（轨道微中心） <span class="seg-tag ss">南五环</span></h2>
+      <div class="loc">大兴区/经开区 · 南五环外侧/南中轴沿线</div>
+    </div>
+  </div>
+  <div class="node-body">
+    <div class="node-info">
+      <div class="info-section">
+        <h4>📍 现状描述</h4>
+        <p>德茂区域是国际医药创新公园（BioPark）的重要配套区域，周边正在加快中小学校和高端人才公寓等配套设施建设。</p>
+      </div>
+      <div class="info-section">
+        <h4>🔧 改造方案</h4>
+        <ul>
+          <li>定位为<strong>国际医药创新公园的生活配套组团</strong></li>
+          <li>打造居住、商业、娱乐融合的功能片区</li>
+          <li>BioPark总体城市设计范围约5.5km²，重点片区1.1km²</li>
+          <li>四大功能片区：总部集聚区/医工融合区/研发转化区/医药智造区</li>
+          <li>三条活力廊道：基因艺廊/共享智廊/生态趣廊</li>
+          <li>人才租赁住房1399套住宅型+324套宿舍型，配套幼儿园</li>
+          <li>以DNA双螺旋为灵感的百米地标建筑</li>
+        </ul>
+      </div>
+      <div class="info-section">
+        <h4>📊 关键数据</h4>
+        <div class="data-row">
+          <div class="data-chip"><span class="num">5.5km²</span><br><span class="txt">园区城市设计范围</span></div>
+          <div class="data-chip"><span class="num">$25亿</span><br><span class="txt">阿斯利康投资</span></div>
+          <div class="data-chip"><span class="num">16家</span><br><span class="txt">15km半径三甲医院</span></div>
+        </div>
+      </div>
+      <div class="info-section">
+        <h4>⏱️ 实施进度</h4>
+        <p><span class="status-badge status-build">建设中</span> 研发转化基地2026年5月开工/2028年竣工；人才住房2026年9月封顶</p>
+      </div>
+    </div>
+    <div class="node-img">
+      <div>
+        <img src="https://s.coze.cn/image/dJsq35JE7DI/" alt="德茂区域卫星影像" loading="lazy">
+        <div class="img-cap">▲ 德茂区域航拍 · 南五环沿线城市近郊风貌</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 节点10：狼垡桥 -->
+<div class="node-card" id="n10">
+  <div class="node-header">
+    <div class="node-icon" style="background:var(--sb)">🛣️</div>
+    <div>
+      <h2>狼垡桥 <span class="seg-tag ss">南五环</span></h2>
+      <div class="loc">大兴区/丰台区交界 · 南五环与京雄高速五环立交</div>
+    </div>
+  </div>
+  <div class="node-body">
+    <div class="node-info">
+      <div class="info-section">
+        <h4>📍 现状描述</h4>
+        <p>狼垡区域位于京开高速和五环路之间，长期受交通瓶颈制约。京良路（大兴段）穿越狼垡区域，因建设年代久远、等级不高，交通不畅。</p>
+      </div>
+      <div class="info-section">
+        <h4>🔧 改造方案</h4>
+        <ul>
+          <li><strong>京雄高速公路市内接线工程</strong>：西起京雄高速五环立交，东至南四环，全长8.1km</li>
+          <li>快速路段红线宽50m/双向六车道/80km/h；主干路段红线宽60m/60km/h</li>
+          <li>建成后分流京港澳高速杜家坎路段<strong>15%车流</strong></li>
+          <li><strong>京良路改扩建</strong>：上跨京沪铁路，打通全线关键节点</li>
+          <li>狼垡组团城中村改造项目持续推进</li>
+        </ul>
+      </div>
+      <div class="info-section">
+        <h4>📊 关键数据</h4>
+        <div class="data-row">
+          <div class="data-chip"><span class="num">48.1亿</span><br><span class="txt">京雄高速接线投资</span></div>
+          <div class="data-chip"><span class="num">8.1km</span><br><span class="txt">接线工程全长</span></div>
+          <div class="data-chip"><span class="num">15%</span><br><span class="txt">分流京港澳车流</span></div>
+        </div>
+      </div>
+      <div class="info-section">
+        <h4>⏱️ 实施进度</h4>
+        <p><span class="status-badge status-plan">2026年底开工</span> 已纳入北京市2026年重点工程计划；京良路2标段2026年2月破土</p>
+      </div>
+    </div>
+    <div class="node-img">
+      <div>
+        <img src="https://s.coze.cn/image/5f0SnJMJAAk/" alt="狼垡桥区域卫星影像" loading="lazy">
+        <div class="img-cap">▲ 狼垡桥区域卫星影像 · 大型互通立交与城郊结合部</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== 西五环 ======== -->
+<section>
+  <div class="section-label">西五环 · 遗产活化典范</div>
+  <h2 class="section-title">西五环节点改造方案</h2>
+  <p class="section-desc">石景山-丰台段，以首钢园工业遗产活化为核心引擎，辐射京西城市复兴。</p>
+</section>
+
+<!-- 节点11：衙门口桥 -->
+<div class="node-card" id="n11">
+  <div class="node-header">
+    <div class="node-icon" style="background:var(--wb)">🏢</div>
+    <div>
+      <h2>衙门口桥 <span class="seg-tag sw">西五环</span></h2>
+      <div class="loc">石景山区 · 西五环与莲石东路交汇</div>
+    </div>
+  </div>
+  <div class="node-body">
+    <div class="node-info">
+      <div class="info-section">
+        <h4>🔧 改造方案</h4>
+        <ul>
+          <li>核心项目：<strong>首程时代中心</strong>，新首钢园东南区，总建筑面积44万㎡</li>
+          <li>19座高品质总部楼宇，面向航空航天/绿色双碳/数字经济</li>
+          <li><strong>M11号线衙门口西站</strong>出入口设于地块内，地铁与楼宇直达连接</li>
+          <li>5A甲级写字楼，LEED金级/绿色建筑三星/绿化率65%</li>
+          <li>首钢集团与新加坡金鹰集团联手打造</li>
+          <li>"北京城六区内、长安街延线新建的最大规模商务园区"</li>
+          <li>市郊铁路副中心线衙门口东站建设中</li>
+        </ul>
+      </div>
+      <div class="info-section">
+        <h4>📊 关键数据</h4>
+        <div class="data-row">
+          <div class="data-chip"><span class="num">44万㎡</span><br><span class="txt">总建筑面积</span></div>
+          <div class="data-chip"><span class="num">19座</span><br><span class="txt">总部楼宇</span></div>
+          <div class="data-chip"><span class="num">65%</span><br><span class="txt">绿化率</span></div>
+        </div>
+      </div>
+      <div class="info-section">
+        <h4>⏱️ 实施进度</h4>
+        <p><span class="status-badge status-done">已建成运营</span> A区13.6万㎡/B区27.3万㎡/C区2.9万㎡</p>
+      </div>
+    </div>
+    <div class="node-img">
+      <div>
+        <img src="https://s.coze.cn/image/0RubDMS-Rtg/" alt="衙门口桥区域卫星影像" loading="lazy">
+        <div class="img-cap">▲ 衙门口桥区域卫星正射影像 · 复合型互通立交与周边城区</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 节点12：首钢园 -->
+<div class="node-card" id="n12">
+  <div class="node-header">
+    <div class="node-icon" style="background:var(--wb)">🏭</div>
+    <div>
+      <h2>首钢园 <span class="seg-tag sw">西五环</span></h2>
+      <div class="loc">石景山区 · 长安街西延线与永定河交汇处</div>
+    </div>
+  </div>
+  <div class="node-body">
+    <div class="node-info">
+      <div class="info-section">
+        <h4>📍 现状描述</h4>
+        <p>首钢园始建于1919年，21世纪初钢厂大搬迁后，8.63km²闲置厂区经保护性开发，已成为跨界融合的都市型产业社区。2022年冬奥会首钢滑雪大跳台让园区全球瞩目。</p>
+      </div>
+      <div class="info-section">
+        <h4>🔧 改造方案</h4>
+        <ul>
+          <li>蹚出"<strong>自主造血</strong>"的城市更新路径——公共资产移交政府，企业专注产业培育</li>
+          <li>北区3.29km²聚焦科幻/元宇宙/游戏电竞/数字产业</li>
+          <li>"需求前置"运营理念：先想清楚谁来用，再改造</li>
+          <li>"四区"转型：钢铁生产区→冬奥赛事区→会展经济区→数字产业区</li>
+          <li>服贸会永久会址+科幻大会永久会址</li>
+          <li>"两园一河"连片发展：首钢园+园博园+永定河</li>
+          <li>2026年重点：9.4km堤顶路/京原漫水桥/潮玩悦享水岸二期/会展小镇/煤仓博物馆艺术中心</li>
+        </ul>
+      </div>
+      <div class="info-section">
+        <h4>📊 关键数据</h4>
+        <div class="data-row">
+          <div class="data-chip"><span class="num">8.63km²</span><br><span class="txt">园区面积</span></div>
+          <div class="data-chip"><span class="num">1286家</span><br><span class="txt">入驻企业(+32%)</span></div>
+          <div class="data-chip"><span class="num">779亿</span><br><span class="txt">企业总营收</span></div>
+          <div class="data-chip"><span class="num">1300万+</span><br><span class="txt">年入园客流</span></div>
+          <div class="data-chip"><span class="num">280亿+</span><br><span class="txt">科幻产业产值</span></div>
+          <div class="data-chip"><span class="num">100+</span><br><span class="txt">AI企业</span></div>
+        </div>
+      </div>
+      <div class="info-section">
+        <h4>⏱️ 实施进度</h4>
+        <p><span class="status-badge status-done">深化运营中</span> 主体转型完成，"十五五"期间成为"千亿园区"</p>
+      </div>
+    </div>
+    <div class="node-img">
+      <div>
+        <img src="https://s.coze.cn/image/P70rCET_yNA/" alt="首钢园卫星影像" loading="lazy">
+        <div class="img-cap">▲ 首钢园航拍 · 工业遗存与现代城市交融的更新地标</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 节点13：看丹站 -->
+<div class="node-card" id="n13">
+  <div class="node-header">
+    <div class="node-icon" style="background:var(--wb)">🚇</div>
+    <div>
+      <h2>看丹站 <span class="seg-tag sw">西五环内</span></h2>
+      <div class="loc">丰台区 · 南五环内/地铁16号线看丹站西南角</div>
+    </div>
+  </div>
+  <div class="node-body">
+    <div class="node-info">
+      <div class="info-section">
+        <h4>🔧 改造方案</h4>
+        <ul>
+          <li><strong>看丹TOD城市综合体</strong>：总建筑面积9.05万㎡（地上5.82万/地下3.23万㎡）</li>
+          <li>总投资约<strong>8.62亿元</strong>，5栋楼（3栋商业+2栋办公）</li>
+          <li>地下空间与地铁16号线看丹站D口<strong>一体化结合设计</strong></li>
+          <li>定位"轨道微中心"+"大健康"产业融合式示范街区</li>
+          <li>看丹数智健康创新产业园先行示范区，规划占地约百亩</li>
+          <li>超20万㎡建筑规模，利用周边近千亩天然绿地资源</li>
+          <li>自密实混凝土/流态固化土等新材料；雨水收集与中水回用系统</li>
+          <li>基坑距地铁16号线隧道结构最近仅2米</li>
+        </ul>
+      </div>
+      <div class="info-section">
+        <h4>📊 关键数据</h4>
+        <div class="data-row">
+          <div class="data-chip"><span class="num">9.05万㎡</span><br><span class="txt">总建筑面积</span></div>
+          <div class="data-chip"><span class="num">8.62亿</span><br><span class="txt">总投资</span></div>
+          <div class="data-chip"><span class="num">1100+</span><br><span class="txt">劳动力安置</span></div>
+        </div>
+      </div>
+      <div class="info-section">
+        <h4>⏱️ 实施进度</h4>
+        <p><span class="status-badge status-build">封顶·2027年竣工</span> 2025年5月进场，9个月封顶（提前2个月），预计2027年7月竣工</p>
+      </div>
+    </div>
+    <div class="node-img">
+      <div>
+        <img src="https://s.coze.cn/image/IvRkO6VhC4U/" alt="看丹站区域卫星影像" loading="lazy">
+        <div class="img-cap">▲ 看丹站区域地图 · 地铁16号线与周边城市空间关系</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 节点14：闵西桥 -->
+<div class="node-card" id="n14">
+  <div class="node-header">
+    <div class="node-icon" style="background:var(--wb)">🔀</div>
+    <div>
+      <h2>杏石口桥/闵西桥 <span class="seg-tag sw">西五环</span></h2>
+      <div class="loc">海淀区 · 西五环路与闵庄路相交处</div>
+    </div>
+  </div>
+  <div class="node-body">
+    <div class="node-info">
+      <div class="info-section">
+        <h4>📍 现状描述</h4>
+        <p>杏石口桥区域存在内环进出京匝道积水问题。闵庄路与五环路相交处原有平交路口，交通转换效率低。</p>
+      </div>
+      <div class="info-section">
+        <h4>🔧 改造方案</h4>
+        <ul>
+          <li><strong>五环路闵西桥立交工程</strong>：新建菱形立交1座</li>
+          <li>新建匝道<strong>4条</strong>，全长约<strong>2.91km</strong>（匝道长约2.02km）</li>
+          <li>五环路加宽改造段长约0.89km</li>
+          <li>同步建设雨水、照明等配套工程</li>
+          <li>杏石口路周边（西四环辅路至旱河路等）路面大修</li>
+        </ul>
+      </div>
+      <div class="info-section">
+        <h4>✨ 设计亮点</h4>
+        <div class="highlight">
+          <p>菱形立交形式实现五环主路与闵庄路的快速转换，<strong>4条匝道覆盖全方向交通需求</strong>，是继远通桥之后又一个"微改造"破解交通瓶颈的范例。</p>
+        </div>
+      </div>
+      <div class="info-section">
+        <h4>⏱️ 实施进度</h4>
+        <p><span class="status-badge status-plan">前期阶段</span> 2025年12月完成监理中标公示；杏石口路周边大修2026年5-9月</p>
+      </div>
+    </div>
+    <div class="node-img">
+      <div>
+        <img src="https://s.coze.cn/image/LrWBt9mtM98/" alt="闵西桥区域卫星影像" loading="lazy">
+        <div class="img-cap">▲ 闵西桥区域地图 · 西五环与闵庄路交汇节点</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  数据来源：北京市交通委 · 北京市规自委 · 各区政府公开信息 · 新华社/人民网/新京报/央视新闻等公开报道 · 2026年10月整理<br>
+  卫星影像来源：公开航拍/卫星图资料，仅供规划参考，非精确测绘
+</footer>
+
+</div>
+</body>
+</html>
