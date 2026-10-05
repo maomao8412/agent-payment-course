@@ -506,6 +506,181 @@
     border-radius: 3px;
     transition: width 0.3s ease;
   }
+
+  /* ===== 治理层 ===== */
+  .governance-section {
+    background: rgba(15,23,42,0.8);
+    border: 1px solid rgba(71,85,105,0.3);
+    border-radius: 12px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    margin-top: 14px;
+  }
+  .gov-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap; gap: 10px;
+  }
+  .gov-header h2 {
+    font-size: 18px; font-weight: 700;
+    background: linear-gradient(135deg, #38bdf8, #a78bfa);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .btn-gov-demo {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    border: none; border-radius: 10px;
+    color: #fff; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.3s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-gov-demo:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(239,68,68,0.4); }
+
+  .gov-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  @media (max-width: 900px) { .gov-grid { grid-template-columns: 1fr; } }
+
+  .gov-card {
+    padding: 16px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+    border: 1px solid rgba(71,85,105,0.2);
+    position: relative;
+  }
+  .gov-tier {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 6px;
+  }
+  .gov-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 10px;
+  }
+  .gov-list {
+    list-style: none;
+    font-size: 11.5px;
+    color: #94a3b8;
+    line-height: 1.7;
+  }
+  .gov-list li {
+    padding-left: 14px;
+    position: relative;
+  }
+  .gov-list li::before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+    color: #6366f1;
+  }
+  .gov-list b { color: #cbd5e1; font-weight: 600; }
+  .gov-tag {
+    margin-top: 12px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    text-align: center;
+    display: inline-block;
+  }
+  .gov-tag.before { background: rgba(99,102,241,0.15); color: #a5b4fc; }
+  .gov-tag.during { background: rgba(245,158,11,0.15); color: #fcd34d; }
+  .gov-tag.after { background: rgba(34,197,94,0.15); color: #86efac; }
+
+  /* 退款详解 */
+  .refund-detail {
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .refund-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .refund-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    gap: 10px;
+    align-items: stretch;
+  }
+  @media (max-width: 800px) {
+    .refund-grid { grid-template-columns: 1fr; }
+    .refund-arrow { display: none; }
+  }
+  .refund-step {
+    padding: 12px;
+    background: rgba(15,23,42,0.6);
+    border: 1px solid rgba(71,85,105,0.3);
+    border-radius: 8px;
+    text-align: center;
+  }
+  .refund-step.highlight {
+    border-color: rgba(251,191,36,0.4);
+    background: rgba(251,191,36,0.08);
+  }
+  .refund-num {
+    width: 24px; height: 24px;
+    margin: 0 auto 6px;
+    background: rgba(99,102,241,0.2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    color: #a5b4fc;
+  }
+  .refund-step.highlight .refund-num {
+    background: rgba(251,191,36,0.2);
+    color: #fcd34d;
+  }
+  .refund-label {
+    font-size: 11px; font-weight: 600;
+    color: #cbd5e1;
+    margin-bottom: 6px;
+  }
+  .refund-desc {
+    font-size: 10.5px;
+    color: #94a3b8;
+    line-height: 1.5;
+  }
+  .refund-arrow {
+    display: flex; align-items: center; justify-content: center;
+    color: #475569;
+    font-size: 18px;
+    font-weight: 300;
+  }
+
+  /* 拦截演示 */
+  .intercept-demo {
+    margin-top: 12px;
+    padding: 12px;
+    background: rgba(239,68,68,0.06);
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 10px;
+  }
+  .ic-step {
+    padding: 6px 10px;
+    font-size: 11px;
+    border-radius: 6px;
+    opacity: 0;
+    transform: translateX(-8px);
+    animation: icIn 0.3s ease forwards;
+  }
+  @keyframes icIn { to { opacity: 1; transform: translateX(0); } }
+  .ic-step.info { background: rgba(100,116,139,0.1); color: #94a3b8; }
+  .ic-step.warn { background: rgba(245,158,11,0.1); color: #fcd34d; }
+  .ic-step.danger { background: rgba(239,68,68,0.1); color: #fca5a5; font-weight: 600; }
+  .ic-step.success { background: rgba(34,197,94,0.1); color: #86efac; }
 </style>
 </head>
 <body>
@@ -675,6 +850,109 @@
     <div style="margin-top:10px;padding:8px 12px;background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.2);border-radius:8px;font-size:11px;color:#a5b4fc;line-height:1.5;">
       💡 <b>核心洞察：</b>不是A2A支付"抢"了传统支付的生意，而是传统支付根本做不了这些分/厘级的微交易。
       A2A数字人民币开辟的是一块<b>全新的市场</b>——机器与机器之间的经济活动。
+    </div>
+  </div>
+
+  <!-- 治理层 -->
+  <div class="governance-section" id="governanceSection">
+    <div class="gov-header">
+      <div>
+        <h2>🛡️ A2A支付治理体系</h2>
+        <p style="font-size:12px;color:#64748b;margin-top:2px;">不是放手让Agent乱花钱，而是一整套可编程的自动治理——事前授权、事中拦截、事后追溯</p>
+      </div>
+      <button class="btn-gov-demo" id="govDemoBtn">
+        <span>🎯</span> 体验异常拦截 & 退款
+      </button>
+    </div>
+
+    <div class="gov-grid">
+      <!-- 事前 -->
+      <div class="gov-card">
+        <div class="gov-tier">事前 · Policy Engine</div>
+        <div class="gov-title">授权与规则</div>
+        <ul class="gov-list">
+          <li><b>子钱包隔离</b>：每个Agent独立额度，亏不到主账户</li>
+          <li><b>白名单机制</b>：只能付给已认证的服务商Agent</li>
+          <li><b>单笔限额</b>：超过阈值自动转人工审批</li>
+          <li><b>日/月累加限额</b>：花超了自动停机</li>
+          <li><b>用途分类</b>：只能花在指定用途（API/素材/数据）</li>
+          <li><b>时间窗口</b>：非工作时间禁止大额支付</li>
+        </ul>
+        <div class="gov-tag before">智能合约硬编码 · 不可绕过</div>
+      </div>
+
+      <!-- 事中 -->
+      <div class="gov-card">
+        <div class="gov-tier">事中 · Risk Engine</div>
+        <div class="gov-title">实时风控</div>
+        <ul class="gov-list">
+          <li><b>行为基线检测</b>：偏离正常消费模式立即冻结</li>
+          <li><b>高频交易限速</b>：短时间内多笔自动熔断</li>
+          <li><b>对手方风险</b>：新服务商首笔小额验证</li>
+          <li><b>重复支付拦截</b>：同一订单不会付两次</li>
+          <li><b>价格偏离校验</b>：比市场价贵太多拦截</li>
+          <li><b>多级审批流</b>：大额自动上报主人确认</li>
+        </ul>
+        <div class="gov-tag during">毫秒级响应 · 自动熔断</div>
+      </div>
+
+      <!-- 事后 -->
+      <div class="gov-card">
+        <div class="gov-tier">事后 · Audit & Refund</div>
+        <div class="gov-title">追溯与退款</div>
+        <ul class="gov-list">
+          <li><b>全链路存证</b>：每笔都上链，不可篡改可审计</li>
+          <li><b>秒级退款</b>：智能合约自动原路退回</li>
+          <li><b>条件退款</b>：服务未达标自动触发退款</li>
+          <li><b>争议仲裁</b>：第三方Agent参与纠纷判定</li>
+          <li><b>消费报表</b>：每日自动生成对账单</li>
+          <li><b>异常回溯</b>：出问题可以倒查每一笔</li>
+        </ul>
+        <div class="gov-tag after">链上存证 · 自动执行</div>
+      </div>
+    </div>
+
+    <!-- 退款机制详解 -->
+    <div class="refund-detail" id="refundDetail">
+      <div class="refund-title">💰 退款：为什么A2A数字人民币支付能做到"秒退"？</div>
+      <div class="refund-grid">
+        <div class="refund-step">
+          <div class="refund-num">1</div>
+          <div class="refund-label">传统支付退款</div>
+          <div class="refund-desc">
+            用户申请 → 商家审核 → 支付公司审核 → 银行清算 → 原路退回<br>
+            <b style="color:#fca5a5;">3-7个工作日</b>
+          </div>
+        </div>
+        <div class="refund-arrow">→</div>
+        <div class="refund-step">
+          <div class="refund-num">2</div>
+          <div class="refund-label">A2A 数币退款</div>
+          <div class="refund-desc">
+            智能合约判定条件满足 → 自动执行退款 → 链上确认到账<br>
+            <b style="color:#86efac;">2-3秒</b>
+          </div>
+        </div>
+        <div class="refund-arrow">→</div>
+        <div class="refund-step highlight">
+          <div class="refund-num">3</div>
+          <div class="refund-label">条件自动退款</div>
+          <div class="refund-desc">
+            服务未按时交付 / 质量不达标 / 超时未完成<br>
+            <b style="color:#fcd34d;">无需申请，合约自动退款</b>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 异常拦截演示区 -->
+    <div class="intercept-demo" id="interceptDemo" style="display:none;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px;color:#fca5a5;">
+        ⚠️ 模拟：Agent试图向一个未授权的陌生服务商支付¥500
+      </div>
+      <div id="interceptTimeline" style="display:flex;flex-direction:column;gap:6px;">
+        <!-- 动态插入 -->
+      </div>
     </div>
   </div>
 
@@ -1013,6 +1291,50 @@ document.getElementById('startBtn').addEventListener('click', startDay);
 document.getElementById('resetBtn').addEventListener('click', () => {
   if (isPlaying) return;
   location.reload();
+});
+
+// 治理演示
+let govPlaying = false;
+document.getElementById('govDemoBtn').addEventListener('click', async () => {
+  if (govPlaying) return;
+  govPlaying = true;
+  const btn = document.getElementById('govDemoBtn');
+  btn.disabled = true;
+  const demo = document.getElementById('interceptDemo');
+  demo.style.display = 'block';
+  const tl = document.getElementById('interceptTimeline');
+  tl.innerHTML = '';
+
+  function addStep(text, type) {
+    const el = document.createElement('div');
+    el.className = 'ic-step ' + type;
+    el.textContent = text;
+    tl.appendChild(el);
+  }
+
+  // 场景：Agent试图向一个陌生的、不在白名单里的服务商支付500元
+  addStep('🤖 写作Agent：发现一个新的素材平台，图片质量不错，我买一年会员试试...', 'info');
+  await sleep(700);
+  addStep('💰 支付意图：向"未知素材网"支付 ¥500.00', 'info');
+  await sleep(500);
+  addStep('🔍 Policy Engine 校验中...', 'info');
+  await sleep(500);
+  addStep('⚠️ 风控触发1：收款方不在白名单内（首次交易）', 'warn');
+  await sleep(500);
+  addStep('⚠️ 风控触发2：单笔金额¥500，超过Agent单笔限额¥200', 'warn');
+  await sleep(500);
+  addStep('⚠️ 风控触发3：本月同类支出已达预算上限85%', 'warn');
+  await sleep(600);
+  addStep('🚫 Risk Engine 自动熔断：支付已拦截，等待主人审批', 'danger');
+  await sleep(700);
+  addStep('📱 已向张小明发送审批通知：写作Agent申请向新服务商支付¥500，请确认', 'info');
+  await sleep(800);
+  addStep('✅ 主人拒绝：不认识这个平台，不准买', 'success');
+  await sleep(500);
+  addStep('🛡️ 支付被拦截，Agent额度未扣减，全程无资金损失', 'success');
+
+  govPlaying = false;
+  btn.disabled = false;
 });
 
 // 初始统计
