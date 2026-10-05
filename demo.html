@@ -681,6 +681,159 @@
   .ic-step.warn { background: rgba(245,158,11,0.1); color: #fcd34d; }
   .ic-step.danger { background: rgba(239,68,68,0.1); color: #fca5a5; font-weight: 600; }
   .ic-step.success { background: rgba(34,197,94,0.1); color: #86efac; }
+
+  /* ===== 为什么需要A2A ===== */
+  .why-section {
+    background: rgba(15,23,42,0.8);
+    border: 1px solid rgba(71,85,105,0.3);
+    border-radius: 12px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    margin-top: 14px;
+  }
+  .why-header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .why-header h2 {
+    font-size: 20px; font-weight: 700;
+    background: linear-gradient(135deg, #f472b6, #a78bfa, #60a5fa);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+  }
+  .why-header p {
+    font-size: 13px;
+    color: #94a3b8;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .alt-section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #cbd5e1;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .alt-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 22px;
+    font-size: 12px;
+  }
+  .alt-table th {
+    text-align: left;
+    padding: 10px 12px;
+    background: rgba(99,102,241,0.1);
+    color: #a5b4fc;
+    font-weight: 600;
+    font-size: 11px;
+    border-bottom: 1px solid rgba(71,85,105,0.3);
+  }
+  .alt-table th:first-child { border-radius: 8px 0 0 0; }
+  .alt-table th:last-child { border-radius: 0 8px 0 0; }
+  .alt-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(71,85,105,0.15);
+    color: #94a3b8;
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .alt-table td:first-child {
+    color: #e2e8f0;
+    font-weight: 600;
+    white-space: nowrap;
+    width: 120px;
+  }
+  .alt-table tr:hover td { background: rgba(99,102,241,0.03); }
+  .alt-table .problem { color: #fca5a5; }
+
+  .impact-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 1000px) { .impact-grid { grid-template-columns: repeat(2, 1fr); } }
+  .impact-card {
+    padding: 14px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+    border: 1px solid rgba(71,85,105,0.2);
+    position: relative;
+    transition: all 0.3s;
+  }
+  .impact-card:hover {
+    border-color: rgba(236,72,153,0.3);
+    transform: translateY(-2px);
+  }
+  .impact-icon {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, rgba(236,72,153,0.2), rgba(168,85,247,0.2));
+    border-radius: 9px;
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  .impact-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 6px;
+  }
+  .impact-desc {
+    font-size: 11px;
+    color: #94a3b8;
+    line-height: 1.55;
+  }
+  .impact-card::after {
+    content: "不存在";
+    position: absolute;
+    top: 10px; right: 10px;
+    font-size: 9px;
+    padding: 2px 6px;
+    background: rgba(239,68,68,0.15);
+    color: #fca5a5;
+    border-radius: 4px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .conclusion-box {
+    padding: 18px 22px;
+    background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(236,72,153,0.08));
+    border: 1px solid rgba(99,102,241,0.25);
+    border-radius: 12px;
+    text-align: center;
+  }
+  .conclusion-box .big {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .conclusion-box .big .hl {
+    background: linear-gradient(135deg, #38bdf8, #a78bfa, #f472b6);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .conclusion-box .sub {
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.6;
+  }
+  .conclusion-box .num {
+    display: inline-block;
+    margin: 10px 8px 0;
+    padding: 8px 14px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 8px;
+    font-size: 13px;
+  }
+  .conclusion-box .num b {
+    color: #fbbf24;
+    font-size: 16px;
+  }
 </style>
 </head>
 <body>
@@ -953,6 +1106,116 @@
       <div id="interceptTimeline" style="display:flex;flex-direction:column;gap:6px;">
         <!-- 动态插入 -->
       </div>
+    </div>
+  </div>
+
+  <!-- 为什么需要A2A支付 -->
+  <div class="why-section">
+    <div class="why-header">
+      <h2>💡 为什么必须要有A2A支付？</h2>
+      <p>不是"比微信支付宝更好用"，而是"没有它，Agent之间的经济活动根本启动不了"</p>
+    </div>
+
+    <div class="alt-section-title">
+      <span>🔄</span>
+      现状：没有A2A支付时，Agent想买东西怎么办？
+    </div>
+
+    <table class="alt-table">
+      <thead>
+        <tr>
+          <th>替代方案</th>
+          <th>怎么运作</th>
+          <th>根本缺陷</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>人工代付</td>
+          <td>Agent想买什么通知人，人手动付钱</td>
+          <td class="problem">完全不可规模化，Agent越快人越跟不上。100个Agent同时工作时，人根本批不过来</td>
+        </tr>
+        <tr>
+          <td>预充值/预付卡</td>
+          <td>给Agent一个固定额度，花完拉倒</td>
+          <td class="problem">黑箱消费，不知道花在哪、花得值不值；额度多了浪费，少了影响工作</td>
+        </tr>
+        <tr>
+          <td>API Key月结算</td>
+          <td>服务商按月出账单，企业公对公转</td>
+          <td class="problem">只能对接大服务商，小服务商/个人Agent进不来；粒度粗，无法按需调用</td>
+        </tr>
+        <tr>
+          <td>订阅制</td>
+          <td>按月/按年付费，不限量使用</td>
+          <td class="problem">用得少的亏，用得多的服务商亏；不适合按需按量的Agent调用场景</td>
+        </tr>
+        <tr>
+          <td>免费+广告</td>
+          <td>不靠用户付费，靠广告变现</td>
+          <td class="problem">绝大多数微服务撑不起广告模型，干脆没人做——供给侧直接消失</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="alt-section-title">
+      <span>📉</span>
+      没有A2A支付，哪些经济活动根本不存在？
+    </div>
+
+    <div class="impact-grid">
+      <div class="impact-card">
+        <div class="impact-icon">🔬</div>
+        <div class="impact-title">微服务市场</div>
+        <div class="impact-desc">
+          OCR识别3分钱、图片处理2分钱、API调用0.001元——这些服务不是没人想做，而是<b>做了也收不上钱</b>。
+          传统支付每笔最低几毛钱手续费，你收3分钱倒贴。结果就是大量低成本、高价值的微服务，干脆没人开发。
+        </div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-icon">🤝</div>
+        <div class="impact-title">Agent分工协作</div>
+        <div class="impact-desc">
+          Agent A写代码要调Agent B做测试、Agent C做安全审计、Agent D写文档——每一步都要付费。
+          没有A2A支付，Agent之间要么免费干活（没人愿意），要么人工对账（效率太低）。
+          <b>Agent永远单打独斗，形成不了产业链。</b>
+        </div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-icon">📊</div>
+        <div class="impact-title">数据要素流通</div>
+        <div class="impact-desc">
+          数据交易天然是细粒度的——买一条数据、买一次查询、买一份摘要。
+          现在数据交易所为什么做不起来？很大一个原因是<b>支付粒度太粗</b>，你不可能为了1块钱的数据走对公签合同。
+          没有微支付，数据要素市场就是个伪命题。
+        </div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-icon">⚙️</div>
+        <div class="impact-title">产业链分工</div>
+        <div class="impact-desc">
+          Agent需要配图、数据、查重、校对、翻译、配音——这些"小服务"如果每笔都有手续费成本，Agent干脆就不用了。
+          <b>支付摩擦决定了产业链的分工程度。</b>
+          支付越顺滑，分工越细；支付越贵，大家越倾向于什么都自己做，整体效率越低。
+        </div>
+      </div>
+    </div>
+
+    <div class="conclusion-box">
+      <div class="big">
+        A2A数字人民币支付，开辟的是一块<span class="hl">传统支付根本覆盖不到的新市场</span>
+      </div>
+      <div class="sub">
+        不是从微信支付宝手里抢生意，而是从零创造出"机器与机器之间的经济活动"<br>
+        支付摩擦降为零 → 分工细化 → 生产力跃升——这才是真正的价值所在
+      </div>
+      <div>
+        <div class="num">1亿个 <b>Agent</b></div>
+        <div class="num">× 50笔/天 <b>微支付</b></div>
+        <div class="num">= 每天 <b>250亿笔</b></div>
+        <div class="num">≈ 每天 <b>125亿元</b></div>
+      </div>
+      <div style="font-size:11px;color:#64748b;margin-top:8px;">* 仅为Agent工作耗材品类的粗略估算，不含交易、金融等更高价值场景</div>
     </div>
   </div>
 
