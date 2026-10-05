@@ -1,0 +1,895 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A2A支付体系建设 · 合作方案</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0a0e1a;
+    --bg-card: rgba(20, 28, 50, 0.6);
+    --bg-card-hover: rgba(30, 42, 72, 0.8);
+    --border: rgba(100, 140, 220, 0.15);
+    --border-light: rgba(100, 140, 220, 0.3);
+    --primary: #4f8cff;
+    --primary-light: #7ab0ff;
+    --accent: #00d4aa;
+    --accent2: #ff6b6b;
+    --gold: #ffd700;
+    --text: #e8ecf5;
+    --text-secondary: #8a94a8;
+    --text-muted: #5c6680;
+    --gradient-primary: linear-gradient(135deg, #4f8cff 0%, #00d4aa 100%);
+    --gradient-gold: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+  
+  /* 背景光效 */
+  .bg-glow {
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    filter: blur(150px);
+    opacity: 0.12;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .bg-glow-1 { top: -200px; right: -100px; background: var(--primary); }
+  .bg-glow-2 { bottom: -200px; left: -100px; background: var(--accent); }
+  .bg-glow-3 { top: 50%; left: 50%; transform: translate(-50%, -50%); background: #8b5cf6; opacity: 0.06; width: 800px; height: 800px; }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Hero */
+  .hero {
+    padding: 100px 0 80px;
+    text-align: center;
+    position: relative;
+  }
+  .hero-badge {
+    display: inline-block;
+    padding: 8px 20px;
+    background: rgba(79, 140, 255, 0.1);
+    border: 1px solid rgba(79, 140, 255, 0.3);
+    border-radius: 20px;
+    font-size: 14px;
+    color: var(--primary-light);
+    margin-bottom: 28px;
+    letter-spacing: 1px;
+  }
+  .hero h1 {
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.3;
+    margin-bottom: 24px;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-subtitle {
+    font-size: 20px;
+    color: var(--text-secondary);
+    max-width: 700px;
+    margin: 0 auto 40px;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    flex-wrap: wrap;
+    margin-top: 50px;
+  }
+  .hero-stat {
+    text-align: center;
+  }
+  .hero-stat-num {
+    font-size: 36px;
+    font-weight: 800;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-stat-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+  }
+  
+  /* Section */
+  section {
+    padding: 70px 0;
+    position: relative;
+  }
+  .section-label {
+    display: inline-block;
+    padding: 6px 16px;
+    background: rgba(0, 212, 170, 0.1);
+    border: 1px solid rgba(0, 212, 170, 0.25);
+    border-radius: 16px;
+    font-size: 13px;
+    color: var(--accent);
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+  }
+  .section-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .section-desc {
+    font-size: 16px;
+    color: var(--text-secondary);
+    max-width: 700px;
+    margin-bottom: 48px;
+  }
+  
+  /* 问题分析表 */
+  .gap-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .gap-table th {
+    padding: 18px 24px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    background: rgba(79, 140, 255, 0.08);
+    border-bottom: 1px solid var(--border);
+  }
+  .gap-table td {
+    padding: 18px 24px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    border-bottom: 1px solid rgba(100, 140, 220, 0.08);
+    vertical-align: top;
+  }
+  .gap-table tr:last-child td { border-bottom: none; }
+  .gap-table td:first-child {
+    color: var(--text);
+    font-weight: 500;
+    width: 18%;
+  }
+  .gap-table .gap {
+    color: var(--accent2);
+    font-weight: 500;
+  }
+  
+  /* 定位三层 */
+  .positioning-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .position-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .position-card:hover {
+    border-color: var(--border-light);
+    background: var(--bg-card-hover);
+    transform: translateY(-4px);
+  }
+  .position-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gradient-primary);
+  }
+  .position-layer {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  .layer-1 { background: rgba(79, 140, 255, 0.15); color: var(--primary-light); }
+  .layer-2 { background: rgba(0, 212, 170, 0.15); color: var(--accent); }
+  .layer-3 { background: rgba(255, 215, 0, 0.15); color: var(--gold); }
+  .position-card h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .position-card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+  .position-card ul {
+    list-style: none;
+    padding: 0;
+  }
+  .position-card li {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 6px 0 6px 20px;
+    position: relative;
+  }
+  .position-card li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  
+  /* 优势 */
+  .advantages-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  .advantage-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    display: flex;
+    gap: 20px;
+    transition: all 0.3s ease;
+  }
+  .advantage-card:hover {
+    border-color: var(--border-light);
+    background: var(--bg-card-hover);
+  }
+  .advantage-icon {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    background: rgba(79, 140, 255, 0.12);
+    border: 1px solid rgba(79, 140, 255, 0.2);
+  }
+  .advantage-content h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .advantage-content p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  
+  /* 合作路径 */
+  .path-timeline {
+    position: relative;
+    padding: 20px 0;
+  }
+  .path-timeline::before {
+    content: '';
+    position: absolute;
+    left: 28px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--primary), var(--accent));
+    opacity: 0.3;
+  }
+  .path-step {
+    display: flex;
+    gap: 28px;
+    margin-bottom: 40px;
+    position: relative;
+  }
+  .path-step:last-child { margin-bottom: 0; }
+  .path-step-num {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--primary);
+    position: relative;
+    z-index: 1;
+  }
+  .path-step-content {
+    flex: 1;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+  }
+  .path-step-content h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .path-step-duration {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(0, 212, 170, 0.1);
+    border-radius: 10px;
+    font-size: 12px;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  .path-step-content p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+  }
+  .path-step-content ul {
+    list-style: none;
+    padding: 0;
+  }
+  .path-step-content li {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 4px 0 4px 18px;
+    position: relative;
+  }
+  .path-step-content li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--primary-light);
+  }
+  
+  /* 合作模式对比 */
+  .modes-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .mode-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  .mode-card.recommended {
+    border-color: var(--primary);
+    background: rgba(79, 140, 255, 0.05);
+  }
+  .mode-card.recommended::after {
+    content: '推荐';
+    position: absolute;
+    top: -10px;
+    right: 16px;
+    padding: 2px 10px;
+    background: var(--gradient-primary);
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .mode-card:hover {
+    border-color: var(--border-light);
+    transform: translateY(-2px);
+  }
+  .mode-card h4 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .mode-card .mode-detail {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .mode-card .mode-detail strong {
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+  
+  /* 核心主张 */
+  .core-statement {
+    background: linear-gradient(135deg, rgba(79, 140, 255, 0.1) 0%, rgba(0, 212, 170, 0.1) 100%);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 48px;
+    text-align: center;
+    margin: 40px 0;
+  }
+  .core-statement p {
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.8;
+    color: var(--text);
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .core-statement p .highlight {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800;
+  }
+  
+  /* 风险提醒 */
+  .warning-box {
+    background: rgba(255, 107, 107, 0.08);
+    border: 1px solid rgba(255, 107, 107, 0.25);
+    border-radius: 14px;
+    padding: 24px 28px;
+    margin-top: 30px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .warning-icon {
+    font-size: 24px;
+    min-width: 24px;
+  }
+  .warning-box h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent2);
+    margin-bottom: 8px;
+  }
+  .warning-box p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  
+  /* 下一步 */
+  .next-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .next-step-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    text-align: center;
+  }
+  .next-step-item .step-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
+  .next-step-item h4 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .next-step-item p {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  
+  footer {
+    text-align: center;
+    padding: 40px 0;
+    color: var(--text-muted);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  
+  @media (max-width: 900px) {
+    .positioning-grid { grid-template-columns: 1fr; }
+    .advantages-grid { grid-template-columns: 1fr; }
+    .modes-grid { grid-template-columns: repeat(2, 1fr); }
+    .next-steps { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 32px; }
+    .hero-subtitle { font-size: 16px; }
+    .section-title { font-size: 24px; }
+    .core-statement { padding: 32px 24px; }
+    .core-statement p { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-glow bg-glow-1"></div>
+<div class="bg-glow bg-glow-2"></div>
+<div class="bg-glow bg-glow-3"></div>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge">合作方案 · CONFIDENTIAL</div>
+    <h1>A2A支付体系建设<br>战略合作方案</h1>
+    <p class="hero-subtitle">
+      以技术与生态为核心，共建Agent时代的数字人民币支付基础设施<br>
+      小团队 × 大金融 = 互补共赢
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">3层</div>
+        <div class="hero-stat-label">核心定位</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">4大</div>
+        <div class="hero-stat-label">独特优势</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">3步</div>
+        <div class="hero-stat-label">落地路径</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">6个月</div>
+        <div class="hero-stat-label">POC到产品</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 一、市场机会 -->
+  <section>
+    <div class="section-label">第一章</div>
+    <h2 class="section-title">为什么现在是A2A支付的最佳入场时机</h2>
+    <p class="section-desc">
+      A2A支付不是"更好的支付"，而是"Agent经济的前提条件"。没有它，Agent之间的经济活动根本启动不了。
+      全球正处于协议标准竞争期，中国走合规法币路线，谁先跑通完整体系，谁就掌握下一代支付的话语权。
+    </p>
+    
+    <table class="gap-table">
+      <thead>
+        <tr>
+          <th>维度</th>
+          <th>平安现状</th>
+          <th>核心短板</th>
+          <th>机会点</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>技术敏捷性</td>
+          <td>大公司机制，决策链长，从立项到落地通常3-6个月</td>
+          <td class="gap">A2A是快速迭代的新领域，等审批完竞品已跑半年</td>
+          <td>小团队快速试错，3个月跑通POC验证</td>
+        </tr>
+        <tr>
+          <td>Agent技术栈</td>
+          <td>金融科技为主，AI Agent不是核心能力</td>
+          <td class="gap">A2A的核心不是"支付"，是"Agent怎么花钱"</td>
+          <td>专注Agent决策与支付治理引擎，补齐能力短板</td>
+        </tr>
+        <tr>
+          <td>开发者生态</td>
+          <td>To B / To C 思维，缺To Developer基因</td>
+          <td class="gap">千万级Agent接入靠BD谈不过来，需要开发者平台</td>
+          <td>做Agent开发者平台，SDK一键接入，形成网络效应</td>
+        </tr>
+        <tr>
+          <td>微支付场景</td>
+          <td>习惯大额交易，对分厘级微支付理解不深</td>
+          <td class="gap">A2A支付80%交易量在微支付，非传统金融主战场</td>
+          <td>从微支付切入差异化赛道，避开与支付宝/微信正面竞争</td>
+        </tr>
+        <tr>
+          <td>跨机构互通</td>
+          <td>平安系内部闭环没问题，跨机构是短板</td>
+          <td class="gap">A2A价值在网络效应，只在平安系内玩天花板很低</td>
+          <td>以中立技术提供方身份，对接多银行多平台，做大蛋糕</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="core-statement">
+      <p>
+        平安在A2A支付上的战略位置，很像<span class="highlight">当年运营商在移动互联网时代</span>——
+        有管道、有用户，但缺<span class="highlight">应用层和生态层</span>。
+        我们要做的，就是补上平安缺的那块。
+      </p>
+    </div>
+  </section>
+
+  <!-- 二、我们的定位 -->
+  <section>
+    <div class="section-label">第二章</div>
+    <h2 class="section-title">我们的三层定位：技术 × 生态 × 场景</h2>
+    <p class="section-desc">
+      不跟平安抢支付牌照、抢商户、抢资金——这些我们抢不过。
+      我们的定位是平安A2A支付体系的"大脑"和"连接器"。
+    </p>
+    
+    <div class="positioning-grid">
+      <div class="position-card">
+        <span class="position-layer layer-1">第一层 · 技术壁垒</span>
+        <h3>核心引擎技术提供方</h3>
+        <p>平安有资金结算能力，但Agent怎么自主决策花钱、怎么风控、怎么签，这套逻辑是全新的。</p>
+        <ul>
+          <li>Policy Engine 策略引擎</li>
+          <li>Signing Engine 签名引擎（TEE安全飞地）</li>
+          <li>Risk Engine 实时风控引擎</li>
+          <li>三层治理架构（事前/事中/事后）</li>
+          <li>数字人民币智能合约对接</li>
+        </ul>
+      </div>
+      
+      <div class="position-card">
+        <span class="position-layer layer-2">第二层 · 网络效应</span>
+        <h3>Agent开发者生态平台</h3>
+        <p>平安服务企业客户，但企业里的各种Agent谁来接入？我们做开发者SDK和社区，让千万Agent一键接入。</p>
+        <ul>
+          <li>多语言SDK（Python/JS/Go）</li>
+          <li>沙箱环境与开发者文档</li>
+          <li>Agent应用市场 / 支付广场</li>
+          <li>开发者社区与激励体系</li>
+          <li>兼容主流Agent框架（Coze/Dify等）</li>
+        </ul>
+      </div>
+      
+      <div class="position-card">
+        <span class="position-layer layer-3">第三层 · 收入验证</span>
+        <h3>垂直场景联合运营</h3>
+        <p>从一两个垂直场景切入跑通商业闭环，验证真实价值后再横向复制。</p>
+        <ul>
+          <li>AI内容创作微支付场景</li>
+          <li>AI研究分析数据购买场景</li>
+          <li>Agent协作分工分账场景</li>
+          <li>联合运营，按交易分润</li>
+          <li>标杆案例打造，行业复制</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 三、核心优势 -->
+  <section>
+    <div class="section-label">第三章</div>
+    <h2 class="section-title">四大核心优势：为什么是我们</h2>
+    <p class="section-desc">
+      别拿"技术好"说事——平安不缺技术团队。我们的优势是平安做不了、也不适合自己做的事。
+    </p>
+    
+    <div class="advantages-grid">
+      <div class="advantage-card">
+        <div class="advantage-icon">⚡</div>
+        <div class="advantage-content">
+          <h3>速度优势：已经跑通完整原型</h3>
+          <p>
+            已有从场景演示到治理体系到全球格局分析的完整Demo，经过多轮迭代优化。
+            平安内部从零立项做同样的事至少需要3-6个月，我们直接带着成品去谈，
+            相当于帮平安省了半年时间窗口。
+          </p>
+        </div>
+      </div>
+      
+      <div class="advantage-card">
+        <div class="advantage-icon">💡</div>
+        <div class="advantage-content">
+          <h3>认知优势：对A2A本质的深度理解</h3>
+          <p>
+            国内玩家还停留在"辅助支付"阶段，真正理解"决策型自主支付"的团队很少。
+            我们的微支付定位、三层治理架构、Agent经济理论等认知深度，
+            是平安内部团队短期内难以达到的。
+          </p>
+        </div>
+      </div>
+      
+      <div class="advantage-card">
+        <div class="advantage-icon">🕊️</div>
+        <div class="advantage-content">
+          <h3>中立性优势：跨机构合作的"瑞士"</h3>
+          <p>
+            A2A支付的网络效应要求跨银行、跨平台、跨Agent框架。
+            如果A2A体系是平安独资，其他金融机构和平台会有顾虑。
+            我们作为独立技术提供商，可以扮演中立角色，谁都可以接入，反而把蛋糕做得更大。
+          </p>
+        </div>
+      </div>
+      
+      <div class="advantage-card">
+        <div class="advantage-icon">💰</div>
+        <div class="advantage-content">
+          <h3>成本优势：小团队高效试错</h3>
+          <p>
+            大公司做新业务，团队一拉就是几十人，成本几百万起步还不一定成。
+            我们一个小团队几个人就能跑通MVP，试错成本是平安的1/10。
+            用最小成本验证最大的可能性。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 四、合作模式 -->
+  <section>
+    <div class="section-label">第四章</div>
+    <h2 class="section-title">合作模式对比与推荐路径</h2>
+    <p class="section-desc">
+      从弱到强四档合作模式，我们建议从联合研发切入，逐步深化，最终走向战略投资。
+    </p>
+    
+    <div class="modes-grid">
+      <div class="mode-card">
+        <h4>技术服务</h4>
+        <div class="mode-detail"><strong>我们做：</strong>项目交付，收开发费</div>
+        <div class="mode-detail"><strong>平安做：</strong>提需求，验收付款</div>
+        <div class="mode-detail"><strong>收益：</strong>一次性收入+运维费</div>
+        <div class="mode-detail"><strong>风险：</strong>低，但没想象力</div>
+      </div>
+      
+      <div class="mode-card recommended">
+        <h4>联合研发</h4>
+        <div class="mode-detail"><strong>我们做：</strong>出技术团队和产品</div>
+        <div class="mode-detail"><strong>平安做：</strong>出场景、客户、资金</div>
+        <div class="mode-detail"><strong>收益：</strong>技术服务费 + 分润</div>
+        <div class="mode-detail"><strong>风险：</strong>中，绑定加深</div>
+      </div>
+      
+      <div class="mode-card recommended">
+        <h4>战略投资</h4>
+        <div class="mode-detail"><strong>我们做：</strong>独立运营，做大生态</div>
+        <div class="mode-detail"><strong>平安做：</strong>出资金、资源、场景</div>
+        <div class="mode-detail"><strong>收益：</strong>投资款 + 业务收入</div>
+        <div class="mode-detail"><strong>风险：</strong>中高，独立发展</div>
+      </div>
+      
+      <div class="mode-card">
+        <h4>合资公司</h4>
+        <div class="mode-detail"><strong>我们做：</strong>出技术团队和产品</div>
+        <div class="mode-detail"><strong>平安做：</strong>出牌照、资金、客户</div>
+        <div class="mode-detail"><strong>收益：</strong>股权 + 分红</div>
+        <div class="mode-detail"><strong>风险：</strong>高，深度绑定</div>
+      </div>
+    </div>
+    
+    <div class="warning-box">
+      <div class="warning-icon">⚠️</div>
+      <div>
+        <h4>关键提醒：别把自己做成外包</h4>
+        <p>
+          小团队跟大公司合作最容易掉的坑就是变成外包——平安提需求，我们写代码，按人月收费。
+          这样做死路一条：没有自己的产品，核心价值越来越弱，随时可以被替换，收入有天花板。
+          <strong>要坚持产品化、平台化，而不是项目化。</strong>
+          每一个项目做完，都要沉淀成可复用的产品模块；每一个客户的定制需求，都要反哺到通用产品里。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 五、落地路径 -->
+  <section>
+    <div class="section-label">第五章</div>
+    <h2 class="section-title">三步走落地路径</h2>
+    <p class="section-desc">
+      不求一步到位，先从小切口切入，用成果说话，逐步深化合作。
+    </p>
+    
+    <div class="path-timeline">
+      <div class="path-step">
+        <div class="path-step-num">1</div>
+        <div class="path-step-content">
+          <h3>联合POC · 概念验证</h3>
+          <span class="path-step-duration">预计 2-3 个月</span>
+          <p>选一个具体场景做概念验证，用最小成本验证技术可行性和业务价值。</p>
+          <ul>
+            <li>选定场景：如"AI理赔Agent微支付"或"研究Agent数据采购"</li>
+            <li>我们出：完整技术方案、产品原型、核心引擎</li>
+            <li>平安出：业务场景、真实数据、内部资源协调</li>
+            <li>目标：跑通完整流程，输出POC验证报告和数据</li>
+            <li>收益：技术开发费 + 后续合作优先权</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="path-step">
+        <div class="path-step-num">2</div>
+        <div class="path-step-content">
+          <h3>联合产品 · 落地运营</h3>
+          <span class="path-step-duration">POC成功后 3-6 个月</span>
+          <p>把POC做成正式产品，在平安内部落地，积累真实交易和客户案例。</p>
+          <ul>
+            <li>产品化：将POC沉淀为标准化产品模块</li>
+            <li>落地：在平安1-2个业务线正式上线运营</li>
+            <li>运营：联合运营，持续优化产品和体验</li>
+            <li>目标：实现真实交易规模，打造标杆案例</li>
+            <li>收益：按交易量分润 / 使用量收费</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="path-step">
+        <div class="path-step-num">3</div>
+        <div class="path-step-content">
+          <h3>战略投资 · 生态扩张</h3>
+          <span class="path-step-duration">有成功案例后启动</span>
+          <p>有了数据、案例和团队，再谈战略投资，此时估值也上来了。</p>
+          <ul>
+            <li>平安战略投资，我们保持独立运营</li>
+            <li>从平安内部走向全行业，对接更多金融机构</li>
+            <li>建设开发者生态，打造Agent支付标准</li>
+            <li>目标：成为中国A2A支付的技术标准制定者</li>
+            <li>收益：股权增值 + 生态收入 + 行业话语权</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 核心主张 -->
+  <section>
+    <div class="core-statement">
+      <p>
+        我们不是来给平安做支付的——支付平安自己会做。<br>
+        我们是来帮平安把<span class="highlight">"Agent怎么花钱"</span>这件事<br>
+        搞明白、做出来、并且让全行业都接入进来的。<br><br>
+        我们卖的不是技术服务，<br>
+        是<span class="highlight">A2A时代的入场券</span>。
+      </p>
+    </div>
+  </section>
+
+  <!-- 下一步 -->
+  <section>
+    <div class="section-label">下一步</div>
+    <h2 class="section-title">立即可以推进的三件事</h2>
+    <p class="section-desc">不需要等合作谈好，现在就可以开始准备。</p>
+    
+    <div class="next-steps">
+      <div class="next-step-item">
+        <div class="step-icon">🎯</div>
+        <h4>锁定切入场景</h4>
+        <p>对接平安内部1-2个有Agent支付需求的业务线，确定POC场景和范围</p>
+      </div>
+      <div class="next-step-item">
+        <div class="step-icon">📋</div>
+        <h4>准备BP和Demo</h4>
+        <p>完善商业计划书和交互Demo，用最直观的方式展示方案价值</p>
+      </div>
+      <div class="next-step-item">
+        <div class="step-icon">🤝</div>
+        <h4>找到关键决策人</h4>
+        <p>通过人脉找到平安内部对A2A支付有话语权的决策层，直接对接</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    本文件为保密文件，仅供内部决策使用 · 2026年10月
+  </footer>
+
+</div>
+
+</body>
+</html>
