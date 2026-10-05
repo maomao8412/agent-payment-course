@@ -834,6 +834,205 @@
     color: #fbbf24;
     font-size: 16px;
   }
+
+  /* ===== 全球格局 ===== */
+  .global-section {
+    background: rgba(15,23,42,0.8);
+    border: 1px solid rgba(71,85,105,0.3);
+    border-radius: 12px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    margin-top: 14px;
+  }
+  .global-header {
+    text-align: center;
+    margin-bottom: 18px;
+  }
+  .global-header h2 {
+    font-size: 20px; font-weight: 700;
+    background: linear-gradient(135deg, #22d3ee, #a78bfa, #f472b6);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+  }
+  .global-header p {
+    font-size: 13px; color: #94a3b8;
+    max-width: 600px; margin: 0 auto; line-height: 1.6;
+  }
+
+  /* 三条技术路线 */
+  .route-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  @media (max-width: 900px) { .route-grid { grid-template-columns: 1fr; } }
+
+  .route-card {
+    padding: 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(71,85,105,0.25);
+    background: rgba(0,0,0,0.2);
+    position: relative;
+  }
+  .route-card.cn {
+    border-color: rgba(239,68,68,0.3);
+    background: linear-gradient(180deg, rgba(239,68,68,0.06), transparent);
+  }
+  .route-badge {
+    position: absolute;
+    top: -10px; right: 12px;
+    padding: 2px 10px;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 10px;
+  }
+  .route-card.cn .route-badge { background: rgba(239,68,68,0.2); color: #fca5a5; }
+  .route-card.overseas .route-badge { background: rgba(59,130,246,0.2); color: #93c5fd; }
+  .route-card.hybrid .route-badge { background: rgba(168,85,247,0.2); color: #d8b4fe; }
+
+  .route-title {
+    font-size: 14px; font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 4px;
+  }
+  .route-sub {
+    font-size: 10px; color: #64748b;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(71,85,105,0.2);
+  }
+  .route-list {
+    list-style: none; font-size: 11px; color: #94a3b8; line-height: 1.7;
+  }
+  .route-list li {
+    padding-left: 14px; position: relative;
+    margin-bottom: 2px;
+  }
+  .route-list li::before {
+    content: "▸"; position: absolute; left: 0; color: #6366f1;
+  }
+  .route-list b { color: #cbd5e1; }
+
+  /* 中国玩家 */
+  .players-section { margin-bottom: 18px; }
+  .section-title {
+    font-size: 14px; font-weight: 600; color: #cbd5e1;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .players-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 900px) { .players-grid { grid-template-columns: 1fr; } }
+
+  .player-card {
+    padding: 12px;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(71,85,105,0.2);
+    border-radius: 8px;
+    transition: all 0.3s;
+  }
+  .player-card:hover {
+    border-color: rgba(99,102,241,0.4);
+    transform: translateY(-2px);
+  }
+  .player-name {
+    font-size: 13px; font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 4px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .player-protocol {
+    display: inline-block;
+    font-size: 9px;
+    padding: 1px 6px;
+    background: rgba(99,102,241,0.2);
+    color: #a5b4fc;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  .player-desc {
+    font-size: 10.5px;
+    color: #94a3b8;
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+  .player-metric {
+    font-size: 11px;
+    color: #fbbf24;
+    font-weight: 600;
+  }
+  .player-metric span { color: #64748b; font-weight: 400; font-size: 10px; }
+
+  /* 三阶段演进 */
+  .stages-section {
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .stages-flow {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    gap: 8px;
+    align-items: stretch;
+    margin-top: 12px;
+  }
+  @media (max-width: 800px) {
+    .stages-flow { grid-template-columns: 1fr; }
+    .stage-arrow { display: none; }
+  }
+  .stage {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(71,85,105,0.25);
+    text-align: center;
+  }
+  .stage.active {
+    border-color: rgba(34,197,94,0.4);
+    background: rgba(34,197,94,0.06);
+  }
+  .stage.today {
+    border-color: rgba(251,191,36,0.4);
+    background: rgba(251,191,36,0.06);
+    position: relative;
+  }
+  .stage.today::before {
+    content: "当前";
+    position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+    font-size: 9px; padding: 1px 8px;
+    background: #fbbf24; color: #0a0e1a;
+    border-radius: 8px; font-weight: 700;
+  }
+  .stage-num {
+    font-size: 10px; color: #64748b;
+    margin-bottom: 4px;
+  }
+  .stage-name {
+    font-size: 13px; font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 6px;
+  }
+  .stage-feat {
+    font-size: 10px; color: #94a3b8; line-height: 1.4;
+  }
+  .stage-arrow {
+    display: flex; align-items: center; justify-content: center;
+    color: #475569; font-size: 16px;
+  }
+
+  .sourcing-note {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(71,85,105,0.2);
+    font-size: 10px;
+    color: #475569;
+    text-align: center;
+  }
+  .sourcing-note a { color: #6366f1; text-decoration: none; }
 </style>
 </head>
 <body>
@@ -1216,6 +1415,177 @@
         <div class="num">≈ 每天 <b>125亿元</b></div>
       </div>
       <div style="font-size:11px;color:#64748b;margin-top:8px;">* 仅为Agent工作耗材品类的粗略估算，不含交易、金融等更高价值场景</div>
+    </div>
+  </div>
+
+  <!-- 全球竞争格局 -->
+  <div class="global-section">
+    <div class="global-header">
+      <h2>🌍 全球A2A支付竞争格局</h2>
+      <p>海外走"稳定币+开放协议"路线，中国走"合规法币+智能合约+协议标准化"路线，目前处于"辅助支付→自主支付"过渡阶段</p>
+    </div>
+
+    <!-- 三条技术路线 -->
+    <div class="section-title">
+      <span>🛤️</span> 全球三条技术路线
+    </div>
+    <div class="route-grid">
+      <div class="route-card overseas">
+        <div class="route-badge">海外主流</div>
+        <div class="route-title">稳定币 + 开放协议</div>
+        <div class="route-sub">基于区块链 / 加密货币</div>
+        <ul class="route-list">
+          <li><b>x402 协议</b>：基于闪电网络，已处理1.65亿笔交易</li>
+          <li><b>MPP（Micro Payment Protocol）</b>：目标100万+ TPS</li>
+          <li><b>AP4M</b>：AI Payment 4 Machines，专门面向机器间支付</li>
+          <li><b>USDC / USDT</b>：主流稳定币作为支付媒介</li>
+          <li>✅ 优势：无国界、可编程、低手续费</li>
+          <li>⚠️ 问题：监管不确定、法币合规风险、价格波动</li>
+        </ul>
+      </div>
+      <div class="route-card hybrid">
+        <div class="route-badge">全球布局</div>
+        <div class="route-title">卡网络 + Token化</div>
+        <div class="route-sub">Visa / Mastercard 路线</div>
+        <ul class="route-list">
+          <li><b>Visa B2B Connect</b>：跨境企业支付网络</li>
+          <li><b>Mastercard Multi-Token Program</b>：支持多代币支付</li>
+          <li><b>Stripe Treasury</b>：嵌入式金融+API支付</li>
+          <li>通过发卡形式支持Agent支付</li>
+          <li>✅ 优势：已有支付基础设施、合规成熟</li>
+          <li>⚠️ 问题：手续费高、到账慢、不适合微支付</li>
+        </ul>
+      </div>
+      <div class="route-card cn">
+        <div class="route-badge">中国路线</div>
+        <div class="route-title">数字人民币 + 智能合约</div>
+        <div class="route-sub">合规法币 / 央行背书</div>
+        <ul class="route-list">
+          <li><b>数字人民币智能合约</b>：48.64万合约，3.16亿交易额</li>
+          <li><b>APOP 协议</b>：银联主导，跨机构Agent支付互通</li>
+          <li><b>ACT 协议</b>：支付宝智能合约交易协议</li>
+          <li><b>A2P2 协议</b>：京东A2A代理支付协议</li>
+          <li>✅ 优势：法币合规、稳定无波动、央行背书</li>
+          <li>⚠️ 问题：仍为预设规则型，自主决策型尚未落地</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 中国玩家 -->
+    <div class="players-section">
+      <div class="section-title">
+        <span>🇨🇳</span> 中国主要玩家 & 技术路线
+      </div>
+      <div class="players-grid">
+        <div class="player-card">
+          <div class="player-name">
+            🟦 支付宝
+            <span class="player-protocol">ACT</span>
+          </div>
+          <div class="player-desc">
+            全栈重构智能合约交易协议，AI智能体支付底层。已接入魔豆、元宝AI、Kimi等60+智能体
+          </div>
+          <div class="player-metric">3亿+笔 <span>AI智能体支付</span></div>
+        </div>
+        <div class="player-card">
+          <div class="player-name">
+            🟩 微信支付
+            <span class="player-protocol">AI专属卡</span>
+          </div>
+          <div class="player-desc">
+            轻量化隔离方案，AI智能体专属电子卡，额度隔离+账单独立，降低安全和合规风险
+          </div>
+          <div class="player-metric">内测中 <span>腾讯内部场景</span></div>
+        </div>
+        <div class="player-card">
+          <div class="player-name">
+            🟥 银联
+            <span class="player-protocol">APOP</span>
+          </div>
+          <div class="player-desc">
+            Agent Pay on UnionPay，跨机构智能体支付互通标准，推动行业协议统一
+          </div>
+          <div class="player-metric">标准制定中 <span>17家机构参与</span></div>
+        </div>
+        <div class="player-card">
+          <div class="player-name">
+            🟨 京东
+            <span class="player-protocol">A2P2</span>
+          </div>
+          <div class="player-desc">
+            Agent to Platform Payment，分级授权+ClawTip A2A微支付。消费场景最成熟
+          </div>
+          <div class="player-metric">商用落地 <span>京东生态内</span></div>
+        </div>
+        <div class="player-card">
+          <div class="player-name">
+            🟪 蚂蚁国际
+            <span class="player-protocol">跨境Alipay+</span>
+          </div>
+          <div class="player-desc">
+            Alipay+ MPOS + AI Agent跨境支付解决方案，服务出海电商和内容平台
+          </div>
+          <div class="player-metric">试点中 <span>东南亚/日韩</span></div>
+        </div>
+        <div class="player-card">
+          <div class="player-name">
+            🔴 数字人民币
+            <span class="player-protocol">智能合约</span>
+          </div>
+          <div class="player-desc">
+            条件触发自动执行，已在财政补贴、公积金、预付消费等场景落地
+          </div>
+          <div class="player-metric">48.64万合约 <span>3.16亿元</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 三阶段演进 -->
+    <div class="stages-section">
+      <div class="section-title" style="margin-bottom:8px;">
+        <span>📈</span> 行业演进阶段
+      </div>
+      <div style="font-size:11px;color:#64748b;margin-bottom:4px;">
+        A2A支付不是一步到位的，而是渐进式演进。当前处于"辅助支付"向"自主支付"过渡阶段
+      </div>
+      <div class="stages-flow">
+        <div class="stage active">
+          <div class="stage-num">阶段 1</div>
+          <div class="stage-name">辅助支付</div>
+          <div class="stage-feat">
+            Agent辅助下单<br>
+            人工确认付款<br>
+            类似"代付"<br>
+            <span style="color:#22c55e;">✅ 已实现</span>
+          </div>
+        </div>
+        <div class="stage-arrow">→</div>
+        <div class="stage today">
+          <div class="stage-num">阶段 2</div>
+          <div class="stage-name">规则型自主支付</div>
+          <div class="stage-feat">
+            预设规则自动扣款<br>
+            额度+白名单限制<br>
+            异常人工审批<br>
+            <span style="color:#fbbf24;">⏳ 当前阶段</span>
+          </div>
+        </div>
+        <div class="stage-arrow">→</div>
+        <div class="stage">
+          <div class="stage-num">阶段 3</div>
+          <div class="stage-name">决策型自主支付</div>
+          <div class="stage-feat">
+            Agent自主判断购买<br>
+            多Agent议价交易<br>
+            全链路无人干预<br>
+            <span style="color:#64748b;">🔮 预计2027+</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sourcing-note">
+      数据来源：公开报道、各公司官方发布会、中国支付清算协会《智能体支付应用自律公约》等 | 更新于 2025-2026
     </div>
   </div>
 
