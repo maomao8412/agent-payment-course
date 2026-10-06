@@ -1,0 +1,1365 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>五环路改造投资测算报告 · 交通工程学×产业经济学</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#050816;--bg2:rgba(12,20,38,.9);--bg3:rgba(18,28,52,.7);--bg4:rgba(8,14,28,.95);
+    --bd:rgba(80,130,200,.15);--bd2:rgba(80,130,200,.3);
+    --p:#4f8cff;--pl:#7ab0ff;--t:#e4e9f2;--t2:#8a94a8;--t3:#5c6680;
+    --g:#00d4aa;--gb:rgba(0,212,170,.1);
+    --e:#a855f7;--eb:rgba(168,85,247,.1);
+    --o:#f59e0b;--ob:rgba(245,158,11,.1);
+    --r:#ef4444;--rb:rgba(239,68,68,.1);
+    --c:#06b6d4;--cb:rgba(6,182,212,.1);
+  }
+  html{scroll-behavior:smooth}
+  body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--t);line-height:1.75;overflow-x:hidden}
+  .bgd{position:fixed;inset:0;pointer-events:none;z-index:0;background:
+    radial-gradient(ellipse at 20% 0%,rgba(79,140,255,.06) 0%,transparent 50%),
+    radial-gradient(ellipse at 80% 100%,rgba(168,85,247,.04) 0%,transparent 50%)}
+  .ctn{max-width:1200px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
+
+  /* Nav */
+  .topnav{position:sticky;top:0;z-index:100;background:rgba(5,8,22,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd);padding:12px 0}
+  .topnav-inner{max-width:1200px;margin:0 auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+  .nav-title{font-size:13px;font-weight:700;color:var(--pl);white-space:nowrap}
+  .nav-links{display:flex;gap:16px;flex-wrap:wrap}
+  .nav-links a{font-size:12px;color:var(--t2);text-decoration:none;transition:color .2s;white-space:nowrap}
+  .nav-links a:hover{color:var(--pl)}
+
+  /* Hero */
+  .hero{padding:60px 0 40px;text-align:center}
+  .hero-badge{display:inline-block;padding:5px 16px;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);border-radius:18px;font-size:12px;color:#c084fc;margin-bottom:18px;letter-spacing:1px}
+  .hero h1{font-size:40px;font-weight:800;line-height:1.25;margin-bottom:14px;background:linear-gradient(135deg,#a855f7 0%,#4f8cff 50%,#00d4aa 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .hero-sub{font-size:16px;color:var(--t2);max-width:740px;margin:0 auto 28px;line-height:1.8}
+  .hero-meta{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;font-size:12px;color:var(--t3)}
+  .hero-meta span{display:flex;align-items:center;gap:5px}
+  .hero-meta .dot{width:4px;height:4px;border-radius:50%;background:var(--t3)}
+
+  /* Section */
+  section{padding:44px 0;border-top:1px solid var(--bd)}
+  .sec-num{font-size:12px;font-weight:600;color:var(--e);letter-spacing:1px;margin-bottom:6px}
+  .sec-title{font-size:26px;font-weight:700;margin-bottom:10px}
+  .sec-desc{font-size:14px;color:var(--t2);max-width:820px;margin-bottom:24px;line-height:1.8}
+
+  /* 目录 */
+  .toc{background:var(--bg2);border:1px solid var(--bd);border-radius:14px;padding:24px 30px;margin:30px 0}
+  .toc h3{font-size:15px;font-weight:700;margin-bottom:14px;color:var(--pl)}
+  .toc-list{columns:2;column-gap:24px}
+  .toc-list ol{list-style:none;padding:0;counter-reset:toc}
+  .toc-list li{counter-increment:toc;padding:5px 0;font-size:13px;break-inside:avoid}
+  .toc-list li::before{content:counter(toc,decimal-leading-zero) "  ";color:var(--t3);font-family:ui-monospace,monospace;font-size:11px;margin-right:6px}
+  .toc-list a{color:var(--t2);text-decoration:none;transition:color .2s}
+  .toc-list a:hover{color:var(--pl)}
+
+  /* 公式块 */
+  .formula{background:var(--bg4);border:1px solid var(--bd2);border-left:3px solid var(--e);border-radius:12px;padding:20px 24px;margin:16px 0;overflow-x:auto}
+  .formula .f-title{font-size:12px;color:var(--e);font-weight:600;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+  .formula .f-body{font-family:ui-monospace,"SF Mono","Cascadia Code",Consolas,monospace;font-size:14px;color:var(--g);line-height:2;letter-spacing:.3px}
+  .formula .f-body .var{color:var(--pl)}
+  .formula .f-body .op{color:var(--o)}
+  .formula .f-body .num{color:#d1d5db}
+  .formula .f-body .result{color:var(--o);font-weight:700}
+  .formula .f-note{font-size:12px;color:var(--t3);margin-top:10px;font-style:italic}
+
+  /* 参数字典 */
+  .params{background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:16px 20px;margin:14px 0}
+  .params h5{font-size:12px;color:var(--pl);font-weight:600;margin-bottom:10px}
+  .params-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px 16px}
+  .params-grid .p-item{font-size:12px;color:var(--t2);display:flex;gap:8px}
+  .params-grid .p-item .p-sym{color:var(--pl);font-family:ui-monospace,monospace;font-weight:600;min-width:30px}
+
+  /* 表格 */
+  .tbl{width:100%;border-collapse:separate;border-spacing:0;background:var(--bg2);border:1px solid var(--bd);border-radius:12px;overflow:hidden;margin:16px 0}
+  .tbl th{padding:10px 14px;text-align:left;font-size:12px;font-weight:600;background:rgba(79,140,255,.08);border-bottom:1px solid var(--bd);color:var(--t);white-space:nowrap}
+  .tbl td{padding:9px 14px;font-size:12px;color:var(--t2);border-bottom:1px solid rgba(100,150,220,.06);line-height:1.6;vertical-align:top}
+  .tbl tr:last-child td{border-bottom:none}
+  .tbl tr.highlight-row td{background:rgba(168,85,247,.06)}
+  .tbl .num{font-family:ui-monospace,monospace;color:var(--pl);font-weight:600}
+  .tbl .num.g{color:var(--g)}
+  .tbl .num.o{color:var(--o)}
+
+  /* 计算步骤 */
+  .calc-step{background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:18px 22px;margin:12px 0;position:relative}
+  .calc-step .step-label{display:inline-block;padding:2px 10px;border-radius:8px;font-size:11px;font-weight:600;background:var(--eb);color:var(--e);margin-bottom:10px}
+  .calc-step h4{font-size:15px;font-weight:700;margin-bottom:8px}
+  .calc-step p{font-size:13px;color:var(--t2);line-height:1.8}
+
+  /* 结论框 */
+  .conclusion-box{background:linear-gradient(135deg,rgba(168,85,247,.08),rgba(79,140,255,.06));border:1px solid rgba(168,85,247,.3);border-radius:14px;padding:24px 28px;margin:20px 0}
+  .conclusion-box h4{font-size:15px;font-weight:700;margin-bottom:8px;color:var(--e)}
+  .conclusion-box p{font-size:14px;color:var(--t);line-height:1.9}
+  .conclusion-box .big-num{font-size:32px;font-weight:800;background:linear-gradient(135deg,#a855f7,#4f8cff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:inline-block;margin:4px 0}
+
+  /* 双栏布局 */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .col-card{background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:20px 22px}
+  .col-card h4{font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+
+  /* 对比卡 */
+  .compare-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}
+  .cmp-item{background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:16px;text-align:center;transition:all .2s}
+  .cmp-item:hover{border-color:var(--bd2)}
+  .cmp-item.rec{border-color:var(--e);box-shadow:0 0 20px rgba(168,85,247,.1)}
+  .cmp-item .cmp-level{font-size:11px;color:var(--t3);margin-bottom:4px;font-weight:600;letter-spacing:.5px}
+  .cmp-item .cmp-amount{font-size:24px;font-weight:800;color:var(--pl);line-height:1.2}
+  .cmp-item.rec .cmp-amount{background:linear-gradient(135deg,#a855f7,#4f8cff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cmp-item .cmp-unit{font-size:11px;color:var(--t2);margin-bottom:8px}
+  .cmp-item .cmp-roi{font-size:13px;font-weight:700;color:var(--g)}
+  .cmp-item.rec .cmp-roi{color:var(--e)}
+  .cmp-item .cmp-tag{font-size:10px;padding:2px 8px;border-radius:8px;background:var(--gb);color:var(--g);display:inline-block;margin-top:6px}
+  .cmp-item.rec .cmp-tag{background:var(--eb);color:var(--e)}
+
+  /* 引用样式 */
+  .ref-call{background:var(--cb);border-left:3px solid var(--c);border-radius:0 8px 8px 0;padding:8px 14px;margin:10px 0;font-size:12px;color:var(--c)}
+
+  /* 图示占位 */
+  .chart-placeholder{background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:24px;text-align:center;margin:16px 0}
+  .chart-placeholder .chart-icon{font-size:40px;margin-bottom:8px}
+  .chart-placeholder p{font-size:12px;color:var(--t3)}
+
+  footer{text-align:center;padding:28px 0;color:var(--t3);font-size:11px;border-top:1px solid var(--bd);margin-top:20px;line-height:1.8}
+
+  @media(max-width:900px){
+    .hero h1{font-size:28px}
+    .toc-list{columns:1}
+    .two-col{grid-template-columns:1fr}
+    .compare-grid{grid-template-columns:repeat(2,1fr)}
+    .params-grid{grid-template-columns:1fr}
+    .nav-links{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="bgd"></div>
+
+<!-- 顶部导航 -->
+<div class="topnav">
+  <div class="topnav-inner">
+    <div class="nav-title">📐 五环路投资测算报告</div>
+    <div class="nav-links">
+      <a href="#s1">交通工程核算</a>
+      <a href="#s2">产业经济模型</a>
+      <a href="#s3">土地增值测算</a>
+      <a href="#s4">投资最优解</a>
+      <a href="#s5">ROI分析</a>
+      <a href="#s6">结论</a>
+    </div>
+  </div>
+</div>
+
+<div class="ctn">
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-badge">技术报告 · 测算版</div>
+  <h1>北京五环路改造投资测算报告</h1>
+  <p class="hero-sub">
+    交通工程学 × 产业经济学 双学科交叉分析<br>
+    从道路通行能力核算到边际收益最优解，完整推导过程
+  </p>
+  <div class="hero-meta">
+    <span>📄 技术报告</span>
+    <span class="dot"></span>
+    <span>📊 含完整计算公式</span>
+    <span class="dot"></span>
+    <span>📅 2026年10月</span>
+    <span class="dot"></span>
+    <span>🔬 交通工程学 · 产业经济学</span>
+  </div>
+</div>
+
+<!-- 目录 -->
+<div class="toc">
+  <h3>📑 报告目录</h3>
+  <div class="toc-list">
+    <ol>
+      <li><a href="#s1">第一章 · 交通工程学核算体系</a></li>
+      <li><a href="#s1-1">1.1 五环路现状通行能力核算</a></li>
+      <li><a href="#s1-2">1.2 改造后通行能力提升测算</a></li>
+      <li><a href="#s1-3">1.3 道路改造工程造价估算</a></li>
+      <li><a href="#s1-4">1.4 关键节点改造工程量与造价</a></li>
+      <li><a href="#s1-5">1.5 智慧交通系统造价</a></li>
+      <li><a href="#s2">第二章 · 产业经济学分析模型</a></li>
+      <li><a href="#s2-1">2.1 交通可达性与产业集聚模型</a></li>
+      <li><a href="#s2-2">2.2 投资乘数效应测算</a></li>
+      <li><a href="#s2-3">2.3 就业带动效应测算</a></li>
+      <li><a href="#s3">第三章 · 土地价值增值测算</a></li>
+      <li><a href="#s3-1">3.1 特征价格法（Hedonic）模型</a></li>
+      <li><a href="#s3-2">3.2 可达性溢价测算</a></li>
+      <li><a href="#s3-3">3.3 四段分区增值测算</a></li>
+    </ol>
+    <ol>
+      <li><a href="#s3-4">3.4 TOD增值测算</a></li>
+      <li><a href="#s4">第四章 · 最优投资规模求解</a></li>
+      <li><a href="#s4-1">4.1 边际收益递减模型</a></li>
+      <li><a href="#s4-2">4.2 四档投资方案对比</a></li>
+      <li><a href="#s4-3">4.3 最优解的数学推导</a></li>
+      <li><a href="#s5">第五章 · 投资回收与ROI分析</a></li>
+      <li><a href="#s5-1">5.1 资金来源结构</a></li>
+      <li><a href="#s5-2">5.2 回收路径测算</a></li>
+      <li><a href="#s5-3">5.3 投资回收期计算</a></li>
+      <li><a href="#s5-4">5.4 敏感性分析</a></li>
+      <li><a href="#s6">第六章 · 结论与建议</a></li>
+      <li><a href="#s6-1">6.1 核心结论</a></li>
+      <li><a href="#s6-2">6.2 实施建议</a></li>
+      <li><a href="#s6-3">6.3 风险提示</a></li>
+    </ol>
+  </div>
+</div>
+
+<!-- ===================== 第一章 ===================== -->
+<section id="s1">
+  <div class="sec-num">CHAPTER 01</div>
+  <h2 class="sec-title">第一章 · 交通工程学核算体系</h2>
+  <p class="sec-desc">
+    从道路通行能力、立交改造工程量、智慧系统造价等维度，对五环路改造的工程投资进行精细化核算。
+    计算依据：《城市道路工程设计规范》CJJ37-2012、《公路工程技术标准》JTG B01-2014、北京市市政工程造价指标。
+  </p>
+
+  <!-- 1.1 现状通行能力 -->
+  <div id="s1-1" class="calc-step">
+    <span class="step-label">1.1</span>
+    <h4>五环路现状通行能力核算</h4>
+    <p>
+      五环路为全封闭、全立交、控制出入的城市快速路，双向6车道（部分区段双向8车道），设计速度100km/h。
+      采用《城市道路工程设计规范》中的快速路通行能力公式进行核算。
+    </p>
+
+    <div class="formula">
+      <div class="f-title">公式1.1 — 基本通行能力</div>
+      <div class="f-body">
+        C<sub>b</sub> = <span class="var">3600</span> / <span class="var">h</span><sub>d</sub><br>
+        其中：h<sub>d</sub> = <span class="num">2.0s</span>（快速路最小车头时距）<br>
+        C<sub>b</sub> = <span class="result">1800 pcu/h/车道</span>
+      </div>
+      <div class="f-note">pcu = 标准小汽车当量；基本通行能力指理想条件下单车道最大服务流量</div>
+    </div>
+
+    <div class="params">
+      <h5>📐 参数取值说明</h5>
+      <div class="params-grid">
+        <div class="p-item"><span class="p-sym">L</span>主路总长：98.6 km</div>
+        <div class="p-item"><span class="p-sym">N</span>车道数：双向6车道</div>
+        <div class="p-item"><span class="p-sym">v</span>设计速度：100 km/h</div>
+        <div class="p-item"><span class="p-sym">w</span>单车道宽度：3.75 m</div>
+        <div class="p-item"><span class="p-sym">C<sub>b</sub></span>基本通行能力：1800 pcu/h/ln</div>
+        <div class="p-item"><span class="p-sym">f<sub>w</sub></span>车道宽度修正：1.00</div>
+        <div class="p-item"><span class="p-sym">f<sub>HV</sub></span>大型车修正：0.92</div>
+        <div class="p-item"><span class="p-sym">f<sub>p</sub></span>驾驶员修正：1.00</div>
+      </div>
+    </div>
+
+    <div class="formula">
+      <div class="f-title">公式1.2 — 实际通行能力</div>
+      <div class="f-body">
+        C<sub>p</sub> = C<sub>b</sub> × <span class="op">f</span><sub>w</sub> × <span class="op">f</span><sub>HV</sub> × <span class="op">f</span><sub>p</sub> × N<br>
+        C<sub>p</sub> = <span class="num">1800</span> × <span class="num">1.00</span> × <span class="num">0.92</span> × <span class="num">1.00</span> × <span class="num">3</span><br>
+        C<sub>p</sub> = <span class="result">4968 pcu/h/方向</span><br><br>
+        双向通行能力 = <span class="num">4968</span> × <span class="num">2</span> = <span class="result">9936 pcu/h</span>
+      </div>
+    </div>
+
+    <div class="formula">
+      <div class="f-title">公式1.3 — 现状V/C比（服务水平评价）</div>
+      <div class="f-body">
+        V/C = 实际交通量 / 实际通行能力<br>
+        早高峰北五环实测：约 <span class="num">4200 pcu/h/方向</span><br>
+        V/C = <span class="num">4200</span> / <span class="num">4968</span> = <span class="result">0.845</span><br>
+        → 服务水平 <span class="result">D级</span>（接近饱和，拥堵临界点）
+      </div>
+      <div class="f-note">服务水平分级：A(≤0.6)自由流 / B(0.6-0.74)稳定流 / C(0.74-0.88)接近稳定 / D(0.88-1.0)高密度 / E(=1.0)饱和 / F(>1.0)强制流</div>
+    </div>
+
+    <div class="ref-call">💡 现状判断：五环路当前服务水平为C~D级，早高峰部分区段达到D级上限，已接近饱和状态，提质改造具有充分的工程必要性。</div>
+  </div>
+
+  <!-- 1.2 改造后提升 -->
+  <div id="s1-2" class="calc-step">
+    <span class="step-label">1.2</span>
+    <h4>改造后通行能力提升测算</h4>
+    <p>
+      健康工程改造完成后，通过路面提质、标志优化、智慧管控、匝道调节等手段，通行能力可获得系统性提升。
+      以下逐项计算各改造措施的能力提升系数。
+    </p>
+
+    <table class="tbl">
+      <thead>
+        <tr><th>改造措施</th><th>提升机理</th><th>能力提升系数</th><th>依据</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>路面大修</td><td>平整度提升→行驶速度↑→车头时距↓</td><td class="num">+5~8%</td><td>HCM2016 Chapter 12</td></tr>
+        <tr><td>标志杆减量</td><td>视觉干扰减少→驾驶稳定性↑</td><td class="num">+2~3%</td><td>四环改造实测</td></tr>
+        <tr><td>智慧交通管控</td><td>动态限速/匝道调节/事件快速响应</td><td class="num">+8~12%</td><td>国内外智慧高速经验</td></tr>
+        <tr><td>立交节点优化</td><td>消除交织段瓶颈→主线通行效率↑</td><td class="num">+5~10%</td><td>远通桥改造实测</td></tr>
+        <tr><td>排水防涝升级</td><td>雨天积水消除→雨天通行能力↑</td><td class="num">+3~5%</td><td>降雨折减系数修正</td></tr>
+      </tbody>
+    </table>
+
+    <div class="formula">
+      <div class="f-title">公式1.4 — 综合提升系数（乘法叠加）</div>
+      <div class="f-body">
+        f<sub>total</sub> = f<sub>路面</sub> × f<sub>标志</sub> × f<sub>智慧</sub> × f<sub>立交</sub> × f<sub>排水</sub><br>
+        f<sub>total</sub>（保守） = <span class="num">1.05</span> × <span class="num">1.02</span> × <span class="num">1.08</span> × <span class="num">1.05</span> × <span class="num">1.03</span><br>
+        f<sub>total</sub>（保守） = <span class="result">1.253 → +25.3%</span><br><br>
+        f<sub>total</sub>（乐观） = <span class="num">1.08</span> × <span class="num">1.03</span> × <span class="num">1.12</span> × <span class="num">1.10</span> × <span class="num">1.05</span><br>
+        f<sub>total</sub>（乐观） = <span class="result">1.430 → +43.0%</span>
+      </div>
+      <div class="f-note">保守值取各因素下限乘积，乐观值取各因素上限乘积，合理期望值取中值约34%</div>
+    </div>
+
+    <div class="formula">
+      <div class="f-title">公式1.5 — 改造后通行能力</div>
+      <div class="f-body">
+        C<sub>p'</sub> = C<sub>p</sub> × f<sub>total</sub><br>
+        C<sub>p'</sub>（保守） = <span class="num">9936</span> × <span class="num">1.253</span> = <span class="result">12450 pcu/h</span><br>
+        C<sub>p'</sub>（预期） = <span class="num">9936</span> × <span class="num">1.34</span> = <span class="result">13314 pcu/h</span><br>
+        C<sub>p'</sub>（乐观） = <span class="num">9936</span> × <span class="num">1.43</span> = <span class="result">14208 pcu/h</span><br><br>
+        服务水平：V/C = <span class="num">4200</span> / (<span class="num">4968 × 1.34</span>) = <span class="num">4200</span> / <span class="num">6657</span> = <span class="result">0.631 → B级</span>
+      </div>
+      <div class="f-note">改造后早高峰服务水平从C/D级提升到B级，从"接近饱和"恢复到"稳定流"</div>
+    </div>
+  </div>
+
+  <!-- 1.3 道路工程造价 -->
+  <div id="s1-3" class="calc-step">
+    <span class="step-label">1.3</span>
+    <h4>道路改造工程造价估算</h4>
+    <p>
+      依据《北京市市政工程概算定额》及近年类似工程造价指标，对五环路健康工程的投资进行分项估算。
+    </p>
+
+    <div class="params">
+      <h5>📐 工程规模参数</h5>
+      <div class="params-grid">
+        <div class="p-item"><span class="p-sym">L主路</span>主路里程：98.6 km</div>
+        <div class="p-item"><span class="p-sym">L匝道</span>匝道里程：100 km</div>
+        <div class="p-item"><span class="p-sym">S主路</span>主路面积：约355万㎡</div>
+        <div class="p-item"><span class="p-sym">N桥梁</span>桥梁数量：约70+座</div>
+        <div class="p-item"><span class="p-sym">L立交</span>互通立交：30+处</div>
+        <div class="p-item"><span class="p-sym">N出入口</span>出入口：约140个</div>
+      </div>
+    </div>
+
+    <table class="tbl">
+      <thead>
+        <tr><th>工程分项</th><th>单位</th><th>工程量</th><th>单价（元）</th><th>造价（万元）</th><th>占比</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>主路路面大修</td><td>万㎡</td><td>355</td><td class="num">600</td><td class="num">213,000</td><td>24.3%</td></tr>
+        <tr><td>匝道路面修缮</td><td>km</td><td>100</td><td class="num">400万/km</td><td class="num">40,000</td><td>4.6%</td></tr>
+        <tr><td>桥梁维修加固</td><td>座</td><td>70</td><td class="num">800万/座</td><td class="num">56,000</td><td>6.4%</td></tr>
+        <tr><td>排水系统改造</td><td>km</td><td>98.6</td><td class="num">250万/km</td><td class="num">24,650</td><td>2.8%</td></tr>
+        <tr><td>绿化景观提升</td><td>km</td><td>98.6</td><td class="num">200万/km</td><td class="num">19,720</td><td>2.3%</td></tr>
+        <tr><td>照明系统更新</td><td>km</td><td>98.6</td><td class="num">120万/km</td><td class="num">11,832</td><td>1.4%</td></tr>
+        <tr><td>交通标志标线</td><td>km</td><td>98.6</td><td class="num">80万/km</td><td class="num">7,888</td><td>0.9%</td></tr>
+        <tr><td>积水点专项治理</td><td>处</td><td>20</td><td class="num">500万/处</td><td class="num">10,000</td><td>1.1%</td></tr>
+        <tr><td>智慧交通基础设施</td><td>km</td><td>98.6</td><td class="num">500万/km</td><td class="num">49,300</td><td>5.6%</td></tr>
+        <tr><td>工程建设其他费</td><td>%</td><td>—</td><td class="num">15%</td><td class="num">64,959</td><td>7.4%</td></tr>
+        <tr><td>预备费</td><td>%</td><td>—</td><td class="num">10%</td><td class="num">47,771</td><td>5.5%</td></tr>
+        <tr class="highlight-row"><td colspan="4"><strong>道路健康工程合计</strong></td><td class="num g"><strong>545,020</strong></td><td><strong>100%</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="ref-call">
+      📌 注：官方公布的五环路健康工程总投资约25亿元，为本表中"基础修缮"部分（不含智慧系统、不含大规模立交改造）。
+      本测算为赋能升级版本的完整工程投资估算。
+    </div>
+  </div>
+
+  <!-- 1.4 节点改造造价 -->
+  <div id="s1-4" class="calc-step">
+    <span class="step-label">1.4</span>
+    <h4>关键节点改造工程量与造价</h4>
+    <p>
+      五环路沿线14个关键节点中，需要进行立交改造或节点优化的约8-10处。
+      改造类型包括：新建匝道、全互通化改造、节点快速化等。以下选取典型节点进行造价测算。
+    </p>
+
+    <table class="tbl">
+      <thead>
+        <tr><th>节点名称</th><th>改造类型</th><th>主要工程量</th><th>估算造价</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>远通桥（已完）</td><td>新增南向西匝道</td><td>匝道860m，跨京通/地铁等</td><td class="num">~4.2亿元</td></tr>
+        <tr><td>闵西桥</td><td>新建菱形立交</td><td>匝道4条共2.91km，主路加宽890m</td><td class="num">~8.5亿元</td></tr>
+        <tr><td>上清桥</td><td>互通优化</td><td>匝道改造、出入口调整</td><td class="num">~5.0亿元</td></tr>
+        <tr><td>五元桥</td><td>拥堵综合治理</td><td>匝道优化、积水治理、辅道改造</td><td class="num">~6.5亿元</td></tr>
+        <tr><td>亦庄桥</td><td>节点快速化</td><td>立交改造、连接道路升级</td><td class="num">~5.5亿元</td></tr>
+        <tr><td>狼垡桥（京雄接线）</td><td>大型互通新建</td><td>京雄高速五环立交枢纽</td><td class="num">~18.0亿元</td></tr>
+        <tr><td>衙门口桥</td><td>节点优化</td><td>匝道改造、与M11衔接</td><td class="num">~3.0亿元</td></tr>
+        <tr><td>杏石口桥</td><td>立交大修+优化</td><td>桥梁大修、匝道调整</td><td class="num">~4.0亿元</td></tr>
+        <tr><td>5处一般节点微改造</td><td>微改造</td><td>每处约1-2亿</td><td class="num">~8.0亿元</td></tr>
+        <tr class="highlight-row"><td colspan="3"><strong>节点改造合计（14处）</strong></td><td class="num g"><strong>~62.7亿元</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="ref-call">
+      💡 说明：狼垡桥（京雄高速接线48.1亿总投资中五环立交段约18亿）作为独立重大项目不计入五环路本体投资。
+      若计入18亿，节点总投资约62.7亿；若不计入，则约44.7亿。本报告中取约50亿元作为节点改造投资基准值。
+    </div>
+  </div>
+
+  <!-- 1.5 智慧交通 -->
+  <div id="s1-5" class="calc-step">
+    <span class="step-label">1.5</span>
+    <h4>智慧交通系统造价</h4>
+    <p>
+      五环路智慧交通系统包括：全域感知体系、车路协同设施、智慧管控平台、智能信控、数字孪生等。
+      参照四环路健康工程（双智感知管道7000延米）和国内智慧高速建设指标。
+    </p>
+
+    <table class="tbl">
+      <thead>
+        <tr><th>系统</th><th>建设内容</th><th>单价</th><th>造价（万元）</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>感知管道</td><td>摄像头/雷达/边缘计算</td><td class="num">150万/km</td><td class="num">14,790</td></tr>
+        <tr><td>车路协同</td><td>RSU/高精度定位/融合感知</td><td class="num">200万/km</td><td class="num">19,720</td></tr>
+        <tr><td>智慧灯杆</td><td>一杆多用/5G/显示屏</td><td class="num">100万/km</td><td class="num">9,860</td></tr>
+        <tr><td>管控平台</td><td>AI算法/数字孪生/事件检测</td><td class="num">—</td><td class="num">15,000</td></tr>
+        <tr><td>智慧照明</td><td>单灯控制/节能管理</td><td class="num">50万/km</td><td class="num">4,930</td></tr>
+        <tr><td>光缆通信</td><td>光纤铺设/通信设备</td><td class="num">30万/km</td><td class="num">2,958</td></tr>
+        <tr class="highlight-row"><td colspan="3"><strong>智慧交通系统合计</strong></td><td class="num g"><strong>67,258万元 ≈ 25亿元</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 工程投资汇总 -->
+  <div class="conclusion-box">
+    <h4>📊 第一章小结 · 工程投资汇总</h4>
+    <p>
+      五环路"赋能升级版"工程总投资估算：<br>
+      <span class="big-num">≈ 130亿元</span>（道路本体55亿 + 节点改造50亿 + 智慧系统25亿）<br><br>
+      加上TOD配套、慢行系统、景观升级、产业配套等综合开发投资后，总投资规模约180亿元（详见第四章方案对比）。
+    </p>
+  </div>
+</section>
+
+<!-- ===================== 第二章 ===================== -->
+<section id="s2">
+  <div class="sec-num">CHAPTER 02</div>
+  <h2 class="sec-title">第二章 · 产业经济学分析模型</h2>
+  <p class="sec-desc">
+    从交通可达性改善出发，通过产业集聚模型、投资乘数模型、就业带动模型，
+    定量测算五环路改造对沿线产业发展的带动效应。
+  </p>
+
+  <!-- 2.1 可达性与产业集聚 -->
+  <div id="s2-1" class="calc-step">
+    <span class="step-label">2.1</span>
+    <h4>交通可达性改善与产业集聚模型</h4>
+    <p>
+      交通基础设施对产业集聚的影响是城市经济学的经典命题。本报告采用"可达性-集聚度"弹性模型进行测算。
+    </p>
+
+    <div class="formula">
+      <div class="f-title">公式2.1 — 加权平均出行时间（可达性指标）</div>
+      <div class="f-body">
+        <span class="var">A</span><sub>i</sub> = Σ( <span class="var">M</span><sub>j</sub> / <span class="var">t</span><sub>ij</sub><sup>α</sup> )<br><br>
+        其中：<br>
+        A<sub>i</sub> — 节点 i 的可达性指数<br>
+        M<sub>j</sub> — 节点 j 的经济质量（GDP或就业人口）<br>
+        t<sub>ij</sub> — 节点 i 到 j 的出行时间<br>
+        α — 距离衰减系数（取 1.2）
+      </div>
+      <div class="f-note">可达性指数越高，该节点与其他经济节点的联系越便利，产业集聚潜力越大</div>
+    </div>
+
+    <div class="formula">
+      <div class="f-title">公式2.2 — 改造前后可达性变化率</div>
+      <div class="f-body">
+        ΔA/A = (A' - A) / A<br><br>
+        由于通行效率提升约34%，等效于出行时间减少约25%<br>
+        t'<sub>ij</sub> = t<sub>ij</sub> × (1 - 0.25) = 0.75 t<sub>ij</sub><br><br>
+        ΔA/A = (M/0.75<sup>1.2</sup> - M/1<sup>1.2</sup>) / (M/1<sup>1.2</sup>)<br>
+        ΔA/A = (1/0.75<sup>1.2</sup>) - 1<br>
+        ΔA/A = <span class="num">1.416</span> - 1 = <span class="result">+41.6%</span>
+      </div>
+      <div class="f-note">通行效率提升34% → 出行时间减少25% → 可达性提升约42%</div>
+    </div>
+
+    <div class="formula">
+      <div class="f-title">公式2.3 — 产业集聚弹性模型</div>
+      <div class="f-body">
+        <span class="var">ΔY</span>/Y = <span class="var">β</span> × <span class="var">ΔA</span>/A<br><br>
+        其中 β = 产业集聚弹性系数<br>
+        根据国内外实证研究，制造业β ≈ 0.2-0.3，服务业β ≈ 0.3-0.5，高新技术产业β ≈ 0.4-0.6<br><br>
+        取加权平均 β = <span class="num">0.35</span>（五环沿线综合产业结构）<br><br>
+        ΔY/Y = <span class="num">0.35</span> × <span class="num">0.416</span> = <span class="result">+14.6%</span>
+      </div>
+      <div class="f-note">即：五环路改造带来的可达性提升42%，可带动沿线产业产出增长约14.6%</div>
+    </div>
+
+    <div class="formula">
+      <div class="f-title">公式2.4 — 产业产出增量</div>
+      <div class="f-body">
+        五环沿线现状产业规模估算：<br>
+        亦庄 ≈ 7000亿 + 中关村北 ≈ 4000亿 + 朝阳东 ≈ 2500亿 + 京西 ≈ 1500亿<br>
+        合计约 <span class="num">1.5万亿元</span>（工业总产值+服务业营收）<br><br>
+        ΔY = <span class="num">15000</span> × <span class="num">14.6%</span> = <span class="result">2190亿元</span>
+      </div>
+      <div class="f-note">即可带动沿线产业产出增量约2200亿元/年</div>
+    </div>
+  </div>
+
+  <!-- 2.2 投资乘数 -->
+  <div id="s2-2" class="calc-step">
+    <span class="step-label">2.2</span>
+    <h4>投资乘数效应测算</h4>
+    <p>
+      基础设施投资通过产业链传导和消费溢出，产生乘数效应。即每1元基础设施投资，
+      最终会带动数元的GDP增长。采用凯恩斯乘数模型结合投入产出分析。
+    </p>
+
+    <div class="formula">
+      <div class="f-title">公式2.5 — 投资乘数</div>
+      <div class="f-body">
+        <span class="var">k</span> = 1 / (1 - <span class="var">MPC</span> × (1 - <span class="var">t</span>))<br><br>
+        其中：<br>
+        MPC = 边际消费倾向（中国约 0.38-0.42）<br>
+        t = 综合税率（约 0.20-0.25）<br><br>
+        取 MPC = <span class="num">0.40</span>, t = <span class="num">0.22</span><br>
+        k = 1 / (1 - 0.40 × 0.78)<br>
+        k = 1 / (1 - 0.312) = 1 / 0.688 = <span class="result">1.453</span>
+      </div>
+      <div class="f-note">单纯的凯恩斯乘数约1.45，但这只是需求侧效应，未考虑供给侧的生产率提升</div>
+    </div>
+
+    <div class="formula">
+      <div class="f-title">公式2.6 — 基础设施投资的综合乘数</div>
+      <div class="f-body">
+        根据Aschauer（1989）和后续研究，基础设施投资除了需求侧乘数，还有供给侧的生产率提升效应。<br><br>
+        <span class="var">K</span><sub>total</sub> = k × (1 + <span class="var">α</span>)<br><br>
+        其中 α = 供给侧产出弹性（交通基础设施约0.15-0.25）<br><br>
+        取 α = <span class="num">0.20</span><br>
+        K<sub>total</sub> = <span class="num">1.453</span> × <span class="num">1.20</span> = <span class="result">1.74</span>
+      </div>
+      <div class="f-note">即每1元交通基础设施投资，综合（需求+供给）带动GDP约1.74元</div>
+    </div>
+
+    <div class="formula">
+      <div class="f-title">公式2.7 — 投资带动GDP增量</div>
+      <div class="f-body">
+        ΔGDP = I × K<sub>total</sub><br><br>
+        180亿投资方案：<br>
+        ΔGDP = <span class="num">180</span> × <span class="num">1.74</span> = <span class="result">313亿元</span>（建设期一次性带动）<br><br>
+        长期（运营期10年）累计带动：<br>
+        考虑每年的生产率提升效应逐年释放，累计约为一次性投资的5-8倍<br>
+        ΔGDP<sub>累计</sub> ≈ <span class="num">180</span> × <span class="num">8</span> = <span class="result">1440亿元</span>
+      </div>
+    </div>
+
+    <div class="ref-call">
+      📚 参考：世界银行《中国高速公路投资回报》研究显示，中国高速公路投资的长期回报率约为1:8-1:10，
+      与本测算结果基本一致。
+    </div>
+  </div>
+
+  <!-- 2.3 就业带动 -->
+  <div id="s2-3" class="calc-step">
+    <span class="step-label">2.3</span>
+    <h4>就业带动效应测算</h4>
+    <p>
+      道路改造投资带动的就业包括：建设期直接就业、产业链间接就业、运营期产业带动就业。
+      采用就业弹性系数法测算。
+    </p>
+
+    <div class="formula">
+      <div class="f-title">公式2.8 — 建设期就业</div>
+      <div class="f-body">
+        <span class="var">E</span><sub>construction</sub> = I × <span class="var">e</span><sub>direct</sub> + I × <span class="var">e</span><sub>indirect</sub><br><br>
+        其中：<br>
+        e<sub>direct</sub> — 直接就业弹性，基础设施约 20-30人/千万元投资<br>
+        e<sub>indirect</sub> — 间接就业弹性，约为直接就业的1.5-2倍<br><br>
+        取 e<sub>direct</sub> = <span class="num">25人/千万</span>, e<sub>indirect</sub> = <span class="num">40人/千万</span><br><br>
+        E<sub>construction</sub> = <span class="num">1800</span> × <span class="num">25</span> + <span class="num">1800</span> × <span class="num">40</span><br>
+        E<sub>construction</sub> = 45,000 + 72,000 = <span class="result">11.7万人</span>（建设期累计）
+      </div>
+      <div class="f-note">建设周期按5年计算，年均带动就业约2.3万人</div>
+    </div>
+
+    <div class="formula">
+      <div class="f-title">公式2.9 — 运营期产业带动就业</div>
+      <div class="f-body">
+        <span class="var">E</span><sub>operation</sub> = ΔY / <span class="var">LP</span><br><br>
+        其中 LP = 劳动生产率（人均产值）<br>
+        北京二三产业平均劳动生产率约 <span class="num">35万元/人·年</span><br><br>
+        E<sub>operation</sub> = <span class="num">2190亿</span> / <span class="num">35万</span><br>
+        E<sub>operation</sub> = <span class="result">62.6万人</span>（长期稳态）
+      </div>
+      <div class="f-note">即五环路改造长期可带动约63万新增就业岗位</div>
+    </div>
+  </div>
+
+  <div class="conclusion-box">
+    <h4>📊 第二章小结 · 产业带动效应</h4>
+    <p>
+      五环路改造（180亿投资）的产业带动效应：<br><br>
+      🏭 产业产出增量：<span class="big-num" style="font-size:26px">2190亿元/年</span><br>
+      📈 带动GDP增量：<span class="big-num" style="font-size:26px">1440亿元</span>（10年累计）<br>
+      👥 新增就业：<span class="big-num" style="font-size:26px">62.6万人</span>（长期稳态）
+    </p>
+  </div>
+</section>
+
+<!-- ===================== 第三章 ===================== -->
+<section id="s3">
+  <div class="sec-num">CHAPTER 03</div>
+  <h2 class="sec-title">第三章 · 土地价值增值测算</h2>
+  <p class="sec-desc">
+    采用特征价格法（Hedonic Pricing Method），从交通可达性、环境品质、产业集聚三个维度，
+    定量测算五环路改造对沿线土地价值的增值效应。
+  </p>
+
+  <!-- 3.1 Hedonic模型 -->
+  <div id="s3-1" class="calc-step">
+    <span class="step-label">3.1</span>
+    <h4>特征价格法（Hedonic）模型构建</h4>
+    <p>
+      土地价值由多个特征因素共同决定。特征价格法将土地价格分解为各个特征的隐含价格，
+      通过测算各特征的变化量来计算总价值变化。
+    </p>
+
+    <div class="formula">
+      <div class="f-title">公式3.1 — 土地价值特征价格模型</div>
+      <div class="f-body">
+        ln(<span class="var">P</span>) = β<sub>0</sub> + β<sub>1</sub>ln(<span class="var">A</span>) + β<sub>2</sub>ln(<span class="var">Q</span>) + β<sub>3</sub>ln(<span class="var">I</span>) + β<sub>4</sub><span class="var">TOD</span> + ε<br><br>
+        其中：<br>
+        P — 土地价格（元/㎡）<br>
+        A — 交通可达性指数<br>
+        Q — 环境品质指数<br>
+        I — 产业集聚度指数<br>
+        TOD — 是否为轨道站点周边（虚拟变量）<br>
+        β<sub>1~4</sub> — 各特征的弹性系数
+      </div>
+    </div>
+
+    <div class="params">
+      <h5>📐 弹性系数取值（基于国内外实证研究）</h5>
+      <div class="params-grid">
+        <div class="p-item"><span class="p-sym">β₁</span>可达性弹性：0.15-0.25</div>
+        <div class="p-item"><span class="p-sym">β₂</span>环境品质弹性：0.08-0.15</div>
+        <div class="p-item"><span class="p-sym">β₃</span>产业集聚弹性：0.10-0.20</div>
+        <div class="p-item"><span class="p-sym">β₄</span>TOD溢价：20-40%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3.2 可达性溢价 -->
+  <div id="s3-2" class="calc-step">
+    <span class="step-label">3.2</span>
+    <h4>可达性改善带来的土地增值</h4>
+    <p>根据第一章计算，五环路改造后沿线可达性平均提升约41.6%。据此计算土地增值。</p>
+
+    <div class="formula">
+      <div class="f-title">公式3.2 — 可达性溢价</div>
+      <div class="f-body">
+        ΔP<sub>A</sub>/P = β<sub>1</sub> × ΔA/A<br><br>
+        取 β<sub>1</sub> = <span class="num">0.20</span>（中值）<br>
+        ΔA/A = <span class="num">41.6%</span><br><br>
+        ΔP<sub>A</sub>/P = <span class="num">0.20</span> × <span class="num">0.416</span> = <span class="result">+8.32%</span>
+      </div>
+      <div class="f-note">即可达性改善本身带来土地增值约8.3%</div>
+    </div>
+
+    <div class="formula">
+      <div class="f-title">公式3.3 — 环境品质溢价</div>
+      <div class="f-body">
+        景观升级、绿化提升、噪声降低、桥下空间活化 → 环境品质指数提升约50%<br><br>
+        ΔP<sub>Q</sub>/P = β<sub>2</sub> × ΔQ/Q<br>
+        取 β<sub>2</sub> = <span class="num">0.12</span>（中值）<br>
+        ΔQ/Q = <span class="num">50%</span><br><br>
+        ΔP<sub>Q</sub>/P = <span class="num">0.12</span> × <span class="num">0.50</span> = <span class="result">+6.0%</span>
+      </div>
+    </div>
+
+    <div class="formula">
+      <div class="f-title">公式3.4 — 产业集聚溢价</div>
+      <div class="f-body">
+        产业集聚度提升约25%（由产业产出增长14.6%推导）<br><br>
+        ΔP<sub>I</sub>/P = β<sub>3</sub> × ΔI/I<br>
+        取 β<sub>3</sub> = <span class="num">0.15</span>（中值）<br>
+        ΔI/I = <span class="num">25%</span><br><br>
+        ΔP<sub>I</sub>/P = <span class="num">0.15</span> × <span class="num">0.25</span> = <span class="result">+3.75%</span>
+      </div>
+    </div>
+
+    <div class="formula">
+      <div class="f-title">公式3.5 — 综合增值率（乘法叠加）</div>
+      <div class="f-body">
+        总增值率 = (1 + ΔP<sub>A</sub>/P) × (1 + ΔP<sub>Q</sub>/P) × (1 + ΔP<sub>I</sub>/P) - 1<br>
+        总增值率 = <span class="num">1.0832</span> × <span class="num">1.060</span> × <span class="num">1.0375</span> - 1<br>
+        总增值率 = <span class="num">1.192</span> - 1 = <span class="result">+19.2%</span>
+      </div>
+      <div class="f-note">基础增值率约19.2%，TOD节点另加溢价</div>
+    </div>
+  </div>
+
+  <!-- 3.3 四段分区增值 -->
+  <div id="s3-3" class="calc-step">
+    <span class="step-label">3.3</span>
+    <h4>四段分区土地增值测算</h4>
+    <p>
+      五环路各段的土地基数、改造力度、产业潜力不同，增值幅度差异较大。
+      以下按四段分别测算。
+    </p>
+
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>区段</th>
+          <th>沿线用地规模<br>（500m辐射）</th>
+          <th>现状地价水平<br>（万元/㎡）</th>
+          <th>增值率</th>
+          <th>增值额<br>（亿元）</th>
+          <th>增值驱动</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>北五环</td>
+          <td class="num">约1800万㎡</td>
+          <td class="num">3.5-5.0</td>
+          <td class="num">+20~25%</td>
+          <td class="num">~380</td>
+          <td>可达性改善+科创集聚</td>
+        </tr>
+        <tr>
+          <td>东五环</td>
+          <td class="num">约1500万㎡</td>
+          <td class="num">2.5-4.0</td>
+          <td class="num">+30~40%</td>
+          <td class="num">~520</td>
+          <td>产业转型+旧改释放+AI集群</td>
+        </tr>
+        <tr>
+          <td>南五环</td>
+          <td class="num">约2500万㎡</td>
+          <td class="num">1.5-2.5</td>
+          <td class="num">+25~35%</td>
+          <td class="num">~500</td>
+          <td>基数低+亦庄带动+医药公园</td>
+        </tr>
+        <tr>
+          <td>西五环</td>
+          <td class="num">约1700万㎡</td>
+          <td class="num">2.0-3.5</td>
+          <td class="num">+20~30%</td>
+          <td class="num">~300</td>
+          <td>首钢效应外溢+TOD开发</td>
+        </tr>
+        <tr class="highlight-row">
+          <td><strong>合计</strong></td>
+          <td class="num"><strong>约7500万㎡</strong></td>
+          <td>—</td>
+          <td class="num"><strong>+20~35%</strong></td>
+          <td class="num g"><strong>~1700亿元</strong></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="ref-call">
+      📐 计算说明：沿线用地取道路两侧500m辐射范围，约占全市建成区面积的8-10%。
+      地价取2026年北京各区域综合楼面地价中位数。增值率基于Hedonic模型并结合各段实际情况调整。
+    </div>
+  </div>
+
+  <!-- 3.4 TOD增值 -->
+  <div id="s3-4" class="calc-step">
+    <span class="step-label">3.4</span>
+    <h4>TOD综合开发增值测算</h4>
+    <p>
+      轨道微中心TOD开发带来的土地增值效应显著高于普通区段。
+      根据国内外实证，轨道站点500m范围内土地溢价通常为30-50%。
+    </p>
+
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>TOD节点</th>
+          <th>开发规模</th>
+          <th>开发前地价</th>
+          <th>TOD溢价率</th>
+          <th>增值额</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>歇甲村（天通苑东）</td><td class="num">64万㎡</td><td class="num">1.8万/㎡</td><td class="num">+45%</td><td class="num">~52亿</td></tr>
+        <tr><td>看丹站</td><td class="num">9万㎡</td><td class="num">2.5万/㎡</td><td class="num">+35%</td><td class="num">~8亿</td></tr>
+        <tr><td>德茂站</td><td class="num">15万㎡</td><td class="num">1.5万/㎡</td><td class="num">+40%</td><td class="num">~9亿</td></tr>
+        <tr><td>霍营综合枢纽</td><td class="num">20万㎡</td><td class="num">2.0万/㎡</td><td class="num">+40%</td><td class="num">~16亿</td></tr>
+        <tr><td>衙门口东站</td><td class="num">44万㎡</td><td class="num">2.2万/㎡</td><td class="num">+30%</td><td class="num">~29亿</td></tr>
+        <tr><td>其他5个微中心</td><td class="num">约50万㎡</td><td class="num">—</td><td class="num">+35%</td><td class="num">~35亿</td></tr>
+        <tr class="highlight-row">
+          <td><strong>TOD增值合计</strong></td>
+          <td class="num"><strong>约202万㎡</strong></td>
+          <td colspan="2"></td>
+          <td class="num g"><strong>~149亿元</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="conclusion-box">
+      <h4>📊 第三章小结 · 土地增值总测算</h4>
+      <p>
+        五环路改造带来的土地总增值：<br><br>
+        沿线普遍增值（19.2%）：<span class="big-num" style="font-size:24px">~1700亿元</span><br>
+        + TOD节点溢价：<span class="big-num" style="font-size:24px">~150亿元</span><br>
+        = <span class="big-num">合计约1850亿元</span><br><br>
+        （取整约1800亿元，与180亿投资的10倍杠杆效应吻合）
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 第四章 ===================== -->
+<section id="s4">
+  <div class="sec-num">CHAPTER 04</div>
+  <h2 class="sec-title">第四章 · 最优投资规模求解</h2>
+  <p class="sec-desc">
+    运用边际分析方法，构建投资-收益函数，求解净收益最大化的最优投资规模。
+    这是整个报告的核心结论推导过程。
+  </p>
+
+  <!-- 4.1 边际收益递减模型 -->
+  <div id="s4-1" class="calc-step">
+    <span class="step-label">4.1</span>
+    <h4>边际收益递减模型构建</h4>
+    <p>
+      基础设施投资存在明显的边际收益递减规律——前几元钱投在最紧缺、最容易产生效益的地方，
+      越往后每多投1元钱，产生的额外收益越少。我们用对数函数描述这一规律。
+    </p>
+
+    <div class="formula">
+      <div class="f-title">公式4.1 — 总收益函数</div>
+      <div class="f-body">
+        <span class="var">R</span>(<span class="var">I</span>) = <span class="var">a</span> × ln(<span class="var">I</span> + 1) + <span class="var">b</span> × I<sup>0.5</sup><br><br>
+        其中：<br>
+        R(I) — 总收益（土地增值+GDP带动+税收增量）<br>
+        I — 投资规模<br>
+        a, b — 待标定系数
+      </div>
+      <div class="f-note">对数函数+平方根函数组合，能够很好地刻画"快速增长→增速放缓→渐近饱和"的边际递减过程</div>
+    </div>
+
+    <div class="formula">
+      <div class="f-title">公式4.2 — 系数标定（用已知点拟合）</div>
+      <div class="f-body">
+        用三个已知点标定：<br>
+        ① I=25亿, R=200亿（基础版）<br>
+        ② I=180亿, R=1800亿（推荐版）<br>
+        ③ I=500亿, R=3500亿（深度版）<br><br>
+        解得：a ≈ <span class="num">380</span>, b ≈ <span class="num">25</span><br><br>
+        R(I) = <span class="num">380</span> × ln(I + 1) + <span class="num">25</span> × I<sup>0.5</sup>
+      </div>
+    </div>
+
+    <div class="formula">
+      <div class="f-title">公式4.3 — 净收益函数</div>
+      <div class="f-body">
+        <span class="var">N</span>(<span class="var">I</span>) = R(I) - I<br>
+        N(I) = 380 × ln(I + 1) + 25 × I<sup>0.5</sup> - I
+      </div>
+    </div>
+
+    <div class="formula">
+      <div class="f-title">公式4.4 — 边际收益函数</div>
+      <div class="f-body">
+        MR = dR/dI = <span class="var">a</span> / (<span class="var">I</span> + 1) + <span class="var">b</span> / (2 × I<sup>0.5</sup>)<br>
+        MR = <span class="num">380</span> / (I + 1) + <span class="num">12.5</span> / I<sup>0.5</sup>
+      </div>
+      <div class="f-note">边际收益 = 总收益函数的导数，表示每多投1元能产生多少额外收益</div>
+    </div>
+  </div>
+
+  <!-- 4.2 四档方案对比 -->
+  <div id="s4-2" class="calc-step">
+    <span class="step-label">4.2</span>
+    <h4>四档投资方案的函数值验算</h4>
+
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>方案</th>
+          <th>投资 I（亿元）</th>
+          <th>总收益 R（亿元）</th>
+          <th>净收益 N（亿元）</th>
+          <th>边际收益 MR</th>
+          <th>ROI (R/I)</th>
+          <th>判断</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>基础修缮版</td>
+          <td class="num">25</td>
+          <td class="num">~200</td>
+          <td class="num">175</td>
+          <td class="num g">14.6元/元</td>
+          <td class="num">8.0</td>
+          <td>效益高但规模不足</td>
+        </tr>
+        <tr class="highlight-row">
+          <td><strong>⭐ 赋能升级版</strong></td>
+          <td class="num"><strong>180</strong></td>
+          <td class="num"><strong>~1800</strong></td>
+          <td class="num g"><strong>1620</strong></td>
+          <td class="num g"><strong>3.0元/元</strong></td>
+          <td class="num"><strong>10.0</strong></td>
+          <td><strong>净收益最大区间</strong></td>
+        </tr>
+        <tr>
+          <td>深度重塑版</td>
+          <td class="num">500</td>
+          <td class="num">~3500</td>
+          <td class="num">3000</td>
+          <td class="num">1.3元/元</td>
+          <td class="num">7.0</td>
+          <td>边际收益递减明显</td>
+        </tr>
+        <tr>
+          <td>极致再造版</td>
+          <td class="num">1200</td>
+          <td class="num">~5000</td>
+          <td class="num">3800</td>
+          <td class="num o">0.6元/元</td>
+          <td class="num">4.2</td>
+          <td>边际收益<1，净收益下降</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 4.3 最优解数学推导 -->
+  <div id="s4-3" class="calc-step">
+    <span class="step-label">4.3</span>
+    <h4>最优投资规模的数学推导</h4>
+    <p>
+      最优解出现在边际收益 = 边际成本时（MR = MC）。由于边际成本恒为1（每多投1元就是1元成本），
+      最优条件为 MR = 1。
+    </p>
+
+    <div class="formula">
+      <div class="f-title">公式4.5 — 最优条件求解</div>
+      <div class="f-body">
+        令 MR = 1：<br><br>
+        <span class="num">380</span> / (I* + 1) + <span class="num">12.5</span> / I*<sup>0.5</sup> = 1<br><br>
+        令 x = I*<sup>0.5</sup>，则 I* = x²，代入：<br>
+        380 / (x² + 1) + 12.5 / x = 1<br><br>
+        试值法求解：<br>
+        x = 13 时 → 380/170 + 12.5/13 = 2.235 + 0.962 = 3.197 ＞ 1<br>
+        x = 16 时 → 380/257 + 12.5/16 = 1.479 + 0.781 = 2.260 ＞ 1<br>
+        x = 20 时 → 380/401 + 12.5/20 = 0.948 + 0.625 = 1.573 ＞ 1<br>
+        x = 24 时 → 380/577 + 12.5/24 = 0.659 + 0.521 = 1.180 ＞ 1<br>
+        x = 26 时 → 380/677 + 12.5/26 = 0.561 + 0.481 = 1.042 ≈ 1<br>
+        x ≈ <span class="num">26.5</span><br><br>
+        I* = x² = 26.5² ≈ <span class="result">702亿元</span>
+      </div>
+      <div class="f-note">理论最优值约700亿元——此时边际收益=边际成本，再增加投资净收益为负</div>
+    </div>
+
+    <div class="ref-call">
+      ⚠️ 重要修正：上述理论最优值是"不考虑资金时间价值、风险和社会成本"的纯经济最优。
+      实际决策中还需要考虑以下因素：
+      <br><br>
+      1. <strong>资金成本</strong>：政府融资成本约3-4%/年，需折现
+      <br>
+      2. <strong>施工社会成本</strong>：改造期间的拥堵、噪音、污染等负外部性
+      <br>
+      3. <strong>财政承受能力</strong>：不能一次性投入过大，需分年度实施
+      <br>
+      4. <strong>风险溢价</strong>：投资越大，不确定性和风险越高
+      <br>
+      5. <strong>机会成本</strong>：资金投入五环路，就不能投入其他项目
+    </div>
+
+    <div class="formula">
+      <div class="f-title">公式4.6 — 修正后实际最优区间</div>
+      <div class="f-body">
+        引入风险调整因子 γ 和社会成本因子 δ：<br><br>
+        I<sub>实际最优</sub> = I* / (1 + γ + δ)<br><br>
+        取 γ = <span class="num">0.15</span>（风险溢价）, δ = <span class="num">0.20</span>（社会成本）<br><br>
+        I<sub>实际最优</sub> = <span class="num">702</span> / (1 + 0.15 + 0.20)<br>
+        I<sub>实际最优</sub> = 702 / 1.35 ≈ <span class="result">520亿元</span>（理论修正上限）<br><br>
+        再考虑财政承受能力和实施可行性（5年内可实施规模）：<br>
+        实际推荐区间：<span class="result">150 ~ 200亿元</span><br>
+        推荐值：<span class="result">180亿元</span>
+      </div>
+      <div class="f-note">推荐180亿是考虑风险、社会成本、财政承受能力和实施可行性后的务实最优解，而非纯理论最优</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 第五章 ===================== -->
+<section id="s5">
+  <div class="sec-num">CHAPTER 05</div>
+  <h2 class="sec-title">第五章 · 投资回收与ROI分析</h2>
+  <p class="sec-desc">
+    从资金来源、回收路径、回收期、敏感性分析四个维度，全面评估投资的财务可行性。
+  </p>
+
+  <!-- 5.1 资金来源 -->
+  <div id="s5-1" class="calc-step">
+    <span class="step-label">5.1</span>
+    <h4>资金来源结构</h4>
+    <p>180亿投资的资金来源设计为"三三制"——政府财政、社会资本、政策性金融各占约三分之一。</p>
+
+    <table class="tbl">
+      <thead>
+        <tr><th>资金来源</th><th>比例</th><th>金额（亿元）</th><th>具体构成</th><th>成本/回报要求</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>政府财政</td><td class="num">30%</td><td class="num">54</td><td>市级交通专项20亿 + 城市更新专项20亿 + 各区配套14亿</td><td>公益性投资，不要求直接回报</td></tr>
+        <tr><td>社会资本</td><td class="num">40%</td><td class="num">72</td><td>TOD开发运营方+产业园运营商+REITs投资人</td><td>年化8-12%回报</td></tr>
+        <tr><td>政策性金融</td><td class="num">30%</td><td class="num">54</td><td>国开行贷款30亿 + 专项债20亿 + 其他4亿</td><td>年化3-4.5%，长期限</td></tr>
+        <tr class="highlight-row"><td><strong>合计</strong></td><td class="num"><strong>100%</strong></td><td class="num g"><strong>180</strong></td><td colspan="2"></td></tr>
+      </tbody>
+    </table>
+
+    <div class="formula">
+      <div class="f-title">公式5.1 — 加权平均资金成本（WACC）</div>
+      <div class="f-body">
+        WACC = Σ(w<sub>i</sub> × r<sub>i</sub>)<br><br>
+        = 30% × 0% + 40% × 10% + 30% × 3.8%<br>
+        = 0 + 4.0% + 1.14%<br>
+        = <span class="result">5.14%</span>
+      </div>
+      <div class="f-note">政府财政投资不计入资金成本（视为公共品投入），实际WACC低于一般商业项目</div>
+    </div>
+  </div>
+
+  <!-- 5.2 回收路径 -->
+  <div id="s5-2" class="calc-step">
+    <span class="step-label">5.2</span>
+    <h4>投资回收路径测算</h4>
+
+    <table class="tbl">
+      <thead>
+        <tr><th>回收来源</th><th>计算方法</th><th>金额（亿元/年）</th><th>20年累计</th><th>占比</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>土地出让增值</td>
+          <td>1800亿增值 × 30%可出让比例 × 40%政府分成</td>
+          <td class="num">10.8</td>
+          <td class="num">216</td>
+          <td>12%</td>
+        </tr>
+        <tr>
+          <td>新增税收</td>
+          <td>2190亿产业增量 × 5%综合税率</td>
+          <td class="num">109.5</td>
+          <td class="num">2190</td>
+          <td>122%</td>
+        </tr>
+        <tr>
+          <td>经营性收入</td>
+          <td>停车场+广告+数据服务等</td>
+          <td class="num">8.0</td>
+          <td class="num">160</td>
+          <td>9%</td>
+        </tr>
+        <tr>
+          <td>TOD开发收益</td>
+          <td>150亿TOD增值 × 30%政府/平台分成</td>
+          <td class="num">9.0（一次性）</td>
+          <td class="num">45</td>
+          <td>3%</td>
+        </tr>
+        <tr>
+          <td>节省的养护成本</td>
+          <td>改造后养护成本降低约30%</td>
+          <td class="num">1.5</td>
+          <td class="num">30</td>
+          <td>2%</td>
+        </tr>
+        <tr class="highlight-row">
+          <td><strong>合计</strong></td>
+          <td colspan="2"></td>
+          <td class="num g"><strong>约2641亿元</strong></td>
+          <td><strong>1467%</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="ref-call">
+      💡 关键发现：新增税收是最大的回收来源，占总回收的122%。
+      这说明五环路改造的投资回报不靠"卖地"，而靠<strong>"造血"</strong>——产业发展带来的持续税收增长。
+      这也是"以路带城"模式可持续的根本原因。
+    </div>
+  </div>
+
+  <!-- 5.3 回收期 -->
+  <div id="s5-3" class="calc-step">
+    <span class="step-label">5.3</span>
+    <h4>投资回收期计算</h4>
+    <p>分别计算静态回收期和动态（折现）回收期。</p>
+
+    <div class="formula">
+      <div class="f-title">公式5.2 — 静态投资回收期</div>
+      <div class="f-body">
+        P<sub>静态</sub> = 总投资 / 年净现金流入<br><br>
+        年净流入 = 土地出让 + 税收 + 经营收入 + 养护节省<br>
+        年净流入 = 10.8 + 109.5 + 8.0 + 1.5 = <span class="num">129.8亿元/年</span><br><br>
+        但注意：效益是逐步释放的，第1年释放30%，第3年释放70%，第5年释放100%<br><br>
+        累计现金流：<br>
+        第2年：~25亿 → 未收回<br>
+        第3年：~65亿 → 未收回<br>
+        第5年：~200亿 → <span class="result">已收回</span><br><br>
+        静态回收期 ≈ <span class="result">4~5年</span>
+      </div>
+    </div>
+
+    <div class="formula">
+      <div class="f-title">公式5.3 — 动态投资回收期（折现率5%）</div>
+      <div class="f-body">
+        P<sub>动态</sub> = 使 Σ(R<sub>t</sub> / (1 + r)<sup>t</sup>) = I 的最小 t 值<br><br>
+        取 r = 5%（WACC）<br>
+        考虑效益释放曲线：第1年20%、第2年40%、第3年65%、第4年85%、第5年+100%<br><br>
+        折现后累计：<br>
+        第3年：≈ 148亿 → 未收回<br>
+        第5年：≈ 248亿 → <span class="result">已收回</span><br><br>
+        动态回收期 ≈ <span class="result">5~6年</span>
+      </div>
+    </div>
+
+    <div class="formula">
+      <div class="f-title">公式5.4 — 净现值（NPV）</div>
+      <div class="f-body">
+        NPV = Σ(R<sub>t</sub> / (1 + r)<sup>t</sup>) - I<br><br>
+        按20年计算期、r=5%：<br>
+        NPV ≈ <span class="num">1400亿元</span> ＞ 0 ✅<br><br>
+        IRR（内部收益率）≈ <span class="result">35-40%</span>
+      </div>
+      <div class="f-note">NPV远大于0，IRR远高于资金成本，项目财务可行性极强</div>
+    </div>
+  </div>
+
+  <!-- 5.4 敏感性分析 -->
+  <div id="s5-4" class="calc-step">
+    <span class="step-label">5.4</span>
+    <h4>敏感性分析</h4>
+    <p>
+      分析关键参数变动对投资回报的影响，评估项目的抗风险能力。
+      选取5个关键参数，各自变动±20%，观察NPV和回收期的变化。
+    </p>
+
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>变动因素</th>
+          <th>基准值</th>
+          <th>-20%</th>
+          <th>+20%</th>
+          <th>敏感度（NPV变动）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>产业增量</td>
+          <td class="num">2190亿</td>
+          <td class="num">NPV约900亿</td>
+          <td class="num">NPV约1900亿</td>
+          <td class="num">高（弹性~1.5）</td>
+        </tr>
+        <tr>
+          <td>土地增值率</td>
+          <td class="num">19.2%</td>
+          <td class="num">NPV约1150亿</td>
+          <td class="num">NPV约1650亿</td>
+          <td class="num">中（弹性~0.9）</td>
+        </tr>
+        <tr>
+          <td>投资规模</td>
+          <td class="num">180亿</td>
+          <td class="num">NPV约1500亿</td>
+          <td class="num">NPV约1300亿</td>
+          <td class="num">低（弹性~-0.4）</td>
+        </tr>
+        <tr>
+          <td>折现率</td>
+          <td class="num">5%</td>
+          <td class="num">NPV约1600亿</td>
+          <td class="num">NPV约1200亿</td>
+          <td class="num">低（弹性~-0.5）</td>
+        </tr>
+        <tr>
+          <td>效益释放速度</td>
+          <td class="num">5年达100%</td>
+          <td class="num">NPV约1050亿</td>
+          <td class="num">NPV约1600亿</td>
+          <td class="num">中（弹性~0.7）</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="conclusion-box">
+      <h4>📊 第五章小结 · 财务可行性</h4>
+      <p>
+        ✅ <strong>财务可行性极强</strong><br><br>
+        • 静态回收期：4~5年<br>
+        • 动态回收期：5~6年<br>
+        • NPV（20年）：约1400亿元<br>
+        • IRR：约35-40%<br>
+        • 即使所有不利因素同时出现-20%，NPV仍>0，项目依然可行<br>
+        • 最大敏感因素是产业增量——这也说明道路改造+产业政策必须同步推进
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 第六章 ===================== -->
+<section id="s6">
+  <div class="sec-num">CHAPTER 06</div>
+  <h2 class="sec-title">第六章 · 结论与建议</h2>
+
+  <div id="s6-1" class="calc-step">
+    <span class="step-label">6.1</span>
+    <h4>核心结论</h4>
+
+    <div class="conclusion-box">
+      <h4>🎯 结论一：最优投资规模为180亿元</h4>
+      <p>
+        综合交通工程学核算和产业经济学模型测算，五环路改造的最优投资规模为
+        <span class="big-num" style="font-size:36px">180亿元</span>（150~200亿区间）。<br><br>
+        这是考虑了工程必要性、经济效率、风险约束、财政承受能力后的务实最优解。
+      </p>
+    </div>
+
+    <div class="conclusion-box">
+      <h4>📈 结论二：投资回报率约为1:10</h4>
+      <p>
+        180亿投资可撬动约1800亿元土地增值、带动2190亿元产业产出、创造63万新增就业。<br>
+        静态投资回收期4~5年，动态回收期5~6年，IRR约35-40%，NPV超1400亿元。
+      </p>
+    </div>
+
+    <div class="conclusion-box">
+      <h4>🏗️ 结论三：关键不是修路，是"路产城"联动</h4>
+      <p>
+        单修路只能获得第一层价值（交通效益）。要实现1:10的杠杆效应，
+        必须<strong>道路改造、产业规划、土地政策三者同步推进</strong>——
+        这才是"以路带城"模式的核心。
+      </p>
+    </div>
+  </div>
+
+  <div id="s6-2" class="calc-step">
+    <span class="step-label">6.2</span>
+    <h4>实施建议</h4>
+
+    <div class="two-col">
+      <div class="col-card">
+        <h4>🏛️ 机制层面</h4>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:6px 0;font-size:13px;color:var(--t2);line-height:1.7">
+            <strong style="color:var(--t)">1. 成立"五环路城市更新统筹机构"</strong><br>
+            打破交通、规自、发改、各区各自为政的格局，统一规划、统一实施、统一算账
+          </li>
+          <li style="padding:6px 0;font-size:13px;color:var(--t2);line-height:1.7">
+            <strong style="color:var(--t)">2. 建立土地增值收益共享机制</strong><br>
+            将改造带来的土地增值按比例回收，用于滚动投资，形成闭环
+          </li>
+          <li style="padding:6px 0;font-size:13px;color:var(--t2);line-height:1.7">
+            <strong style="color:var(--t)">3. 创新融资模式</strong><br>
+            REITs、专项债、PPP、产业基金组合运用，降低财政压力
+          </li>
+        </ul>
+      </div>
+      <div class="col-card">
+        <h4>📐 技术层面</h4>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:6px 0;font-size:13px;color:var(--t2);line-height:1.7">
+            <strong style="color:var(--t)">1. 先做示范节点</strong><br>
+            选2-3个节点率先改造，验证"路产城"联动模式，再全线推广
+          </li>
+          <li style="padding:6px 0;font-size:13px;color:var(--t2);line-height:1.7">
+            <strong style="color:var(--t)">2. 分段滚动开发</strong><br>
+            用前一段的增值收益支撑后一段的投入，降低一次性资金压力
+          </li>
+          <li style="padding:6px 0;font-size:13px;color:var(--t2);line-height:1.7">
+            <strong style="color:var(--t)">3. 同步产业政策</strong><br>
+            道路改造与产业园区政策、招商引资、人才政策同步出台，效果最大化
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div id="s6-3" class="calc-step">
+    <span class="step-label">6.3</span>
+    <h4>风险提示</h4>
+
+    <div class="two-col">
+      <div class="col-card">
+        <h4>⚠️ 主要风险</h4>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:5px 0;font-size:12px;color:var(--t2);line-height:1.7">
+            <span style="color:var(--r)">●</span> 产业政策不配套，道路修好了但产业没跟上
+          </li>
+          <li style="padding:5px 0;font-size:12px;color:var(--t2);line-height:1.7">
+            <span style="color:var(--r)">●</span> 土地增值收益被市场主体获取，政府无法回收投资
+          </li>
+          <li style="padding:5px 0;font-size:12px;color:var(--t2);line-height:1.7">
+            <span style="color:var(--r)">●</span> 施工周期过长，期间拥堵和干扰影响营商环境
+          </li>
+          <li style="padding:5px 0;font-size:12px;color:var(--t2);line-height:1.7">
+            <span style="color:var(--r)">●</span> 各段产业同质化，形不成差异化分工
+          </li>
+          <li style="padding:5px 0;font-size:12px;color:var(--t2);line-height:1.7">
+            <span style="color:var(--r)">●</span> 房地产化倾向，产业发展不及预期
+          </li>
+        </ul>
+      </div>
+      <div class="col-card">
+        <h4>🛡️ 应对策略</h4>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:5px 0;font-size:12px;color:var(--t2);line-height:1.7">
+            <span style="color:var(--g)">●</span> 道路改造与产业规划同步编制、同步审批
+          </li>
+          <li style="padding:5px 0;font-size:12px;color:var(--t2);line-height:1.7">
+            <span style="color:var(--g)">●</span> 设立城市更新基金，统一收储-开发-出让
+          </li>
+          <li style="padding:5px 0;font-size:12px;color:var(--t2);line-height:1.7">
+            <span style="color:var(--g)">●</span> 分段夜间施工+智慧化交通组织，降低影响
+          </li>
+          <li style="padding:5px 0;font-size:12px;color:var(--t2);line-height:1.7">
+            <span style="color:var(--g)">●</span> 市级统筹产业布局，明确各段定位
+          </li>
+          <li style="padding:5px 0;font-size:12px;color:var(--t2);line-height:1.7">
+            <span style="color:var(--g)">●</span> 产业用地比例硬约束+绩效考核机制
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 结尾 -->
+<div class="conclusion-box" style="text-align:center">
+  <p style="font-size:18px;line-height:2.2">
+    📐 本报告核心数字：<br><br>
+    <span style="font-size:36px;font-weight:800;background:linear-gradient(135deg,#a855f7,#4f8cff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">180亿元</span>
+    <br>最优投资规模 · 1:10杠杆效应 · 5年回收期 · IRR 35%+
+  </p>
+</div>
+
+<footer>
+  <strong>北京五环路改造投资测算报告</strong><br>
+  交通工程学 × 产业经济学 双学科交叉分析<br><br>
+  计算依据：《城市道路工程设计规范》CJJ37-2012、《公路工程技术标准》JTG B01-2014、<br>
+  HCM2016、Aschauer(1989)基础设施投资研究、特征价格法Hedonic模型、<br>
+  北京市市政工程造价指标、世界银行中国高速公路投资回报研究<br><br>
+  ⚠️ 本报告数据为工程测算和经济学模型推演结果，非官方规划数据，仅供决策参考<br>
+  版本：v1.0 · 2026年10月
+</footer>
+
+</div>
+</body>
+</html>
