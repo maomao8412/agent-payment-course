@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>北京"动力环"战略研究报告</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#faf9f7;--bg2:#ffffff;--bg3:#f0ede8;
+    --ink:#1a1a1a;--ink2:#4a4a4a;--ink3:#8a8a8a;--ink4:#c4c4c4;
+    --accent:#0a2540;--accent2:#1a4a6f;
+    --gold:#b8986a;--gold2:#d4b896;
+    --green:#2d7a5c;
+    --red:#c44536;
+    --line:#e5e2dc;
+  }
+  html{scroll-behavior:smooth}
+  body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Serif SC","Microsoft YaHei",serif;background:var(--bg);color:var(--ink);line-height:1.7;-webkit-font-smoothing:antialiased}
+  .ctn{max-width:1200px;margin:0 auto;padding:0 40px}
+
+  /* ===== COVER ===== */
+  .cover{min-height:100vh;display:flex;flex-direction:column;justify-content:space-between;padding:60px 0 50px;position:relative;overflow:hidden;background:var(--accent);color:#fff}
+  .cover::before{content:'';position:absolute;top:0;right:0;width:50%;height:100%;background:linear-gradient(135deg,rgba(184,152,106,.12) 0%,transparent 60%)}
+  .cover-ring{position:absolute;right:-100px;top:50%;transform:translateY(-50%);width:600px;height:600px;border:1px solid rgba(212,184,150,.2);border-radius:50%}
+  .cover-ring::before{content:'';position:absolute;inset:40px;border:1px solid rgba(212,184,150,.15);border-radius:50%}
+  .cover-ring::after{content:'';position:absolute;inset:100px;border:1px solid rgba(212,184,150,.1);border-radius:50%}
+
+  .cover-top{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center}
+  .cover-mark{font-size:11px;letter-spacing:3px;color:var(--gold2);text-transform:uppercase;font-weight:500}
+  .cover-date{font-size:11px;color:rgba(255,255,255,.5);letter-spacing:1px}
+
+  .cover-main{position:relative;z-index:2;max-width:720px}
+  .cover-eyebrow{display:inline-block;font-size:13px;color:var(--gold2);letter-spacing:4px;text-transform:uppercase;margin-bottom:24px;font-weight:500;border-top:1px solid var(--gold);padding-top:14px}
+  .cover h1{font-family:"Noto Serif SC",serif;font-size:72px;font-weight:700;line-height:1.15;margin-bottom:28px;letter-spacing:-1px}
+  .cover h1 em{font-style:normal;color:var(--gold2);font-weight:700}
+  .cover-sub{font-size:20px;color:rgba(255,255,255,.7);line-height:1.7;max-width:560px;font-weight:300}
+
+  .cover-bottom{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:flex-end;padding-top:40px;border-top:1px solid rgba(255,255,255,.1)}
+  .cover-meta{display:flex;gap:48px}
+  .cover-meta-item .num{font-family:"Noto Serif SC",serif;font-size:28px;font-weight:600;color:var(--gold2)}
+  .cover-meta-item .label{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;letter-spacing:1px}
+  .cover-confidential{font-size:10px;color:rgba(255,255,255,.4);letter-spacing:2px;text-transform:uppercase;text-align:right}
+
+  /* ===== SLIDES ===== */
+  .slide{min-height:100vh;padding:80px 0;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--line);position:relative}
+  .slide-num{position:absolute;top:40px;right:40px;font-family:"Noto Serif SC",serif;font-size:14px;color:var(--ink3);letter-spacing:2px}
+
+  .slide-header{margin-bottom:50px}
+  .slide-chapter{font-size:11px;color:var(--gold);letter-spacing:4px;text-transform:uppercase;font-weight:600;margin-bottom:14px}
+  .slide-title{font-family:"Noto Serif SC",serif;font-size:42px;font-weight:700;line-height:1.25;letter-spacing:-.5px;max-width:900px}
+  .slide-title .gold{color:var(--gold)}
+
+  /* ===== EXEC SUMMARY ===== */
+  .key-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin:40px 0}
+  .metric{padding:36px 0;border-top:2px solid var(--accent)}
+  .metric.gold{border-top-color:var(--gold)}
+  .metric.green{border-top-color:var(--green)}
+  .metric .m-num{font-family:"Noto Serif SC",serif;font-size:56px;font-weight:700;line-height:1;letter-spacing:-2px}
+  .metric .m-unit{font-size:18px;color:var(--ink2);font-weight:400;margin-left:4px}
+  .metric .m-label{font-size:14px;color:var(--ink2);margin-top:14px;line-height:1.5}
+
+  .insight-box{background:var(--bg3);padding:36px 40px;margin-top:30px;position:relative}
+  .insight-box::before{content:'洞察';position:absolute;top:14px;left:40px;font-size:11px;letter-spacing:3px;color:var(--gold);font-weight:600;text-transform:uppercase}
+  .insight-box p{font-family:"Noto Serif SC",serif;font-size:22px;line-height:1.6;color:var(--ink);font-weight:500;margin-top:20px}
+
+  /* ===== 问题界定 ===== */
+  .problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+  .problem-left h3{font-family:"Noto Serif SC",serif;font-size:24px;font-weight:600;margin-bottom:20px;line-height:1.4}
+  .problem-list{list-style:none;padding:0}
+  .problem-list li{padding:18px 0;border-bottom:1px solid var(--line);font-size:15px;color:var(--ink2);display:flex;gap:14px;line-height:1.6}
+  .problem-list li::before{content:'';width:24px;height:1px;background:var(--red);margin-top:12px;flex-shrink:0}
+  .problem-list li:last-child{border-bottom:none}
+
+  .problem-right{background:var(--bg2);border:1px solid var(--line);padding:40px}
+  .pr-question{font-family:"Noto Serif SC",serif;font-size:28px;font-weight:600;line-height:1.5;margin-bottom:24px;color:var(--accent)}
+  .pr-answer{font-size:15px;color:var(--ink2);line-height:2}
+  .pr-answer strong{color:var(--gold);font-weight:600}
+
+  /* ===== 传导逻辑 ===== */
+  .logic-chain{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:50px 0;position:relative}
+  .logic-chain::before{content:'';position:absolute;top:50px;left:10%;right:10%;height:1px;background:var(--line)}
+  .logic-node{text-align:center;padding:0 16px;position:relative}
+  .ln-icon{width:100px;height:100px;border-radius:50%;background:var(--bg2);border:2px solid var(--line);margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:36px;position:relative;z-index:1}
+  .ln-num{position:absolute;top:0;left:50%;transform:translate(-50%,-50%);width:28px;height:28px;border-radius:50%;background:var(--gold);color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;line-height:1}
+  .ln-title{font-family:"Noto Serif SC",serif;font-size:17px;font-weight:600;margin-bottom:8px}
+  .ln-desc{font-size:13px;color:var(--ink3);line-height:1.6}
+
+  /* ===== 方案对比 ===== */
+  .compare-table{width:100%;border-collapse:collapse;margin:30px 0}
+  .compare-table th{padding:20px 16px;text-align:left;font-size:12px;font-weight:600;color:var(--ink3);letter-spacing:1px;text-transform:uppercase;border-bottom:2px solid var(--ink)}
+  .compare-table td{padding:24px 16px;font-size:14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink2)}
+  .compare-table td:first-child{font-weight:600;color:var(--ink);font-family:"Noto Serif SC",serif;font-size:15px}
+  .compare-table .rec-col{background:rgba(184,152,106,.06)}
+  .compare-table th.rec-col{color:var(--gold)}
+  .compare-table .val{font-family:"Noto Serif SC",serif;font-size:22px;font-weight:700;color:var(--ink)}
+  .compare-table .val.gold{color:var(--gold)}
+  .compare-table .tag{display:inline-block;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;background:var(--bg3);color:var(--ink2)}
+  .compare-table .tag.rec{background:var(--gold);color:#fff}
+  .compare-table tr:last-child td{border-bottom:none}
+
+  /* ===== 数字论证 ===== */
+  .calc-section{margin:30px 0}
+  .calc-row{display:grid;grid-template-columns:200px 1fr 200px;gap:20px;align-items:center;padding:24px 0;border-bottom:1px solid var(--line)}
+  .calc-row:last-child{border-bottom:none}
+  .calc-label{font-size:14px;color:var(--ink2);font-weight:500}
+  .calc-formula{font-family:"Noto Serif SC",serif;font-size:18px;color:var(--ink);letter-spacing:.5px;text-align:center}
+  .calc-formula .var{color:var(--accent2);font-style:italic}
+  .calc-formula .op{color:var(--gold);margin:0 6px;font-weight:600}
+  .calc-result{font-family:"Noto Serif SC",serif;font-size:28px;font-weight:700;text-align:right;color:var(--gold)}
+
+  /* ===== 回收路径 ===== */
+  .return-paths{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin:40px 0}
+  .return-card{background:var(--bg2);border:1px solid var(--line);padding:32px;position:relative}
+  .return-card .rc-pct{position:absolute;top:24px;right:32px;font-family:"Noto Serif SC",serif;font-size:36px;font-weight:700;color:var(--gold)}
+  .return-card h4{font-family:"Noto Serif SC",serif;font-size:18px;font-weight:600;margin-bottom:12px;padding-right:60px}
+  .return-card p{font-size:13px;color:var(--ink3);line-height:1.7}
+  .return-card .rc-amount{margin-top:16px;padding-top:16px;border-top:1px solid var(--line);font-size:14px;color:var(--ink2)}
+  .return-card .rc-amount strong{font-family:"Noto Serif SC",serif;font-size:18px;color:var(--ink);font-weight:600}
+
+  /* ===== 实施路径 ===== */
+  .phases{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:40px 0;position:relative}
+  .phase-card{padding:32px;border-right:1px solid var(--line);position:relative}
+  .phase-card:last-child{border-right:none}
+  .phase-year{font-size:11px;color:var(--gold);letter-spacing:3px;font-weight:600;margin-bottom:10px}
+  .phase-card h4{font-family:"Noto Serif SC",serif;font-size:20px;font-weight:600;margin-bottom:16px}
+  .phase-card ul{list-style:none;padding:0}
+  .phase-card li{font-size:13px;color:var(--ink2);padding:6px 0 6px 18px;position:relative;line-height:1.6}
+  .phase-card li::before{content:'—';position:absolute;left:0;color:var(--gold)}
+  .phase-num{position:absolute;top:32px;right:32px;font-family:"Noto Serif SC",serif;font-size:48px;font-weight:700;color:var(--line);line-height:1}
+
+  /* ===== 风险 ===== */
+  .risk-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin:30px 0}
+  .risk-item{background:var(--bg2);border-left:3px solid var(--red);padding:24px 28px}
+  .risk-item h5{font-size:15px;font-weight:600;margin-bottom:8px}
+  .risk-item p{font-size:13px;color:var(--ink3);line-height:1.7;margin-bottom:10px}
+  .risk-item .solution{font-size:12px;color:var(--green);padding:8px 12px;background:rgba(45,122,92,.06);border-radius:4px;line-height:1.6}
+
+  /* ===== CLOSING ===== */
+  .closing{background:var(--accent);color:#fff;padding:100px 0;text-align:center;position:relative;overflow:hidden}
+  .closing::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(184,152,106,.1) 0%,transparent 60%)}
+  .closing-inner{position:relative;z-index:1}
+  .closing .eyebrow{font-size:12px;color:var(--gold2);letter-spacing:4px;text-transform:uppercase;margin-bottom:24px}
+  .closing h2{font-family:"Noto Serif SC",serif;font-size:52px;font-weight:700;line-height:1.3;max-width:800px;margin:0 auto 30px}
+  .closing h2 em{font-style:normal;color:var(--gold2)}
+  .closing-statement{font-size:18px;color:rgba(255,255,255,.6);max-width:600px;margin:0 auto;line-height:1.9;font-weight:300}
+
+  /* ===== BACK MATTER ===== */
+  .back-matter{background:var(--bg3);padding:60px 0}
+  .bm-title{font-size:11px;color:var(--ink3);letter-spacing:3px;text-transform:uppercase;margin-bottom:20px;font-weight:600}
+  .sources{columns:2;column-gap:40px}
+  .sources p{font-size:12px;color:var(--ink3);line-height:1.8;padding:4px 0;break-inside:avoid}
+
+  /* ===== NAV ===== */
+  .side-nav{position:fixed;right:30px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:14px}
+  .sn-dot{width:8px;height:8px;border-radius:50%;background:var(--ink4);cursor:pointer;transition:all .3s}
+  .sn-dot.active{background:var(--gold);transform:scale(1.5)}
+  .sn-dot:hover{background:var(--ink2)}
+
+  @media(max-width:900px){
+    .ctn{padding:0 24px}
+    .cover h1{font-size:42px}
+    .cover-sub{font-size:16px}
+    .slide-title{font-size:28px}
+    .key-metrics{grid-template-columns:1fr}
+    .metric .m-num{font-size:42px}
+    .problem-grid{grid-template-columns:1fr;gap:30px}
+    .logic-chain{grid-template-columns:repeat(2,1fr);gap:24px}
+    .logic-chain::before{display:none}
+    .phases{grid-template-columns:1fr}
+    .phase-card{border-right:none;border-bottom:1px solid var(--line)}
+    .return-paths{grid-template-columns:1fr}
+    .risk-grid{grid-template-columns:1fr}
+    .calc-row{grid-template-columns:1fr;gap:8px;text-align:left}
+    .calc-result{text-align:left}
+    .closing h2{font-size:32px}
+    .side-nav{display:none}
+    .cover-ring{display:none}
+    .cover-meta{flex-wrap:wrap;gap:24px}
+    .compare-table{font-size:12px;display:block;overflow-x:auto}
+    .compare-table th,.compare-table td{padding:14px 10px;min-width:120px}
+  }
+</style>
+</head>
+<body>
+
+<!-- 侧边导航点 -->
+<div class="side-nav">
+  <div class="sn-dot active" data-target="cover" title="封面"></div>
+  <div class="sn-dot" data-target="s1" title="核心结论"></div>
+  <div class="sn-dot" data-target="s2" title="问题界定"></div>
+  <div class="sn-dot" data-target="s3" title="传导逻辑"></div>
+  <div class="sn-dot" data-target="s4" title="方案对比"></div>
+  <div class="sn-dot" data-target="s5" title="投资测算"></div>
+  <div class="sn-dot" data-target="s6" title="回报路径"></div>
+  <div class="sn-dot" data-target="s7" title="实施路径"></div>
+  <div class="sn-dot" data-target="s8" title="风险与应对"></div>
+  <div class="sn-dot" data-target="s9" title="结语"></div>
+</div>
+
+<!-- ===== 封面 ===== -->
+<section class="cover" id="cover">
+  <div class="cover-ring"></div>
+  <div class="ctn">
+    <div class="cover-top">
+      <div class="cover-mark">战略研究报告</div>
+      <div class="cover-date">2026年10月 · 北京</div>
+    </div>
+
+    <div class="cover-main">
+      <div class="cover-eyebrow">城市更新 · 产业升级</div>
+      <h1>打造北京<em>"动力环"</em><br>五环路改造的<br>战略价值与实施路径</h1>
+      <p class="cover-sub">
+        从交通环线到城市经济引擎<br>
+        180亿投资撬动1800亿土地增值与万亿级产业增量
+      </p>
+    </div>
+
+    <div class="cover-bottom">
+      <div class="cover-meta">
+        <div class="cover-meta-item">
+          <div class="num">1 : 10</div>
+          <div class="label">投资杠杆效应</div>
+        </div>
+        <div class="cover-meta-item">
+          <div class="num">180亿</div>
+          <div class="label">推荐投资规模</div>
+        </div>
+        <div class="cover-meta-item">
+          <div class="num">5年</div>
+          <div class="label">投资回收期</div>
+        </div>
+      </div>
+      <div class="cover-confidential">
+        机密 · 仅供决策参考
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Slide 1: 核心结论 ===== -->
+<section class="slide" id="s1">
+  <div class="ctn">
+    <div class="slide-num">01 / 09</div>
+    <div class="slide-header">
+      <div class="slide-chapter">执行摘要</div>
+      <h2 class="slide-title">五环路不仅是一条路，<br>更是北京高质量发展的<span class="gold">环形经济引擎</span></h2>
+    </div>
+
+    <div class="key-metrics">
+      <div class="metric">
+        <div class="m-num">180<span class="m-unit">亿元</span></div>
+        <div class="m-label">推荐投资规模<br>边际收益最优区间</div>
+      </div>
+      <div class="metric gold">
+        <div class="m-num">1 : 10</div>
+        <div class="m-label">综合投资回报率<br>土地+产业+税收</div>
+      </div>
+      <div class="metric green">
+        <div class="m-num">5<span class="m-unit">年</span></div>
+        <div class="m-label">动态投资回收期<br>NPV超1400亿元</div>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <p>
+        关键判断：五环路改造的本质不是"道路维修"，而是以25亿交通基础设施投资为触发器，
+        通过可达性改善带动沿线产业升级和土地增值，撬动千亿级城市更新投资，
+        最终形成"交通—产业—城市"三位一体的<span style="color:var(--gold);font-weight:600">环形动力系统</span>。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Slide 2: 问题界定 ===== -->
+<section class="slide" id="s2">
+  <div class="ctn">
+    <div class="slide-num">02 / 09</div>
+    <div class="slide-header">
+      <div class="slide-chapter">问题界定</div>
+      <h2 class="slide-title">五环路正处于"瓶颈期"——<br>通行能力接近饱和，带动效应远未释放</h2>
+    </div>
+
+    <div class="problem-grid">
+      <div class="problem-left">
+        <h3>当前三大结构性矛盾</h3>
+        <ul class="problem-list">
+          <li>服务水平已达C/D级，早高峰部分区段接近饱和，通行效率难以支撑更高能级的产业发展</li>
+          <li>沿线大量低效工业用地和仓储用地，土地价值与区位优势严重不匹配</li>
+          <li>北/东/南/西四段产业发展各自为战，缺乏"环形联动"的整体战略设计</li>
+        </ul>
+      </div>
+      <div class="problem-right">
+        <div class="pr-question">核心问题：<br>25亿健康工程之外，<br>我们应该多投多少？</div>
+        <div class="pr-answer">
+          不是"花多少钱修路"的工程问题，<br>
+          而是"<strong>投多少钱能撬动最大经济价值</strong>"的战略问题。<br><br>
+          本报告从产业经济学和交通工程学双学科交叉视角，
+          求解五环路改造的<strong>最优投资规模</strong>和<strong>实施路径</strong>。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Slide 3: 传导逻辑 ===== -->
+<section class="slide" id="s3">
+  <div class="ctn">
+    <div class="slide-num">03 / 09</div>
+    <div class="slide-header">
+      <div class="slide-chapter">理论框架</div>
+      <h2 class="slide-title">"以路带城"的四层价值传导模型</h2>
+    </div>
+
+    <div class="logic-chain">
+      <div class="logic-node">
+        <div class="ln-icon"><span class="ln-num">1</span>🛣️</div>
+        <div class="ln-title">快速路能力提升</div>
+        <div class="ln-desc">路面提质+节点改造+智慧化<br>通行效率提升30-40%</div>
+      </div>
+      <div class="logic-node">
+        <div class="ln-icon"><span class="ln-num">2</span>⏱️</div>
+        <div class="ln-title">可达性系统性改善</div>
+        <div class="ln-desc">时空距离压缩约25%<br>可达性指数提升42%</div>
+      </div>
+      <div class="logic-node">
+        <div class="ln-icon"><span class="ln-num">3</span>🏭</div>
+        <div class="ln-title">产业要素加速集聚</div>
+        <div class="ln-desc">企业选址偏好+人才流动<br>产业产出增量2190亿/年</div>
+      </div>
+      <div class="logic-node">
+        <div class="ln-icon"><span class="ln-num">4</span>💰</div>
+        <div class="ln-title">土地价值全面增值</div>
+        <div class="ln-desc">沿线地价平均增值19.2%<br>合计约1800亿元</div>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <p>
+        交通基础设施是城市经济的"底座"——底座提升一分，上面的产业和土地价值就会以乘数效应放大。
+        关键在于找到<span style="color:var(--gold);font-weight:600">投入产出比最高的那个点</span>，既不能投入不足，也不能过度投资。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Slide 4: 方案对比 ===== -->
+<section class="slide" id="s4">
+  <div class="ctn">
+    <div class="slide-num">04 / 09</div>
+    <div class="slide-header">
+      <div class="slide-chapter">方案对比</div>
+      <h2 class="slide-title">四档投资方案，<span class="gold">赋能升级版</span>性价比最优</h2>
+    </div>
+
+    <div style="overflow-x:auto">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th style="width:18%"></th>
+          <th>基础修缮版</th>
+          <th class="rec-col">⭐ 赋能升级版</th>
+          <th>深度重塑版</th>
+          <th>极致再造版</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>投资规模</td>
+          <td><div class="val">25亿</div></td>
+          <td class="rec-col"><div class="val gold">180亿</div></td>
+          <td><div class="val">500亿</div></td>
+          <td><div class="val">1200亿+</div></td>
+        </tr>
+        <tr>
+          <td>核心内容</td>
+          <td>路面+桥梁+排水<br>健康工程标配</td>
+          <td class="rec-col">道路+节点+智慧+TOD+产业配套<br>全面赋能产业升级</td>
+          <td>重点段地下化+立体开发<br>自动驾驶+零碳</td>
+          <td>全环地下化+环形公园<br>世界级城市更新</td>
+        </tr>
+        <tr>
+          <td>撬动增值</td>
+          <td>~200亿</td>
+          <td class="rec-col"><strong>~1800亿</strong></td>
+          <td>~3500亿</td>
+          <td>~5000亿</td>
+        </tr>
+        <tr>
+          <td>投资回报率</td>
+          <td>1 : 8</td>
+          <td class="rec-col"><strong>1 : 10</strong></td>
+          <td>1 : 7</td>
+          <td>1 : 4</td>
+        </tr>
+        <tr>
+          <td>回收期</td>
+          <td>3-4年</td>
+          <td class="rec-col"><strong>5-6年</strong></td>
+          <td>8-10年</td>
+          <td>20年+</td>
+        </tr>
+        <tr>
+          <td>推荐度</td>
+          <td><span class="tag">基础投入</span></td>
+          <td class="rec-col"><span class="tag rec">⭐ 最优方案</span></td>
+          <td><span class="tag">价值最大</span></td>
+          <td><span class="tag">远景愿景</span></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="insight-box">
+      <p>
+        不是投得越多越好。25亿太少带不动产业，500亿以上边际效益快速递减，
+        <span style="color:var(--gold);font-weight:600">180亿是净收益最高的"甜点区间"</span>——每1元投入撬动10元价值，5-6年即可收回投资。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Slide 5: 投资测算 ===== -->
+<section class="slide" id="s5">
+  <div class="ctn">
+    <div class="slide-num">05 / 09</div>
+    <div class="slide-header">
+      <div class="slide-chapter">投资测算</div>
+      <h2 class="slide-title">180亿投资构成与收益测算</h2>
+    </div>
+
+    <div class="calc-section">
+      <div class="calc-row">
+        <div class="calc-label">道路本体工程</div>
+        <div class="calc-formula">路面大修 + 桥梁加固 + 排水改造 + 绿化照明</div>
+        <div class="calc-result">55亿</div>
+      </div>
+      <div class="calc-row">
+        <div class="calc-label">关键节点改造</div>
+        <div class="calc-formula">14处节点 · 立交优化 + 全互通化</div>
+        <div class="calc-result">50亿</div>
+      </div>
+      <div class="calc-row">
+        <div class="calc-label">智慧交通系统</div>
+        <div class="calc-formula">车路协同 + 感知管道 + 管控平台</div>
+        <div class="calc-result">25亿</div>
+      </div>
+      <div class="calc-row">
+        <div class="calc-label">TOD与产业配套</div>
+        <div class="calc-formula">8个轨道微中心 + 园区基础设施</div>
+        <div class="calc-result">50亿</div>
+      </div>
+      <div class="calc-row" style="border-top:2px solid var(--ink)">
+        <div class="calc-label" style="font-weight:600;color:var(--ink)">总投资</div>
+        <div class="calc-formula">交通工程 + 产业赋能配套</div>
+        <div class="calc-result">180亿</div>
+      </div>
+    </div>
+
+    <div class="key-metrics" style="margin-top:50px">
+      <div class="metric">
+        <div class="m-num">1800<span class="m-unit">亿</span></div>
+        <div class="m-label">沿线土地增值<br>Hedonic特征价格法测算</div>
+      </div>
+      <div class="metric gold">
+        <div class="m-num">2190<span class="m-unit">亿/年</span></div>
+        <div class="m-label">产业产出增量<br>集聚弹性模型测算</div>
+      </div>
+      <div class="metric green">
+        <div class="m-num">63<span class="m-unit">万人</span></div>
+        <div class="m-label">新增就业岗位<br>劳动生产率法测算</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Slide 6: 回收路径 ===== -->
+<section class="slide" id="s6">
+  <div class="ctn">
+    <div class="slide-num">06 / 09</div>
+    <div class="slide-header">
+      <div class="slide-chapter">投资回收</div>
+      <h2 class="slide-title">三大回收路径，<span class="gold">税收是最大来源</span></h2>
+    </div>
+
+    <div class="return-paths">
+      <div class="return-card">
+        <div class="rc-pct">12%</div>
+        <h4>土地增值收益</h4>
+        <p>沿线土地出让金溢价分成、低效用地再开发增值收益、TOD项目综合开发收益。</p>
+        <div class="rc-amount">
+          约 <strong>216亿元</strong><br>
+          20年累计
+        </div>
+      </div>
+      <div class="return-card">
+        <div class="rc-pct">122%</div>
+        <h4>新增税收贡献</h4>
+        <p>产业发展带来的增值税、所得税、房产税等持续增长，是最稳定的回收来源。</p>
+        <div class="rc-amount">
+          约 <strong>2190亿元</strong><br>
+          20年累计
+        </div>
+      </div>
+      <div class="return-card">
+        <div class="rc-pct">9%</div>
+        <h4>经营性收入</h4>
+        <p>智慧服务、数据服务、停车、广告、商业配套等沿线经营性资产的持续收入。</p>
+        <div class="rc-amount">
+          约 <strong>160亿元</strong><br>
+          20年累计
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <p>
+        核心发现：<span style="color:var(--gold);font-weight:600">税收是最大的投资回收来源</span>，占比超过120%。
+        这说明"动力环"模式不靠"卖地"回本，而是靠"造血"——产业发展带来的持续税收增长。
+        这是一个真正可持续的城市更新模式。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Slide 7: 实施路径 ===== -->
+<section class="slide" id="s7">
+  <div class="ctn">
+    <div class="slide-num">07 / 09</div>
+    <div class="slide-header">
+      <div class="slide-chapter">实施路径</div>
+      <h2 class="slide-title">三期滚动推进，用增值收益支撑后续投入</h2>
+    </div>
+
+    <div class="phases">
+      <div class="phase-card">
+        <div class="phase-num">Ⅰ</div>
+        <div class="phase-year">第 1-2 年 · 启动期</div>
+        <h4>示范先行</h4>
+        <ul>
+          <li>道路本体健康工程</li>
+          <li>2个示范节点改造</li>
+          <li>智慧交通系统启动</li>
+          <li>产业规划同步编制</li>
+          <li>投入：30亿元</li>
+          <li>验证模式，建立信心</li>
+        </ul>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">Ⅱ</div>
+        <div class="phase-year">第 2-4 年 · 扩张期</div>
+        <h4>全线铺开</h4>
+        <ul>
+          <li>14个节点全面改造</li>
+          <li>4个TOD项目启动</li>
+          <li>智慧系统全线覆盖</li>
+          <li>低效用地批量盘活</li>
+          <li>投入：80亿元</li>
+          <li>地价普涨，批量释放</li>
+        </ul>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">Ⅲ</div>
+        <div class="phase-year">第 4-6 年 · 深化期</div>
+        <h4>品质跃升</h4>
+        <ul>
+          <li>慢行景观全面升级</li>
+          <li>剩余TOD/POD项目</li>
+          <li>产业配套设施完善</li>
+          <li>运营服务体系建立</li>
+          <li>投入：70亿元</li>
+          <li>产业集群成型，ROI达1:10</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Slide 8: 风险 ===== -->
+<section class="slide" id="s8">
+  <div class="ctn">
+    <div class="slide-num">08 / 09</div>
+    <div class="slide-header">
+      <div class="slide-chapter">风险与应对</div>
+      <h2 class="slide-title">六大核心风险，均有明确应对策略</h2>
+    </div>
+
+    <div class="risk-grid">
+      <div class="risk-item">
+        <h5>产业政策不配套</h5>
+        <p>道路修好了但产业没跟上，路产城脱节导致价值停留在第一层。</p>
+        <div class="solution">→ 建立统筹机构，道路改造与产业规划同步编制、同步审批、同步实施</div>
+      </div>
+      <div class="risk-item">
+        <h5>增值收益外溢</h5>
+        <p>政府投资修路，土地增值主要被市场主体获取，无法回收再投入。</p>
+        <div class="solution">→ 设立城市更新基金，统一收储-开发-出让，土地增值按比例回收</div>
+      </div>
+      <div class="risk-item">
+        <h5>产业同质化竞争</h5>
+        <p>各节点都搞AI/大健康，相互抢项目，形不成差异化分工。</p>
+        <div class="solution">→ 市级统筹产业布局，明确四段差异化定位，建立项目流转和利益分享机制</div>
+      </div>
+      <div class="risk-item">
+        <h5>施工期营商干扰</h5>
+        <p>改造期间拥堵、噪音、扬尘降低沿线企业运营效率，甚至导致企业外迁。</p>
+        <div class="solution">→ 分段夜间施工+智慧交通组织，最大限度降低影响，受影响企业给予过渡扶持</div>
+      </div>
+      <div class="risk-item">
+        <h5>房地产化倾向</h5>
+        <p>土地增值变成"卖地-盖楼-涨价"循环，真正的产业没有发展起来。</p>
+        <div class="solution">→ 产业用地占比硬约束（≥40%），设置产业绩效考核，未达标限制土地供应</div>
+      </div>
+      <div class="risk-item">
+        <h5>投资回报不及预期</h5>
+        <p>改造投入过大但产业带动和土地增值不及预期，财政压力增加。</p>
+        <div class="solution">→ 先示范后推广，用前一段收益验证模式再扩大投入；引入社会资本共担风险</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Slide 9: 结语 ===== -->
+<section class="closing" id="s9">
+  <div class="ctn">
+    <div class="closing-inner">
+      <div class="eyebrow">结语</div>
+      <h2>一条环路，<br><em>激活一座城。</em></h2>
+      <p class="closing-statement">
+        五环路改造不是一个交通工程，<br>
+        而是北京城市更新与产业升级的战略抓手。<br><br>
+        180亿投入，1800亿增值，2万亿产业增量，<br>
+        这就是"动力环"的价值。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 封底 -->
+<div class="back-matter">
+  <div class="ctn">
+    <div class="bm-title">参考依据</div>
+    <div class="sources">
+      <p>《城市道路工程设计规范》CJJ37-2012</p>
+      <p>《公路工程技术标准》JTG B01-2014</p>
+      <p>《美国道路通行能力手册》HCM2016</p>
+      <p>《北京市国土空间近期规划（2026-2030年）》</p>
+      <p>北京市市政工程概算定额（2021版）</p>
+      <p>Aschauer, D.A. (1989) Is Public Expenditure Productive?</p>
+      <p>世界银行：中国高速公路投资回报研究</p>
+      <p>特征价格法（Hedonic Pricing Method）相关研究</p>
+      <p>北京市五环路健康工程招标公告（2026年2月）</p>
+      <p>四环路健康工程竣工报告（2026年5月）</p>
+      <p>首钢园城市更新模式研究</p>
+      <p>北京光智空间AI创新街区发展规划</p>
+      <p>亦庄经开区产业发展报告</p>
+      <p>回天地区城市更新行动计划</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 滚动导航点
+  const dots = document.querySelectorAll('.sn-dot');
+  const sections = ['cover','s1','s2','s3','s4','s5','s6','s7','s8','s9'];
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+      document.getElementById(sections[i]).scrollIntoView({behavior:'smooth'});
+    });
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = sections.indexOf(entry.target.id);
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      }
+    });
+  }, {threshold: 0.4});
+
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
