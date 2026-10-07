@@ -103,6 +103,27 @@
   
   footer{text-align:center;padding:60px 24px;border-top:1px solid rgba(100,120,200,.1);color:#5a6478;font-size:13px;line-height:1.8}
   
+
+  /* 无穷层级模块 */
+  .hotel-room{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;background:rgba(110,231,183,.15);border:1px solid rgba(110,231,183,.3);border-radius:8px;font-size:12px;color:#6ee7b7;font-weight:600;transition:all .3s}
+  .hotel-room.new{background:rgba(245,158,11,.25);border-color:#f59e0b;color:#f59e0b;animation:popIn .4s ease}
+  .hotel-room.moved{animation:slideRight .4s ease}
+  @keyframes popIn{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+  @keyframes slideRight{0%{transform:translateX(0)}50%{transform:translateX(4px)}100%{transform:translateX(0)}}
+  
+  .tower-level{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 20px;border-radius:8px;transition:all .5s cubic-bezier(.34,1.56,.64,1);opacity:0;transform:translateY(20px) scale(.9)}
+  .tower-level.visible{opacity:1;transform:translateY(0) scale(1)}
+  .tower-level .aleph{font-size:28px;font-weight:700;min-width:60px;text-align:right}
+  .tower-level .examples{font-size:13px;color:#9aa3b8;flex:1}
+  .tower-level .size-bar{height:8px;border-radius:4px;background:linear-gradient(90deg,#6ee7b7,#a78bfa);transition:width .6s ease}
+  
+  .compare-card{background:rgba(255,255,255,.03);border:1px solid rgba(100,120,200,.2);border-radius:10px;padding:16px;cursor:pointer;transition:all .2s;text-align:center}
+  .compare-card:hover{border-color:#6ee7b7;transform:translateY(-2px)}
+  .compare-card.correct{border-color:#6ee7b7;background:rgba(110,231,183,.1)}
+  .compare-card.wrong{border-color:#f87171;background:rgba(248,113,113,.1)}
+  .compare-card h4{font-size:15px;font-weight:600;margin-bottom:4px;color:#e8eaf0}
+  .compare-card .hint{font-size:12px;color:#9aa3b8}
+  
   @media (max-width:700px){
     .demo-box{padding:24px}
     .nav-links{display:none}
@@ -131,6 +152,7 @@
       <a data-target="m2">文氏图运算</a>
       <a data-target="m3">罗素悖论</a>
       <a data-target="m4">对角线法</a>
+      <a data-target="m-infinity">无穷层级</a>
       <a data-target="m5">ZFC公理</a>
     </div>
   </div>
@@ -268,9 +290,71 @@
   </div>
 </section>
 
+<!-- Module 4.5: 无穷层级 -->
+<section id="m-infinity">
+  <div class="section-label">05 / SIX CORE IDEAS</div>
+  <h2 class="section-title">无穷的无穷层级</h2>
+  <p class="section-desc">无穷不是一个概念，而是有无穷多个等级。从最小的可数无穷ℵ₀开始，每一级都比前一级大得多——而且没有最大的无穷。滑动层级，亲眼看看无穷是怎么"长"上去的。</p>
+  
+  <div class="demo-box">
+    <!-- 希尔伯特旅馆 -->
+    <h3 style="color:#6ee7b7;font-size:18px;margin-bottom:8px">🏨 第一站：希尔伯特旅馆</h3>
+    <p style="color:#9aa3b8;font-size:14.5px;margin-bottom:20px">想象一个有无穷多间房间的旅馆，每间都住满了人。现在又来了一位新客人——能住下吗？试试点"来新客人"：</p>
+    
+    <div class="hotel-controls" style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+      <button class="btn btn-secondary" onclick="hotelNewGuest()">来1位新客人</button>
+      <button class="btn btn-secondary" onclick="hotelInfiniteBus()">来一辆无穷人的大巴</button>
+      <button class="btn btn-secondary" onclick="hotelReset()">重置旅馆</button>
+    </div>
+    
+    <div class="hotel-visual" id="hotelVisual" style="background:#0d111d;border-radius:10px;padding:20px;min-height:120px;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;transition:all .3s">
+    </div>
+    <p style="font-size:13.5px;color:#f59e0b;margin-top:12px">💡 <strong style="color:#f59e0b">可数无穷的奇特性质：</strong>无穷多加1还是无穷多，无穷多加无穷多还是无穷多。只要能一个一个数出来，大小就都是 ℵ₀。</p>
+  </div>
+  
+  <div class="demo-box">
+    <!-- 无穷层级塔 -->
+    <h3 style="color:#a78bfa;font-size:18px;margin-bottom:8px">🗼 第二站：无穷层级塔</h3>
+    <p style="color:#9aa3b8;font-size:14.5px;margin-bottom:20px">实数的无穷（ℵ₁）比自然数的无穷（ℵ₀）大。那比实数还大的无穷呢？拉动滑块，一层层往上爬：</p>
+    
+    <div style="margin-bottom:20px">
+      <input type="range" min="0" max="5" value="0" id="infinitySlider" style="width:100%;height:6px;appearance:none;background:linear-gradient(to right,#6ee7b7,#a78bfa,#f87171);border-radius:3px;cursor:pointer" oninput="updateInfinityLevel(this.value)">
+      <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:#5a6478">
+        <span>ℵ₀ 最小</span>
+        <span>ℵ₁</span>
+        <span>ℵ₂</span>
+        <span>ℵ₃</span>
+        <span>ℵ₄</span>
+        <span>ℵ₅ 越来越大…</span>
+      </div>
+    </div>
+    
+    <div class="infinity-tower" id="infinityTower" style="background:#0d111d;border-radius:12px;padding:30px;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;position:relative;overflow:hidden">
+    </div>
+    
+    <div class="infinity-info" style="margin-top:20px;background:rgba(167,139,250,.08);border-left:4px solid #a78bfa;border-radius:6px;padding:16px 20px">
+      <div id="infinityTitle" style="font-size:17px;font-weight:700;color:#a78bfa;margin-bottom:8px">ℵ₀ —— 可数无穷</div>
+      <div id="infinityDesc" style="font-size:14px;color:#c8d0e0;line-height:1.8">这是最小的无穷。自然数、整数、有理数都属于这一级。它们都可以一个一个"数"出来，虽然永远数不完，但每个元素都能排上号。</div>
+    </div>
+  </div>
+  
+  <div class="demo-box">
+    <!-- 集合大小对比 -->
+    <h3 style="color:#f59e0b;font-size:18px;margin-bottom:8px">⚖️ 第三站：哪些无穷一样大？</h3>
+    <p style="color:#9aa3b8;font-size:14.5px;margin-bottom:20px">直觉可能会骗你。点下面的集合，判断它们和自然数是不是一样大（等势）：</p>
+    
+    <div class="compare-grid" id="compareGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:20px">
+    </div>
+    
+    <div id="compareResult" style="background:#0d111d;border-radius:10px;padding:18px;min-height:80px;font-size:14.5px;color:#9aa3b8;line-height:1.8">
+      点上面任意一个集合，看看它和自然数是不是一样大。
+    </div>
+  </div>
+</section>
+
 <!-- Module 5: ZFC公理 -->
 <section id="m5">
-  <div class="section-label">05 / FIVE CORE IDEAS</div>
+  <div class="section-label">06 / SIX CORE IDEAS</div>
   <h2 class="section-title">ZFC公理：修复后的基础</h2>
   <p class="section-desc">罗素悖论出现后，数学家给集合论加上了严格的规则——ZFC公理系统。核心思想是：不能随便定义集合，只能从已有的集合出发，用受控的方式构造新集合。</p>
   
@@ -349,7 +433,7 @@
   });
   
   // 滚动高亮导航
-  const sections=['m1','m2','m3','m4','m5'];
+  const sections=['m1','m2','m3','m4','m-infinity','m5'];
   window.addEventListener('scroll',()=>{
     let current='m1';
     sections.forEach(id=>{
@@ -637,6 +721,200 @@
   
   // 初始化
   renderDiag();
+  
+  // ===== Module: 希尔伯特旅馆 =====
+  let hotelRooms = 12; // 显示的房间数（视觉上截断，概念上是无穷）
+  
+  function renderHotel(){
+    const v = document.getElementById('hotelVisual');
+    if(!v) return;
+    let html = '';
+    for(let i=1;i<=hotelRooms;i++){
+      let cls = 'hotel-room';
+      html += '<div class="'+cls+'">'+i+'</div>';
+    }
+    v.innerHTML = html;
+  }
+  
+  window.hotelNewGuest = function(){
+    // 所有人往后挪一间，第1间空出来
+    const rooms = document.querySelectorAll('#hotelVisual .hotel-room');
+    rooms.forEach((r,i)=>{
+      const num = i + 1;
+      setTimeout(()=>{
+        r.classList.add('moved');
+        r.textContent = num + 1;
+        setTimeout(()=>r.classList.remove('moved'),400);
+      }, i * 40);
+    });
+    // 新客人住进1号房
+    setTimeout(()=>{
+      const v = document.getElementById('hotelVisual');
+      const first = document.createElement('div');
+      first.className = 'hotel-room new';
+      first.textContent = '1*';
+      v.insertBefore(first, v.firstChild);
+      // 更新后面的数字（因为上面已经改了，这里移除最后一个保持视觉数量）
+      if(v.children.length > hotelRooms){
+        v.removeChild(v.lastChild);
+      }
+    }, hotelRooms * 40 + 50);
+  };
+  
+  window.hotelInfiniteBus = function(){
+    // 所有人搬到偶数房间，奇数房间空出来给大巴乘客
+    const rooms = document.querySelectorAll('#hotelVisual .hotel-room');
+    rooms.forEach((r,i)=>{
+      const num = i + 1;
+      setTimeout(()=>{
+        r.classList.add('moved');
+        r.textContent = 2 * num;
+        setTimeout(()=>r.classList.remove('moved'),400);
+      }, i * 30);
+    });
+  };
+  
+  window.hotelReset = function(){
+    renderHotel();
+  };
+  
+  // 初始化旅馆
+  setTimeout(renderHotel, 100);
+  
+  // ===== Module: 无穷层级塔 =====
+  const infinityLevels = [
+    {
+      aleph: 'ℵ₀',
+      name: '可数无穷',
+      color: '#6ee7b7',
+      width: '30%',
+      examples: '自然数 · 整数 · 有理数 · 偶数 · 质数',
+      desc: '这是最小的无穷。所有能一个一个"数"出来的集合都在这一级。虽然直觉上偶数应该只有自然数的一半，但它们其实一样多——因为每个自然数n都能对应一个偶数2n。'
+    },
+    {
+      aleph: 'ℵ₁',
+      name: '连续统',
+      color: '#5ee0c0',
+      width: '50%',
+      examples: '实数 · 无理数 · 一条线上的所有点 · 平面上所有点',
+      desc: '实数的无穷比自然数大得多，大到你永远列不完。康托尔用对角线法证明了这一点。连续统假设问：ℵ₁是不是刚好就是2^ℵ₀？答案是——在ZFC里既不能证明也不能证伪。'
+    },
+    {
+      aleph: 'ℵ₂',
+      name: '第二级无穷',
+      color: '#a78bfa',
+      width: '68%',
+      examples: '实数的所有子集构成的集合（幂集）· 所有实函数的集合的一部分',
+      desc: '比实数还大的无穷。把实数的幂集拿出来，它就比实数本身还大——就像实数比自然数大一样。这是康托尔定理的直接推论：任何集合的幂集都比原集合大。'
+    },
+    {
+      aleph: 'ℵ₃',
+      name: '第三级无穷',
+      color: '#c084fc',
+      width: '80%',
+      examples: '幂集的幂集 · 更高维的"函数空间"',
+      desc: '继续往上一层。ℵ₃的幂集是ℵ₄，ℵ₄的幂集是ℵ₅……这个过程可以永远继续下去。每一级都比前一级大得"无法想象"。'
+    },
+    {
+      aleph: 'ℵ₄',
+      name: '第四级无穷',
+      color: '#f472b6',
+      width: '90%',
+      examples: '更高阶的幂集迭代',
+      desc: '越往上，相邻两级之间的差距就越巨大。如果说ℵ₀到ℵ₁是从有限跳到无穷，那ℵ₄到ℵ₅的差距……抱歉，人类的想象力已经不够用了。'
+    },
+    {
+      aleph: 'ℵ_ω',
+      name: '以及无穷无尽…',
+      color: '#f87171',
+      width: '98%',
+      examples: 'ℵ₀, ℵ₁, ℵ₂, …… 永远没有尽头',
+      desc: '最震撼的是：没有最大的无穷。不管你找到多大的无穷，取它的幂集就能得到更大的。这是一个无穷无尽的"无穷的天梯"——而我们甚至永远不知道每一级之间有没有别的无穷（连续统假设）。'
+    }
+  ];
+  
+  let currentInfLevel = 0;
+  
+  function renderInfinityTower(level){
+    const tower = document.getElementById('infinityTower');
+    if(!tower) return;
+    
+    let html = '';
+    for(let i=0;i<=level;i++){
+      const l = infinityLevels[i];
+      html += '<div class="tower-level visible" style="background:'+l.color+'15;border:1px solid '+l.color+'33">';
+      html += '<div class="aleph" style="color:'+l.color+'">'+l.aleph+'</div>';
+      html += '<div style="flex:1">';
+      html += '<div class="examples" style="color:#c8d0e0;font-size:13px">'+l.examples+'</div>';
+      html += '<div class="size-bar" style="width:'+l.width+';background:linear-gradient(90deg,'+l.color+'66,'+l.color+')"></div>';
+      html += '</div></div>';
+    }
+    tower.innerHTML = html;
+    
+    // 更新说明文字
+    const l = infinityLevels[level];
+    document.getElementById('infinityTitle').textContent = l.aleph + ' —— ' + l.name;
+    document.getElementById('infinityTitle').style.color = l.color;
+    document.getElementById('infinityTitle').previousElementSibling; // no-op
+    const descEl = document.getElementById('infinityDesc');
+    descEl.textContent = l.desc;
+    const infoBox = descEl.parentElement;
+    infoBox.style.borderLeftColor = l.color;
+    infoBox.style.background = l.color + '08';
+  }
+  
+  window.updateInfinityLevel = function(val){
+    currentInfLevel = parseInt(val);
+    renderInfinityTower(currentInfLevel);
+  };
+  
+  // 初始化无穷塔
+  setTimeout(()=>renderInfinityTower(0),100);
+  
+  // ===== Module: 集合大小对比 =====
+  const compareSets = [
+    {name:'所有偶数', hint:'直觉上是自然数的一半', equal:true, reason:'每个自然数n → 2n，一一对应。偶数和自然数一样多！'},
+    {name:'所有整数', hint:'比自然数多了负数', equal:true, reason:'排列成 0,1,-1,2,-2,3,-3…… 就能一个一个数出来。'},
+    {name:'所有有理数', hint:'分数，看起来密密麻麻', equal:true, reason:'按"分子+分母"的大小逐层排列，就能一一对应。有理数也是可数的！'},
+    {name:'(0,1)上的实数', hint:'0到1之间所有小数', equal:false, reason:'康托尔对角线法证明了：实数比自然数多，多得多。'},
+    {name:'一条线段上的点', hint:'1厘米线段上的点', equal:false, reason:'线段上的点和实数一一对应（把它弯一下就能和整条直线对应），所以也是不可数的。'},
+    {name:'正方形里所有点', hint:'二维的，应该更多吧？', equal:false, reason:'错了——等等，实际上平面上的点和线段上的点一样多（可以用交错数字的方法对应）！但它们都是不可数的，大小都是ℵ₁。'},
+    {name:'所有质数', hint:'质数越来越稀疏', equal:true, reason:'质数有无穷多个（欧几里得证明），而且可以从小到大一个一个数出来，所以是可数无穷。'},
+    {name:'所有实数函数', hint:'函数比数还多？', equal:false, reason:'对！所有从实数到实数的函数构成的集合，比实数还大——它的大小至少是 ℵ₂ 起步。函数比数字多得多。'}
+  ];
+  
+  function renderCompareGrid(){
+    const grid = document.getElementById('compareGrid');
+    if(!grid) return;
+    let html = '';
+    compareSets.forEach((s,i)=>{
+      html += '<div class="compare-card" onclick="checkCompare('+i+',this)">';
+      html += '<h4>'+s.name+'</h4>';
+      html += '<div class="hint">'+s.hint+'</div>';
+      html += '</div>';
+    });
+    grid.innerHTML = html;
+  }
+  
+  window.checkCompare = function(idx, card){
+    const s = compareSets[idx];
+    const result = document.getElementById('compareResult');
+    
+    document.querySelectorAll('.compare-card').forEach(c=>{
+      c.classList.remove('correct','wrong');
+    });
+    
+    if(s.equal){
+      card.classList.add('correct');
+      result.innerHTML = '<strong style="color:#6ee7b7">✓ 和自然数一样大（等势，都是 ℵ₀）</strong><br>'+s.reason;
+    } else {
+      card.classList.add('wrong');
+      result.innerHTML = '<strong style="color:#f87171">✗ 比自然数更大（更高阶的无穷）</strong><br>'+s.reason;
+    }
+  };
+  
+  // 初始化
+  setTimeout(renderCompareGrid, 100);
   
 })();
 </script>
