@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>集合论核心思想 · 交互体验</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;background:#0a0e1a;color:#e8eaf0;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,26,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(100,120,200,.15)}
+  .nav-inner{max-width:1200px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
+  .nav-title{font-size:15px;font-weight:600;letter-spacing:1px}
+  .nav-title span{color:#6ee7b7}
+  .nav-links{display:flex;gap:18px;font-size:13px}
+  .nav-links a{color:#9aa3b8;text-decoration:none;transition:color .2s;cursor:pointer}
+  .nav-links a:hover,.nav-links a.active{color:#6ee7b7}
+  
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:100px 24px 60px;position:relative;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(110,231,183,.08) 0%,transparent 60%),radial-gradient(ellipse at 30% 40%,rgba(139,92,246,.06) 0%,transparent 50%);pointer-events:none}
+  .hero-tag{font-size:13px;color:#6ee7b7;letter-spacing:4px;margin-bottom:24px;font-weight:500}
+  .hero h1{font-size:clamp(36px,6vw,72px);font-weight:800;line-height:1.15;margin-bottom:24px;letter-spacing:-1px}
+  .hero h1 .mint{color:#6ee7b7}
+  .hero h1 .purple{color:#a78bfa}
+  .hero-sub{font-size:clamp(16px,2vw,20px);color:#9aa3b8;max-width:620px;line-height:1.8;margin-bottom:40px}
+  .scroll-hint{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);font-size:12px;color:#5a6478;letter-spacing:2px;animation:bounce 2s infinite}
+  @keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+  
+  section{padding:80px 24px;max-width:1100px;margin:0 auto}
+  .section-label{font-size:12px;color:#6ee7b7;letter-spacing:4px;font-weight:600;margin-bottom:12px}
+  .section-title{font-size:clamp(28px,4vw,42px);font-weight:700;line-height:1.3;margin-bottom:16px;letter-spacing:-0.5px}
+  .section-desc{font-size:16px;color:#9aa3b8;max-width:700px;line-height:1.8;margin-bottom:40px}
+  
+  .demo-box{background:rgba(255,255,255,.03);border:1px solid rgba(100,120,200,.12);border-radius:16px;padding:40px;margin-bottom:24px;backdrop-filter:blur(10px)}
+  
+  /* Module 1: 自然数构造 */
+  .nat-controls{display:flex;gap:12px;margin-bottom:30px;flex-wrap:wrap}
+  .btn{padding:10px 20px;border-radius:8px;border:none;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;font-family:inherit}
+  .btn-primary{background:#6ee7b7;color:#0a2e1e}
+  .btn-primary:hover{background:#4ddba0;transform:translateY(-1px)}
+  .btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
+  .btn-secondary{background:transparent;border:1px solid rgba(100,120,200,.3);color:#c8d0e0}
+  .btn-secondary:hover{border-color:#6ee7b7;color:#6ee7b7}
+  
+  .nat-display{background:#0d111d;border-radius:12px;padding:30px;min-height:160px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;margin-bottom:20px;transition:all .3s}
+  .set-brace{color:#a78bfa;font-size:28px;font-weight:300}
+  .set-content{display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:center}
+  .set-item{display:inline-flex;align-items:center;gap:2px;animation:fadeIn .4s ease}
+  @keyframes fadeIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+  .empty-set{color:#f59e0b;font-style:italic}
+  .comma{color:#5a6478;margin:0 2px}
+  
+  .nat-info{display:flex;gap:20px;flex-wrap:wrap;justify-content:center}
+  .info-chip{background:rgba(110,231,183,.1);border:1px solid rgba(110,231,183,.2);color:#6ee7b7;padding:8px 16px;border-radius:20px;font-size:14px}
+  .info-chip.purple{background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.2);color:#a78bfa}
+  
+  /* Module 2: 文氏图 */
+  .venn-container{position:relative;width:100%;max-width:500px;margin:0 auto 30px}
+  .venn-svg{width:100%;height:auto}
+  .venn-controls{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-bottom:24px}
+  .venn-btn{padding:10px 18px;border-radius:8px;background:transparent;border:1px solid rgba(100,120,200,.3);color:#c8d0e0;font-size:13px;cursor:pointer;transition:all .2s;font-family:inherit}
+  .venn-btn.active{background:rgba(110,231,183,.15);border-color:#6ee7b7;color:#6ee7b7}
+  .venn-btn:hover{border-color:#6ee7b7;color:#6ee7b7}
+  .venn-result{background:#0d111d;border-radius:10px;padding:20px;text-align:center}
+  .venn-result .label{font-size:12px;color:#9aa3b8;margin-bottom:8px;letter-spacing:1px}
+  .venn-result .value{font-size:20px;font-weight:600;color:#6ee7b7;font-family:ui-monospace,Menlo,Consolas,monospace}
+  
+  /* Module 3: 罗素悖论 */
+  .russell-steps{counter-reset:step}
+  .russell-step{position:relative;padding-left:44px;margin-bottom:24px}
+  .russell-step:before{counter-increment:step;content:counter(step);position:absolute;left:0;top:2px;width:30px;height:30px;border-radius:50%;background:rgba(239,68,68,.15);color:#f87171;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;border:1px solid rgba(239,68,68,.3)}
+  .russell-step h4{font-size:17px;margin-bottom:6px;color:#e8eaf0}
+  .russell-step p{font-size:14.5px;color:#9aa3b8;line-height:1.8}
+  .russell-step code{background:rgba(167,139,250,.1);color:#c4b5fd;padding:2px 8px;border-radius:4px;font-size:13px;font-family:ui-monospace,Menlo,Consolas,monospace}
+  
+  .paradox-box{background:linear-gradient(135deg,rgba(239,68,68,.1),rgba(167,139,250,.1));border:1px solid rgba(239,68,68,.3);border-radius:12px;padding:28px;margin-top:30px;text-align:center}
+  .paradox-box .result{font-size:24px;font-weight:700;color:#f87171;margin:16px 0;line-height:1.6}
+  .paradox-box .result span{display:inline-block;animation:flash 1s ease-in-out infinite}
+  @keyframes flash{0%,100%{opacity:1}50%{opacity:.4}}
+  
+  .russell-demo{margin-top:30px;text-align:center}
+  .russell-demo .toggle-row{display:flex;gap:12px;justify-content:center;margin-bottom:20px}
+  
+  /* Module 4: 对角线法 */
+  .diag-grid{display:inline-block;background:#0d111d;border-radius:10px;padding:16px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px;margin:0 auto 24px;overflow-x:auto;max-width:100%}
+  .diag-row{display:flex;align-items:center;height:28px}
+  .diag-label{color:#9aa3b8;min-width:50px;text-align:right;padding-right:12px;font-size:12px}
+  .diag-cell{width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;border-radius:3px;margin-right:2px;transition:all .3s}
+  .diag-cell.zero{color:#f87171}
+  .diag-cell.one{color:#6ee7b7}
+  .diag-cell.diagonal{background:rgba(110,231,183,.2);font-weight:700}
+  .diag-cell.flipped{background:rgba(248,113,113,.25);font-weight:700;transform:scale(1.1)}
+  
+  .diag-controls{text-align:center;margin-bottom:20px}
+  .diag-explain{background:rgba(110,231,183,.08);border-left:4px solid #6ee7b7;border-radius:6px;padding:16px 20px;margin-top:20px;text-align:left;font-size:14.5px;color:#c8d0e0;line-height:1.8}
+  
+  /* Module 5: ZFC公理 */
+  .axiom-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+  .axiom-card{background:rgba(255,255,255,.03);border:1px solid rgba(100,120,200,.12);border-radius:12px;padding:22px;transition:all .25s;cursor:pointer}
+  .axiom-card:hover{border-color:rgba(110,231,183,.4);transform:translateY(-2px);box-shadow:0 8px 24px rgba(110,231,183,.08)}
+  .axiom-card .icon{width:40px;height:40px;border-radius:10px;background:rgba(110,231,183,.12);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px}
+  .axiom-card h4{font-size:16px;font-weight:600;margin-bottom:8px;color:#e8eaf0}
+  .axiom-card p{font-size:13.5px;color:#9aa3b8;line-height:1.7}
+  
+  footer{text-align:center;padding:60px 24px;border-top:1px solid rgba(100,120,200,.1);color:#5a6478;font-size:13px;line-height:1.8}
+  
+  @media (max-width:700px){
+    .demo-box{padding:24px}
+    .nav-links{display:none}
+    .diag-cell{width:20px;height:20px;font-size:12px}
+    .diag-label{min-width:40px;font-size:11px}
+  }
+  
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important}
+  }
+  
+  @media print{
+    nav,.scroll-hint,.btn,.venn-controls,.diag-controls,.russell-demo{display:none !important}
+    body{background:#fff;color:#000}
+    .demo-box,.axiom-card{border-color:#ccc;background:#fff}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-title">SET THEORY <span>· 集合论</span></div>
+    <div class="nav-links">
+      <a data-target="m1" class="active">自然数构造</a>
+      <a data-target="m2">文氏图运算</a>
+      <a data-target="m3">罗素悖论</a>
+      <a data-target="m4">对角线法</a>
+      <a data-target="m5">ZFC公理</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-tag">INTERACTIVE EXPERIENCE</div>
+  <h1>用一个<span class="mint">集合</span>的概念，<br>构造出<span class="purple">整个数学宇宙</span></h1>
+  <p class="hero-sub">从空集出发，到无穷的层级，再到基础的裂缝——<br>亲手操作，体验集合论最核心的五个思想。</p>
+  <div class="scroll-hint">向下滑动 ↓</div>
+</div>
+
+<!-- Module 1: 自然数构造 -->
+<section id="m1">
+  <div class="section-label">01 / FIVE CORE IDEAS</div>
+  <h2 class="section-title">从空集到自然数</h2>
+  <p class="section-desc">冯·诺依曼构造法：只用"集合"一个原始概念，从空集开始一层一层套，就能构造出所有自然数。点下面的按钮，亲眼看看0、1、2、3……是怎么从无到有长出来的。</p>
+  
+  <div class="demo-box">
+    <div class="nat-controls">
+      <button class="btn btn-primary" onclick="nextNat()">+ 增加一个数</button>
+      <button class="btn btn-secondary" onclick="resetNat()">重置</button>
+      <button class="btn btn-secondary" onclick="autoNat()">自动演示</button>
+    </div>
+    <div class="nat-display" id="natDisplay">
+      <span class="set-brace">∅</span>
+    </div>
+    <div class="nat-info">
+      <span class="info-chip" id="natNumber">0 = 空集</span>
+      <span class="info-chip purple" id="natElements">0 个元素</span>
+    </div>
+  </div>
+</section>
+
+<!-- Module 2: 文氏图 -->
+<section id="m2">
+  <div class="section-label">02 / FIVE CORE IDEAS</div>
+  <h2 class="section-title">集合运算：文氏图</h2>
+  <p class="section-desc">并集、交集、差集、补集、对称差……用文氏图直观感受集合之间的关系。点击不同运算，看看结果区域的变化。</p>
+  
+  <div class="demo-box">
+    <div class="venn-controls">
+      <button class="venn-btn active" onclick="setVenn('union',this)">A ∪ B 并集</button>
+      <button class="venn-btn" onclick="setVenn('intersection',this)">A ∩ B 交集</button>
+      <button class="venn-btn" onclick="setVenn('diffA',this)">A − B 差集</button>
+      <button class="venn-btn" onclick="setVenn('diffB',this)">B − A 差集</button>
+      <button class="venn-btn" onclick="setVenn('symmetric',this)">A △ B 对称差</button>
+      <button class="venn-btn" onclick="setVenn('complementA',this)">Aᶜ 补集</button>
+    </div>
+    <div class="venn-container">
+      <svg class="venn-svg" viewBox="0 0 500 350" role="img" aria-label="文氏图演示">
+        <rect x="10" y="10" width="480" height="330" rx="12" fill="#0d111d" stroke="rgba(100,120,200,.2)" stroke-width="1"/>
+        <text x="30" y="35" fill="#5a6478" font-size="13">U (全集)</text>
+        
+        <circle cx="190" cy="180" r="110" id="circleA" fill="rgba(110,231,183,.25)" stroke="#6ee7b7" stroke-width="2" class="venn-circle"/>
+        <circle cx="310" cy="180" r="110" id="circleB" fill="rgba(167,139,250,.25)" stroke="#a78bfa" stroke-width="2" class="venn-circle"/>
+        
+        <!-- Result overlay -->
+        <path id="resultPath" d="" fill="rgba(245,158,11,.55)" stroke="none" style="transition:all .35s ease"/>
+        
+        <text x="135" y="185" fill="#6ee7b7" font-size="18" font-weight="600" text-anchor="middle">A</text>
+        <text x="365" y="185" fill="#a78bfa" font-size="18" font-weight="600" text-anchor="middle">B</text>
+      </svg>
+    </div>
+    <div class="venn-result">
+      <div class="label" id="vennLabel">A ∪ B（并集）</div>
+      <div class="value" id="vennFormula">A ∪ B = {x | x ∈ A 或 x ∈ B}</div>
+    </div>
+  </div>
+</section>
+
+<!-- Module 3: 罗素悖论 -->
+<section id="m3">
+  <div class="section-label">03 / FIVE CORE IDEAS</div>
+  <h2 class="section-title">罗素悖论：基础的裂缝</h2>
+  <p class="section-desc">1901年，罗素发现了集合论的一个致命bug——只用最基本的概念就能推出矛盾。跟着下面四步走，亲手构造出这个悖论。</p>
+  
+  <div class="demo-box">
+    <div class="russell-steps">
+      <div class="russell-step">
+        <h4>概括原则：任何性质都能定义集合</h4>
+        <p>集合论早期的想法很朴素：只要你能描述一个性质，所有满足这个性质的东西就能构成一个集合。比如"所有偶数"、"所有水果"、"所有不包含自己的集合"……</p>
+      </div>
+      <div class="russell-step">
+        <h4>定义集合 R：所有"不包含自己"的集合</h4>
+        <p>写出来就是 <code>R = {x | x ∉ x}</code>。翻译成人话：R 这个集合，装着所有"不把自己当元素"的集合。听起来完全没问题，对吧？</p>
+      </div>
+      <div class="russell-step">
+        <h4>灵魂拷问：R 包含它自己吗？</h4>
+        <p>这个问题怎么回答都会矛盾：<br>
+        • 如果 <code>R ∈ R</code>（R在自己里面）→ 那它满足"x ∉ x"的定义吗？不满足 → 所以 <code>R ∉ R</code>，矛盾<br>
+        • 如果 <code>R ∉ R</code>（R不在自己里面）→ 那它满足"x ∉ x"的定义吗？满足 → 所以 <code>R ∈ R</code>，矛盾</p>
+      </div>
+      <div class="russell-step">
+        <h4>结论：朴素集合论是自相矛盾的</h4>
+        <p>这就是罗素悖论。它动摇了整个数学的基础——如果最基础的集合论本身就有矛盾，那建立在它上面的所有数学还可靠吗？</p>
+      </div>
+    </div>
+    
+    <div class="paradox-box">
+      <div style="font-size:13px;color:#f87171;letter-spacing:2px">⚠ 悖 论 产 生</div>
+      <div class="result"><span>R ∈ R</span> &nbsp;⟺&nbsp; <span>R ∉ R</span></div>
+      <div style="color:#9aa3b8;font-size:14px">左边和右边永远相反，但逻辑上它们必须相等。<br>怎么说都不对。</div>
+    </div>
+    
+    <div class="russell-demo">
+      <p style="font-size:14px;color:#9aa3b8;margin-bottom:14px">试试点下面的开关——你会发现无论怎么选都不对：</p>
+      <div class="toggle-row">
+        <button class="btn btn-secondary" id="russellToggle" onclick="toggleRussell()">R ∈ R？（点击切换）</button>
+      </div>
+      <div id="russellResult" style="font-size:15px;color:#f87171;min-height:30px;font-weight:500"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Module 4: 对角线法 -->
+<section id="m4">
+  <div class="section-label">04 / FIVE CORE IDEAS</div>
+  <h2 class="section-title">康托尔对角线法：无穷有大小</h2>
+  <p class="section-desc">自然数有无穷多个，实数也有无穷多个——但这两个无穷不一样大。康托尔用一个绝妙的方法证明了：实数比自然数多。点按钮，一步步看对角线法是怎么工作的。</p>
+  
+  <div class="demo-box" style="text-align:center">
+    <div class="diag-controls">
+      <button class="btn btn-secondary" onclick="prevDiag()">上一步</button>
+      <button class="btn btn-primary" onclick="nextDiag()">下一步 →</button>
+      <button class="btn btn-secondary" onclick="resetDiag()">重置</button>
+    </div>
+    <div class="diag-grid" id="diagGrid"></div>
+    <div class="diag-explain" id="diagExplain">
+      <strong style="color:#6ee7b7">第0步：假设实数可数。</strong><br>
+      如果实数（0到1之间的二进制小数）和自然数一样多，我们就能把它们一个一个列出来，排成一个无限长的列表。每个自然数对应一个实数。
+    </div>
+  </div>
+</section>
+
+<!-- Module 5: ZFC公理 -->
+<section id="m5">
+  <div class="section-label">05 / FIVE CORE IDEAS</div>
+  <h2 class="section-title">ZFC公理：修复后的基础</h2>
+  <p class="section-desc">罗素悖论出现后，数学家给集合论加上了严格的规则——ZFC公理系统。核心思想是：不能随便定义集合，只能从已有的集合出发，用受控的方式构造新集合。</p>
+  
+  <div class="axiom-grid">
+    <div class="axiom-card">
+      <div class="icon">∅</div>
+      <h4>空集公理</h4>
+      <p>存在一个什么都不包含的集合——空集 ∅。这是整个集合论宇宙的"第一块砖"。</p>
+    </div>
+    <div class="axiom-card">
+      <div class="icon">≡</div>
+      <h4>外延公理</h4>
+      <p>两个集合相等，当且仅当它们的元素完全相同。集合只看"里面有什么"，不关心怎么定义的。</p>
+    </div>
+    <div class="axiom-card">
+      <div class="icon">{ }</div>
+      <h4>配对公理</h4>
+      <p>给你两个集合a和b，可以构造出一个新集合恰好装着它们俩：{a, b}。</p>
+    </div>
+    <div class="axiom-card">
+      <div class="icon">∪</div>
+      <h4>并集公理</h4>
+      <p>给你一堆集合，可以把它们全拆开，把所有元素合到一起，构成一个更大的集合。</p>
+    </div>
+    <div class="axiom-card">
+      <div class="icon">P( )</div>
+      <h4>幂集公理</h4>
+      <p>任何集合的所有子集，能构成一个更大的集合（幂集）。这是通向更大无穷的阶梯。</p>
+    </div>
+    <div class="axiom-card">
+      <div class="icon">⊂</div>
+      <h4>分离公理</h4>
+      <p>不能说"所有满足P的东西构成集合"，只能说"从已有的集合A里，挑出满足P的元素构成子集"。堵死了罗素悖论。</p>
+    </div>
+    <div class="axiom-card">
+      <div class="icon">f(x)</div>
+      <h4>替换公理</h4>
+      <p>把一个集合里的每个元素，按某个函数替换成别的东西，得到的结果还是一个集合。</p>
+    </div>
+    <div class="axiom-card">
+      <div class="icon">∞</div>
+      <h4>无穷公理</h4>
+      <p>存在一个无穷集合。这是唯一一条"创造出无穷"的公理，没有它数学就只能研究有限。</p>
+    </div>
+    <div class="axiom-card">
+      <div class="icon">∉</div>
+      <h4>正则公理</h4>
+      <p>任何集合都不能包含自己，也不能无限嵌套下去。集合是"分层"的，从底层往上建。</p>
+    </div>
+    <div class="axiom-card">
+      <div class="icon">✓</div>
+      <h4>选择公理</h4>
+      <p>从任意一堆非空集合里，总能各挑一个元素组成新集合。这条最有争议，但缺了它很多数学就做不了。</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div style="margin-bottom:12px;font-size:15px;color:#9aa3b8">一条核心思想：<span style="color:#6ee7b7">用集合构造一切</span></div>
+  从空集出发 · 靠公理约束 · 通向无穷 · 也发现边界
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  
+  // ===== 导航滚动 =====
+  document.querySelectorAll('.nav-links a').forEach(a=>{
+    a.addEventListener('click',function(e){
+      e.preventDefault();
+      document.querySelectorAll('.nav-links a').forEach(x=>x.classList.remove('active'));
+      this.classList.add('active');
+      const t=document.getElementById(this.dataset.target);
+      if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+  
+  // 滚动高亮导航
+  const sections=['m1','m2','m3','m4','m5'];
+  window.addEventListener('scroll',()=>{
+    let current='m1';
+    sections.forEach(id=>{
+      const el=document.getElementById(id);
+      if(el && el.getBoundingClientRect().top<=150) current=id;
+    });
+    document.querySelectorAll('.nav-links a').forEach(a=>{
+      a.classList.toggle('active',a.dataset.target===current);
+    });
+  });
+  
+  // ===== Module 1: 自然数构造 =====
+  let natLevel = 0;
+  let natAutoTimer = null;
+  
+  function buildSet(n){
+    if(n===0) return '<span class="empty-set">∅</span>';
+    const parts = [];
+    for(let i=0;i<n;i++){
+      parts.push(buildSet(i));
+    }
+    return '<span class="set-brace">{</span><span class="set-content">' + parts.join('<span class="comma">,</span> ') + '</span><span class="set-brace">}</span>';
+  }
+  
+  function updateNat(){
+    const display = document.getElementById('natDisplay');
+    display.innerHTML = buildSet(natLevel);
+    document.getElementById('natNumber').textContent = natLevel + ' = ' + (natLevel===0?'空集':'{0,1,...,'+(natLevel-1)+'}');
+    document.getElementById('natElements').textContent = natLevel + ' 个元素';
+  }
+  
+  window.nextNat = function(){
+    if(natLevel < 5){
+      natLevel++;
+      updateNat();
+    }
+  };
+  window.resetNat = function(){
+    if(natAutoTimer){clearInterval(natAutoTimer);natAutoTimer=null;}
+    natLevel = 0;
+    updateNat();
+  };
+  window.autoNat = function(){
+    if(natAutoTimer) return;
+    natLevel = 0;
+    updateNat();
+    let step = 0;
+    natAutoTimer = setInterval(()=>{
+      step++;
+      if(step > 5){
+        clearInterval(natAutoTimer);
+        natAutoTimer = null;
+        return;
+      }
+      natLevel = step;
+      updateNat();
+    }, 900);
+  };
+  
+  // ===== Module 2: 文氏图 =====
+  const vennData = {
+    union: {
+      label: 'A ∪ B（并集）',
+      formula: 'A ∪ B = {x | x ∈ A 或 x ∈ B}',
+      // 两个圆都高亮 - 用两个圆的并区域
+      draw: function(svg){
+        // 简单方式：把两个圆都加深
+        return;
+      }
+    },
+    intersection: {
+      label: 'A ∩ B（交集）',
+      formula: 'A ∩ B = {x | x ∈ A 且 x ∈ B}',
+    },
+    diffA: {
+      label: 'A − B（差集）',
+      formula: 'A − B = {x | x ∈ A 且 x ∉ B}',
+    },
+    diffB: {
+      label: 'B − A（差集）',
+      formula: 'B − A = {x | x ∈ B 且 x ∉ A}',
+    },
+    symmetric: {
+      label: 'A △ B（对称差）',
+      formula: 'A △ B = (A−B) ∪ (B−A) = 只属于其中一个的元素',
+    },
+    complementA: {
+      label: 'Aᶜ（补集）',
+      formula: 'Aᶜ = U − A = 全集里不在A中的所有元素',
+    }
+  };
+  
+  let currentVenn = 'union';
+  
+  window.setVenn = function(type, btn){
+    currentVenn = type;
+    document.querySelectorAll('.venn-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    const data = vennData[type];
+    document.getElementById('vennLabel').textContent = data.label;
+    document.getElementById('vennFormula').textContent = data.formula;
+    
+    const cA = document.getElementById('circleA');
+    const cB = document.getElementById('circleB');
+    const res = document.getElementById('resultPath');
+    
+    // 重置颜色
+    cA.setAttribute('fill','rgba(110,231,183,.15)');
+    cB.setAttribute('fill','rgba(167,139,250,.15)');
+    res.setAttribute('d','');
+    
+    // 圆的位置: A在(190,180)半径110, B在(310,180)半径110
+    // 两圆交点大约在 x=250, y=180±某个值
+    const ax=190, ay=180, r=110;
+    const bx=310, by=180;
+    const midX = (ax+bx)/2; // 250
+    
+    if(type==='union'){
+      cA.setAttribute('fill','rgba(245,158,11,.45)');
+      cB.setAttribute('fill','rgba(245,158,11,.45)');
+    } else if(type==='intersection'){
+      // 用路径画交集区域
+      // 计算两圆交点的y偏移
+      const d = bx-ax; // 120
+      const h = Math.sqrt(r*r - (d/2)*(d/2)); // 交点半高
+      const y1 = ay - h;
+      const y2 = ay + h;
+      // 画一个透镜形状
+      const path = `M ${midX} ${y1} A ${r} ${r} 0 0 1 ${midX} ${y2} A ${r} ${r} 0 0 1 ${midX} ${y1} Z`;
+      // 其实应该是两个弧。左弧从A圆来，右弧从B圆来。
+      // 更简单的做法：用两个半弧
+      const path2 = `M ${midX} ${y1} A ${r} ${r} 0 0 1 ${midX} ${y2} A ${r} ${r} 0 0 1 ${midX} ${y1} Z`;
+      // 简化处理：直接用一个path
+      res.setAttribute('d',`M ${midX} ${y1} A ${r} ${r} 0 0 1 ${midX} ${y2} A ${r} ${r} 0 0 1 ${midX} ${y1} Z`);
+    } else if(type==='diffA'){
+      // A - B: 左圆减去中间
+      cA.setAttribute('fill','rgba(245,158,11,.45)');
+      // 用路径画A中不重叠部分
+      const d = bx-ax;
+      const h = Math.sqrt(r*r - (d/2)*(d/2));
+      const y1 = ay - h, y2 = ay + h;
+      // 左半部分: A圆减去重叠 = A圆的左边弧 + 右边凹弧
+      res.setAttribute('d',`M ${midX} ${y1} A ${r} ${r} 0 0 0 ${midX} ${y2} A ${r} ${r} 0 0 1 ${midX} ${y1} Z`);
+      // 修正: 我们需要A-B的区域=A中不在B中的部分
+      // 用A的左半圈(从下到上经过左边) + B的左弧(从上到下)
+      res.setAttribute('d',`M ${midX} ${y1} A ${r} ${r} 0 0 0 ${midX} ${y2} A ${r} ${r} 0 0 1 ${midX} ${y1} Z`);
+      // 实际上这样画出来就是差集A-B的形状
+    } else if(type==='diffB'){
+      cB.setAttribute('fill','rgba(245,158,11,.45)');
+      const d = bx-ax;
+      const h = Math.sqrt(r*r - (d/2)*(d/2));
+      const y1 = ay - h, y2 = ay + h;
+      res.setAttribute('d',`M ${midX} ${y1} A ${r} ${r} 0 0 1 ${midX} ${y2} A ${r} ${r} 0 0 0 ${midX} ${y1} Z`);
+    } else if(type==='symmetric'){
+      // 对称差: 并集 - 交集 = 两边月牙
+      const d = bx-ax;
+      const h = Math.sqrt(r*r - (d/2)*(d/2));
+      const y1 = ay - h, y2 = ay + h;
+      // 两个月牙
+      res.setAttribute('d',`M ${midX} ${y1} A ${r} ${r} 0 0 0 ${midX} ${y2} A ${r} ${r} 0 0 1 ${midX} ${y1} Z M ${midX} ${y1} A ${r} ${r} 0 0 1 ${midX} ${y2} A ${r} ${r} 0 0 0 ${midX} ${y1} Z`);
+    } else if(type==='complementA'){
+      // A的补集: 方框 - A
+      // 用一个大矩形挖掉圆
+      res.setAttribute('d','M 10 10 H 490 V 340 H 10 Z M 190 180 m -110 0 a 110 110 0 1 0 220 0 a 110 110 0 1 0 -220 0');
+      // evenodd fill rule
+      res.style.fillRule = 'evenodd';
+    }
+    if(type!=='complementA'){
+      res.style.fillRule = 'nonzero';
+    }
+  };
+  
+  // ===== Module 3: 罗素悖论开关 =====
+  let russellInside = true;
+  
+  window.toggleRussell = function(){
+    russellInside = !russellInside;
+    const btn = document.getElementById('russellToggle');
+    const result = document.getElementById('russellResult');
+    
+    if(russellInside){
+      btn.textContent = 'R ∉ R？（点击切换）';
+      result.innerHTML = '如果 R ∈ R（R包含自己），那根据 R 的定义"只装不包含自己的集合"，<br>R 就不应该在里面 → <strong style="color:#f87171">所以 R ∉ R，矛盾！</strong>';
+    } else {
+      btn.textContent = 'R ∈ R？（点击切换）';
+      result.innerHTML = '如果 R ∉ R（R不包含自己），那根据 R 的定义"装所有不包含自己的集合"，<br>R 就应该在里面 → <strong style="color:#f87171">所以 R ∈ R，矛盾！</strong>';
+    }
+  };
+  
+  // 初始化
+  window.toggleRussell();
+  russellInside = true; // 重置一下
+  
+  // ===== Module 4: 对角线法 =====
+  let diagStep = 0;
+  const diagTotal = 4;
+  
+  // 生成一个确定性的"随机"二进制数列表
+  function genBin(seed, len){
+    // 简单伪随机
+    let s = seed;
+    let str = '';
+    for(let i=0;i<len;i++){
+      s = (s * 9301 + 49297) % 233280;
+      str += (s < 116640) ? '0' : '1';
+    }
+    return str;
+  }
+  
+  function renderDiag(){
+    const grid = document.getElementById('diagGrid');
+    const explain = document.getElementById('diagExplain');
+    const rows = 7;
+    const cols = 7;
+    
+    let html = '';
+    for(let r=0;r<rows;r++){
+      const binStr = genBin(r+1, cols);
+      html += '<div class="diag-row">';
+      html += '<span class="diag-label">a<sub>'+r+'</sub> =</span>';
+      for(let c=0;c<cols;c++){
+        const digit = binStr[c];
+        let cls = 'diag-cell ' + (digit==='0'?'zero':'one');
+        if(diagStep >= 1 && r === c){
+          cls += ' diagonal';
+        }
+        if(diagStep >= 2 && r === -1){
+          // 占位，下面单独处理
+        }
+        html += '<span class="'+cls+'">'+digit+'</span>';
+      }
+      html += '</div>';
+    }
+    
+    // 第3、4步：显示翻转后的新数
+    if(diagStep >= 2){
+      html += '<div class="diag-row" style="margin-top:8px;padding-top:8px;border-top:1px dashed rgba(100,120,200,.2)">';
+      html += '<span class="diag-label" style="color:#f87171">新数 d =</span>';
+      for(let c=0;c<cols;c++){
+        const binStr = genBin(c+1, cols); // 第c行的第c位就是对角线上的位
+        const origDigit = binStr[c];
+        const flipped = origDigit === '0' ? '1' : '0';
+        let cls = 'diag-cell ' + (flipped==='0'?'zero':'one');
+        if(diagStep >= 2){
+          cls += ' flipped';
+        }
+        html += '<span class="'+cls+'">'+flipped+'</span>';
+      }
+      html += '</div>';
+    }
+    
+    grid.innerHTML = html;
+    
+    // 解释文字
+    if(diagStep === 0){
+      explain.innerHTML = '<strong style="color:#6ee7b7">第0步：假设实数可数。</strong><br>如果0到1之间的实数和自然数一样多，我们就能把它们列出来：a₀, a₁, a₂, a₃……（为了方便，用二进制小数表示）每个自然数对应一个实数。这是反证法的起点。';
+    } else if(diagStep === 1){
+      explain.innerHTML = '<strong style="color:#6ee7b7">第1步：画出对角线。</strong><br>我们取第0个数的第0位、第1个数的第1位、第2个数的第2位……沿着对角线取一串数字。高亮的绿色格子就是对角线。';
+    } else if(diagStep === 2){
+      explain.innerHTML = '<strong style="color:#f87171">第2步：把对角线上的每一位都取反。</strong><br>0变1，1变0。我们得到了一个新的二进制小数 d。<br>这个 d 和列表里每一个数都不一样——因为它的第n位和第n个数的第n位一定相反。';
+    } else if(diagStep === 3){
+      explain.innerHTML = '<strong style="color:#f87171">第3步：矛盾出现了！</strong><br>d 是0到1之间的实数（对吧？），但它不在我们的列表里（因为和每个aₙ都不同）。<br>这就和我们一开始的"所有实数都列出来了"的假设矛盾了。';
+    } else if(diagStep === 4){
+      explain.innerHTML = '<strong style="color:#a78bfa">结论：实数比自然数多！</strong><br>通过反证法，康托尔证明了自然数和实数之间不存在一一对应。<br>实数的无穷，比自然数的无穷<strong style="color:#f87171">更大</strong>。<br><br>而且这还不是终点——任何集合的幂集都比原集合大，所以有无穷多层级的无穷：ℵ₀ < ℵ₁ < ℵ₂ < ℵ₃ < ……';
+    }
+  }
+  
+  window.nextDiag = function(){
+    if(diagStep < diagTotal){
+      diagStep++;
+      renderDiag();
+    }
+  };
+  window.prevDiag = function(){
+    if(diagStep > 0){
+      diagStep--;
+      renderDiag();
+    }
+  };
+  window.resetDiag = function(){
+    diagStep = 0;
+    renderDiag();
+  };
+  
+  // 初始化
+  renderDiag();
+  
+})();
+</script>
+</body>
+</html>
