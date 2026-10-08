@@ -1,0 +1,989 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>掼蛋炸点练习 · 随机出题</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;background:#0f1724;color:#e8ecf3;line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh}
+  .wrap{max-width:820px;margin:0 auto;padding:30px 20px 80px}
+  
+  header{text-align:center;margin-bottom:24px;padding:16px 0}
+  header h1{font-size:clamp(22px,4vw,32px);font-weight:700;background:linear-gradient(135deg,#f59e0b,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px;letter-spacing:1px}
+  header p{color:#8892a8;font-size:13px}
+  
+  /* 顶部状态 */
+  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;padding:12px 18px;background:rgba(255,255,255,.03);border-radius:12px;border:1px solid rgba(255,255,255,.06)}
+  .topbar .score{font-size:14px}
+  .topbar .score b{color:#f59e0b;font-size:18px}
+  .topbar .progress{font-size:12px;color:#8892a8}
+  
+  /* 牌桌卡片 */
+  .card{background:linear-gradient(145deg,rgba(30,41,59,.8),rgba(15,23,42,.9));border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:24px;margin-bottom:18px;box-shadow:0 8px 32px rgba(0,0,0,.3)}
+  
+  .card-tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-bottom:10px}
+  .tag-attack{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3)}
+  .tag-assist{background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
+  .tag-defense{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3)}
+  .tag-mid{background:rgba(245,158,11,.15);color:#fbbf24;border:1px solid rgba(245,158,11,.3)}
+  .tag-memory{background:rgba(168,85,247,.15);color:#c084fc;border:1px solid rgba(168,85,247,.3)}
+  
+  .card h2{font-size:17px;font-weight:700;margin-bottom:8px;color:#f1f5f9;line-height:1.5}
+  
+  .situation{color:#cbd5e1;font-size:14px;line-height:1.85;margin-bottom:16px;padding:14px;background:rgba(0,0,0,.2);border-radius:8px;border-left:4px solid #f59e0b}
+  
+  /* 手牌展示 */
+  .hand{margin-bottom:14px}
+  .hand-label{font-size:12px;color:#8892a8;margin-bottom:6px}
+  .hand-cards{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;padding:10px;background:rgba(0,0,0,.25);border-radius:8px;min-height:52px}
+  .poker{width:36px;height:50px;border-radius:5px;background:#fff;color:#1e293b;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;font-size:12px;box-shadow:0 2px 4px rgba(0,0,0,.3);position:relative;user-select:none;flex-shrink:0}
+  .poker.red{color:#ef4444}
+  .poker .suit{font-size:13px;line-height:1}
+  .poker .rank{font-size:11px;line-height:1.1}
+  .poker.joker-red{background:linear-gradient(135deg,#ef4444,#f97316);color:#fff;font-size:9px}
+  .poker.joker-black{background:linear-gradient(135deg,#1e293b,#0f172a);color:#fff;font-size:9px}
+  .poker.more{background:transparent;color:#8892a8;font-size:11px;box-shadow:none;justify-content:flex-end}
+  
+  /* 炸弹标签 */
+  .bomb-info{margin-bottom:14px;padding:10px 14px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:7px;font-size:13px;color:#fbbf24}
+  .bomb-info b{color:#fff}
+  
+  /* 游戏状态 */
+  .game-state{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px;font-size:12px}
+  .state-item{padding:8px 10px;background:rgba(0,0,0,.2);border-radius:6px}
+  .state-item .lbl{color:#8892a8;font-size:11px;margin-bottom:2px}
+  .state-item .val{color:#e2e8f0;font-weight:600;font-size:12px}
+  
+  /* 选项按钮 */
+  .options{display:flex;flex-direction:column;gap:8px}
+  .opt-btn{padding:12px 16px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:8px;color:#e2e8f0;font-size:14px;cursor:pointer;transition:all .2s;text-align:left;font-family:inherit;line-height:1.6}
+  .opt-btn:hover{background:rgba(255,255,255,.08);border-color:rgba(245,158,11,.5)}
+  .opt-btn:active{transform:scale(.98)}
+  .opt-btn.correct{background:rgba(34,197,94,.12);border-color:#22c55e;color:#86efac}
+  .opt-btn.wrong{background:rgba(239,68,68,.12);border-color:#ef4444;color:#fca5a5}
+  .opt-btn .opt-label{font-weight:700;margin-right:6px;color:#f59e0b}
+  .opt-btn.correct .opt-label{color:#22c55e}
+  .opt-btn.wrong .opt-label{color:#ef4444}
+  
+  /* 解析 */
+  .analysis{margin-top:14px;padding:14px 18px;background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:8px;display:none;animation:fadeIn .3s ease}
+  .analysis.show{display:block}
+  .analysis h3{color:#60a5fa;font-size:14px;margin-bottom:8px}
+  .analysis p{color:#cbd5e1;font-size:13.5px;line-height:1.8;margin-bottom:6px}
+  .analysis .key-point{padding:8px 12px;background:rgba(245,158,11,.1);border-left:3px solid #f59e0b;margin:8px 0;font-size:13px;color:#fbbf24;border-radius:0 5px 5px 0;line-height:1.7}
+  
+  /* 下一题按钮 */
+  .next-btn{margin-top:12px;padding:12px 24px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;width:100%;display:none}
+  .next-btn.show{display:block}
+  .next-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(245,158,11,.3)}
+  
+  /* 开始页 */
+  .start-page{text-align:center;padding:40px 20px}
+  .start-page h2{font-size:22px;margin-bottom:12px;color:#e2e8f0}
+  .start-page .desc{color:#94a3b8;font-size:14px;margin-bottom:30px;line-height:1.8;max-width:500px;margin-left:auto;margin-right:auto}
+  .start-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:30px;max-width:500px;margin-left:auto;margin-right:auto}
+  .stat-box{padding:16px 10px;background:rgba(255,255,255,.03);border-radius:10px;border:1px solid rgba(255,255,255,.06)}
+  .stat-box .num{font-size:24px;font-weight:700;color:#f59e0b}
+  .stat-box .lbl{font-size:12px;color:#8892a8;margin-top:4px}
+  .start-btn{padding:14px 40px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+  .start-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(245,158,11,.3)}
+  .start-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+  
+  /* 加载动画 */
+  .loading{text-align:center;padding:40px;color:#8892a8}
+  .loading-spinner{display:inline-block;width:32px;height:32px;border:3px solid rgba(245,158,11,.2);border-top-color:#f59e0b;border-radius:50%;animation:spin 1s linear infinite;margin-bottom:12px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  
+  /* 结果页 */
+  .result-page{text-align:center;padding:30px 20px;display:none}
+  .result-page.show{display:block}
+  .result-score{font-size:64px;font-weight:800;background:linear-gradient(135deg,#f59e0b,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:6px 0}
+  .result-level{font-size:16px;color:#fbbf24;margin-bottom:20px}
+  .result-summary{background:rgba(255,255,255,.03);border-radius:10px;padding:18px;margin-bottom:20px;text-align:left}
+  .result-summary h3{font-size:15px;margin-bottom:10px;color:#e2e8f0}
+  .summary-row{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+  .summary-row:last-child{border-bottom:none}
+  
+  .review-section{text-align:left;margin-top:16px}
+  .review-item{padding:12px 14px;background:rgba(255,255,255,.03);border-radius:8px;margin-bottom:8px;border-left:3px solid #475569}
+  .review-item.correct{border-left-color:#22c55e}
+  .review-item.wrong{border-left-color:#ef4444}
+  .review-item .ri-title{font-size:13.5px;font-weight:600;margin-bottom:4px;color:#e2e8f0}
+  .review-item .ri-tag{font-size:11px;padding:2px 6px;border-radius:10px;margin-right:6px;vertical-align:middle}
+  .review-item .ri-explain{font-size:12.5px;color:#94a3b8;line-height:1.7}
+  .review-item .ri-key{font-size:12px;color:#fbbf24;margin-top:4px}
+  
+  .bottom-actions{display:flex;gap:10px;margin-top:20px;justify-content:center;flex-wrap:wrap}
+  .bottom-actions button{padding:12px 24px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;border:none}
+  .btn-primary{background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff}
+  .btn-secondary{background:rgba(255,255,255,.08);color:#e2e8f0;border:1px solid rgba(255,255,255,.15)}
+  .bottom-actions button:hover{transform:translateY(-1px)}
+  
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+  
+  @media(max-width:600px){
+    .card{padding:18px}
+    .poker{width:30px;height:42px;font-size:10px}
+    .poker .suit{font-size:11px}
+    .poker .rank{font-size:10px}
+    .game-state{grid-template-columns:repeat(2,1fr)}
+    .start-stats{grid-template-columns:repeat(3,1fr)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>💣 掼蛋炸点练习</h1>
+    <p>随机出题 · 每次不同 · 智能复盘</p>
+  </header>
+  
+  <div id="app">
+    <!-- 开始页 -->
+    <div id="startPage" class="start-page">
+      <h2>准备好了吗？</h2>
+      <p class="desc">
+        每轮随机生成10道炸点判断题，涵盖进攻炸、助攻炸、防守炸、记牌判断等多种场景。<br>
+        题目的牌局、位置、牌型都是随机组合的，每次都不一样。
+      </p>
+      <div class="start-stats">
+        <div class="stat-box"><div class="num">5+</div><div class="lbl">题目类型</div></div>
+        <div class="stat-box"><div class="num">50+</div><div class="lbl">场景变体</div></div>
+        <div class="stat-box"><div class="num">10</div><div class="lbl">每轮题数</div></div>
+      </div>
+      <button class="start-btn" onclick="startQuiz()">🎯 开始测试</button>
+    </div>
+    
+    <!-- 答题区 -->
+    <div id="quizArea" style="display:none">
+      <div class="topbar">
+        <div class="score">得分：<b id="score">0</b> / <span id="curTotal">0</span></div>
+        <div class="progress">第 <span id="curIdx">0</span> / <span id="totalCount">10</span> 题</div>
+      </div>
+      <div id="quizCard"></div>
+    </div>
+    
+    <!-- 结果页 -->
+    <div id="resultPage" class="result-page">
+      <div style="font-size:14px;color:#8892a8">你的最终得分</div>
+      <div class="result-score" id="finalScore">0 / 10</div>
+      <div class="result-level" id="resultLevel"></div>
+      
+      <div class="result-summary">
+        <h3>📊 分类统计</h3>
+        <div id="categoryStats"></div>
+      </div>
+      
+      <div class="review-section">
+        <h3 style="font-size:15px;margin-bottom:10px;color:#e2e8f0;text-align:left">📝 错题复盘</h3>
+        <div id="wrongReview"></div>
+      </div>
+      
+      <div class="bottom-actions">
+        <button class="btn-primary" onclick="startQuiz()">🔄 再来一轮</button>
+        <button class="btn-secondary" onclick="backToStart()">返回首页</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  
+  // ========== 工具函数 ==========
+  function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+  function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
+  function shuffle(arr){
+    const a=[...arr];
+    for(let i=a.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  }
+  
+  // ========== 题目生成器 ==========
+  // 每种类型的模板，随机参数生成具体题目
+  
+  const questionGenerators = {
+    
+    // === 进攻型：1火1轮冲刺 ===
+    attack_1fire_1round: function(){
+      const bombRank = pick(['A','K','Q','J','10']);
+      const bombCount = pick([6,6,5]); // 6个居多
+      const position = pick(['主攻·头家','主攻·末家']);
+      const remainRounds = rand(1,2);
+      const bigCard = pick(['大王','大王','2']);
+      
+      const bombText = bombCount + '个' + bombRank;
+      const bombSize = bombCount === 6 ? '大炸' : bombCount === 5 ? '中炸' : '小炸';
+      
+      return {
+        type: 'attack',
+        tag: '进攻炸点',
+        title: '1火' + remainRounds + '轮·头游冲刺',
+        situation: '你是' + position + '，手里牌型很整，只有' + bombSize + '（' + bombText + '），其余是' + remainRounds + '手即将出完的牌（含' + bigCard + '收牌权）。队友牌还多，但对手两家牌都不少。对家刚出了三带两，你马上就可以冲刺了。',
+        bombCount: 1,
+        bombDetail: bombText + '（' + bombSize + '）',
+        state: {
+          pos: position,
+          mine: remainRounds === 1 ? '约8张（1炸+1手整牌）' : '约12张（1炸+2手牌）',
+          mate: '较多',
+          oppL: '较多',
+          oppR: '较多'
+        },
+        question: '对家出了三带两，轮到你。要不要炸？',
+        options: [
+          {
+            text: '炸！全力冲刺头游', correct: true,
+            explain: remainRounds + '手' + bombCount + '个' + bombRank + '的炸弹，牌型已经非常整齐了。主攻方的核心目标就是争头游，有机会就要果断冲。' + bigCard + '还能帮你收一次牌权，成功率很高。'
+          },
+          {
+            text: '不炸，跟一手看看', correct: false,
+            explain: '跟一手只会让对手过牌，给了他们调整的机会。1火' + remainRounds + '轮的牌就是要果断冲刺，越犹豫越被动。'
+          },
+          {
+            text: '不炸，让队友先出', correct: false,
+            explain: '你是主攻方且牌型整齐，队友牌多说明他是助攻位。主攻有牌就要坚决冲，让队友保留炸弹给你护航。'
+          }
+        ],
+        keypoint: '核心原则：1火少轮必冲头游。牌越整、炸弹越大，越要果断。'
+      };
+    },
+    
+    // === 进攻型：2火2轮伺机 ===
+    attack_2fire_2round: function(){
+      const bigBomb = pick(['5个J','5个Q','5个10','4个A','小王炸']);
+      const smallBomb = pick(['4个8','4个9','4个7','4个10']);
+      const situation = pick([
+        '对家出了一个大顺子压了你一头',
+        '下家刚出了一副连队',
+        '上家出了三带两，牌势很顺',
+        '对家出了同花，场上氛围很热闹'
+      ]);
+      
+      return {
+        type: 'attack',
+        tag: '进攻炸点',
+        title: '2火多轮·伺机而动',
+        situation: '你是主攻方，有2个炸弹（' + bigBomb + ' + ' + smallBomb + '），其余牌还需要3-4轮出完。' + situation + '。场上已经出了不少大牌，但大王和最大的炸还没出现。',
+        bombCount: 2,
+        bombDetail: bigBomb + ' + ' + smallBomb,
+        state: {
+          pos: '主攻',
+          mine: '约16-18张',
+          mate: '中等',
+          oppL: '较多',
+          oppR: '较多'
+        },
+        question: '轮到你了，要不要炸？',
+        options: [
+          {
+            text: '炸，用大炸压上去继续冲', correct: false,
+            explain: '2火多轮不是立刻冲刺的时机。用大炸太奢侈了——大王还没出，你不知道最大的炸在哪。而且你还需要3-4轮才能出完，还没到冲刺阶段。'
+          },
+          {
+            text: '不炸，先观望，见机行事', correct: true,
+            explain: '2火3-4轮属于"中上等牌"，要见机行事。先让一手，观察对手炸弹分布和大牌位置，等对手出得差不多了、你的牌也跟顺了，再择机冲刺。牌越多越不能急。'
+          },
+          {
+            text: '炸，用小炸先试探一下', correct: false,
+            explain: '小炸很可能被对手更大的炸压回来，白白浪费一把火。2火多轮的牌要珍惜炸弹，要么不炸，炸就要争取拿牌权。'
+          }
+        ],
+        keypoint: '核心原则：2火多轮要伺机而动，牌越少越猛，牌多先观望。'
+      };
+    },
+    
+    // === 进攻型：火多轮少后控 ===
+    attack_manyFire_manyRound: function(){
+      const fireCount = rand(3,4);
+      const rounds = rand(3,5);
+      const action = pick(['出了一对A','出了三带两','出了一个小顺子','出了连队']);
+      
+      const fires = [];
+      const ranks = ['5','6','7','8','9','10','J','Q'];
+      const picks = shuffle(ranks).slice(0,fireCount);
+      picks.forEach(r=>fires.push('5个'+r));
+      if(fireCount === 4) fires[3] = '4个2'; // 第四个小一点
+      
+      return {
+        type: 'attack',
+        tag: '进攻炸点',
+        title: fireCount + '火' + rounds + '轮·后控打法',
+        situation: '你有' + fireCount + '个炸弹（' + fires.join('、') + '），但单牌和散牌也不少，大概还需要' + rounds + '手才能出完。队友牌型一般。下家' + action + '。',
+        bombCount: fireCount,
+        bombDetail: fires.length + '把（大小不一）',
+        state: {
+          pos: '主攻',
+          mine: '约' + (rounds*4 + fireCount*3) + '张',
+          mate: '一般',
+          oppL: '中等',
+          oppR: '中等'
+        },
+        question: '下家出了一手牌，你要不要用炸弹上手？',
+        options: [
+          {
+            text: '炸，牌力充足要主动出击', correct: false,
+            explain: '火多轮也多的牌，急着上手没用——上手了也出不完，反而暴露炸弹实力。这种牌应该打后控，耐心景伏等待时机。'
+          },
+          {
+            text: '不炸，耐心等，后控打法', correct: true,
+            explain: fireCount + '火' + rounds + '轮的牌，最关键是有耐心。前控是给牌好的人玩的，你牌多但轮次也多，应该后控——让对手先把牌出散，等你把散牌跟顺了、只剩炸弹+1-2手的时候再全面冲刺。'
+          },
+          {
+            text: '炸，先用最小的炸试试水', correct: false,
+            explain: '最小的炸很可能压不住场，被对手反炸后你就少了一把火。每一把火都要用在刀刃上。'
+          }
+        ],
+        keypoint: '核心原则：火多轮少（相对）要后控，耐心景伏等待时机，非能打底停手或自身轮次完全可控，绝不出动。'
+      };
+    },
+    
+    // === 进攻型：天炸隐忍 ===
+    attack_bigBomb_hide: function(){
+      const superBomb = pick(['6个2','6个A','7个10','大王炸+6个K']);
+      const smallBombCount = rand(1,2);
+      const rounds = rand(2,3);
+      
+      return {
+        type: 'attack',
+        tag: '进攻炸点',
+        title: '天炸在手·隐忍觅机',
+        situation: '你是主攻方，有超级大炸（' + superBomb + '）和' + smallBombCount + '个小炸，其余牌还需要' + rounds + '轮出完。对手两家都还有不少炸弹。目前你是后手位，前面出的牌你都能跟，场面很混乱。',
+        bombCount: 1 + smallBombCount,
+        bombDetail: superBomb + '（天炸） + ' + smallBombCount + '个小炸',
+        state: {
+          pos: '主攻·后手',
+          mine: '约15-18张',
+          mate: '较多',
+          oppL: '较多',
+          oppR: '较多'
+        },
+        question: '对手都在疯狂出炸弹，场面很混乱。你要不要加入混战？',
+        options: [
+          {
+            text: '炸！天炸在手怕什么', correct: false,
+            explain: '天炸最怕的就是"早出"。你' + superBomb + '一旦亮出来，对手就知道最大的炸在你手里了，他们反而会谨慎。而且你牌还需要' + rounds + '轮，还没到冲刺的时候。'
+          },
+          {
+            text: '不炸，隐忍，等对手出弹直逼', correct: true,
+            explain: '这是高手的打法——"隐忍觅机"。你有天炸但不出，让对手猜你到底有没有大炸。对手之间互相消耗炸弹，等他们炸弹都用得差不多了，你' + superBomb + '一出来，天下无敌。核心是：有大炸要忍住，非能打底停手或自身轮次完全可控，绝不出动。'
+          },
+          {
+            text: '先用小炸试试深浅', correct: false,
+            explain: '小炸出了也拿不到牌权，只是浪费一把火。有天炸在手，就要用得物超所值——一出就要定乾坤。'
+          }
+        ],
+        keypoint: '核心原则：耐心景伏等待时机，大炸弹要留到最关键的时刻才出。隐忍越久，威力越大。'
+      };
+    },
+    
+    // === 助攻型：队友报单传牌 ===
+    assist_teammate_single: function(){
+      const bombSize = pick(['4个8','4个9','4个7','4个10','5个6']);
+      const passCard = pick(['3','4','5','6']);
+      
+      return {
+        type: 'assist',
+        tag: '助攻炸点',
+        title: '队友报单·精准传牌',
+        situation: '你是助攻方，牌一般，只有' + bombSize + '一个小炸弹。队友是主攻方，已经报单（剩一张牌）。下家刚刚出了一个三带两，你通过之前的观察清楚队友要的是小单张。',
+        bombCount: 1,
+        bombDetail: bombSize + '（小炸）',
+        state: {
+          pos: '助攻',
+          mine: '约15张',
+          mate: '报单！剩1张',
+          oppL: '中等',
+          oppR: '较少'
+        },
+        question: '下家出三带两，轮到你。怎么操作？',
+        options: [
+          {
+            text: '不炸，继续观望', correct: false,
+            explain: '队友已经报单了，这是关键时刻。不炸的话上家很可能也会跟一手大的直接送走。必须抓住机会上手传牌。'
+          },
+          {
+            text: '炸，上手后出小单张给队友', correct: true,
+            explain: '助攻方的核心使命：队友报单时，有炸必炸，上手传牌。' + bombSize + '虽然小，但此时不炸更待何时？炸了之后出' + passCard + '给队友，精准喂牌。'
+          },
+          {
+            text: '炸，上手后出对子', correct: false,
+            explain: '队友报单了，你出对子不是坑队友吗？助攻方一定要记清楚队友要什么牌——队友报单就传单张，队友报对就传对子。'
+          }
+        ],
+        keypoint: '核心原则：队友报单，有炸必炸；精准传牌，定向输送。助攻的意义就在这里。'
+      };
+    },
+    
+    // === 助攻型：吸引火力 ===
+    assist_attract_fire: function(){
+      const bomb1 = pick(['5个7','5个8','5个6','4个Q','4个J']);
+      const bomb2 = pick(['4个9','4个10','4个8']);
+      const situation = pick([
+        '下家牌不多但明显有大炸，正等着压队友',
+        '上家出得很顺，队友压力很大',
+        '对手两家都还有炸弹，队友不敢轻易冲'
+      ]);
+      
+      return {
+        type: 'assist',
+        tag: '助攻炸点',
+        title: '助攻吸引·假冲真引',
+        situation: '你是助攻方，有2个炸弹（' + bomb1 + ' + ' + bomb2 + '）。队友还剩8-9张牌，牌型很好，一看就是要冲的。' + situation + '。你判断对手有大炸在等着队友。',
+        bombCount: 2,
+        bombDetail: bomb1 + ' + ' + bomb2,
+        state: {
+          pos: '助攻',
+          mine: '约16-18张',
+          mate: '8-9张（牌型整）',
+          oppL: '较少（有炸）',
+          oppR: '较多'
+        },
+        question: '上家出了一手牌，队友没接。轮到你，要不要炸？',
+        options: [
+          {
+            text: '炸，自己冲头游', correct: false,
+            explain: '你是助攻方，你的任务不是自己冲头游，而是帮队友冲。你牌还多，冲不动的。'
+          },
+          {
+            text: '不炸，留着炸给队友护航', correct: false,
+            explain: '只说对了一半。助攻方不能只被动等待，有时候需要主动制造混乱吸引对手火力，给队友创造机会。尤其是判断对手有大炸等着队友的时候。'
+          },
+          {
+            text: '炸，假装自己要冲，骗对手炸你', correct: true,
+            explain: '这是助攻的高级技巧——"假冲真引"。你用一把炸上手，出一些有威胁的牌，让对手误以为你要冲头游，把他的大炸骗出来压你。等他大炸用完了，队友再冲刺就没人能挡了。牺牲自己，成就队友。'
+          }
+        ],
+        keypoint: '核心原则：助攻要会演戏，吸引对手火力，消耗对手的强炸，为队友创造冲刺空间。'
+      };
+    },
+    
+    // === 助攻型：送队友双带 ===
+    assist_double_pass: function(){
+      const bomb = pick(['4个J','4个Q','5个6','4个10']);
+      const remainCards = rand(4,7);
+      
+      return {
+        type: 'assist',
+        tag: '助攻炸点',
+        title: '送队友双带·最后一炸',
+        situation: '你是助攻方，剩' + remainCards + '张牌：1个炸（' + bomb + '）+ 一些散牌。队友也不多了，大概6-7张，牌型很整。对手两家各剩10张左右。牌局已经到了后盘，大牌基本出完了。',
+        bombCount: 1,
+        bombDetail: bomb,
+        state: {
+          pos: '助攻',
+          mine: remainCards + '张',
+          mate: '6-7张',
+          oppL: '约10张',
+          oppR: '约10张'
+        },
+        question: '下家出了一对Q，你怎么办？',
+        options: [
+          {
+            text: '炸了报单，等队友送', correct: false,
+            explain: '你是助攻，搞反了！助攻的任务是送队友，不是让队友送你。剩5张以内报单是主攻的事，助攻要做的是把牌送出去给队友。'
+          },
+          {
+            text: '不炸，留炸等队友最后再送', correct: true,
+            explain: '助攻的炸弹要"好钢用在刀刃上"——队友冲刺的最后一刻再出手。现在下家出对子，你没对子可跟就不跟，让队友去接，你的炸要留到最后送队友一程。'
+          },
+          {
+            text: '炸了出三带两', correct: false,
+            explain: '你剩' + remainCards + '张，1个炸加散牌，炸完还有' + (remainCards-4) + '张散牌，根本不是一手能出完的。乱炸只会浪费炸弹。'
+          }
+        ],
+        keypoint: '核心原则：助攻的炸弹要留到最关键的时刻——队友冲刺的最后一程。'
+      };
+    },
+    
+    // === 防守型：头家报单拦不拦 ===
+    defense_first_single: function(){
+      const bomb = pick(['5个K','5个Q','5个J','6个8']);
+      const myRemain = rand(15,20);
+      const judge = pick(['你判断是大王','大概率是大的单张','你估计是2']);
+      
+      return {
+        type: 'defense',
+        tag: '防守原则',
+        title: '头家报单·拦不拦',
+        situation: '你是防守位置（下家），手里有一个大炸弹（' + bomb + '）。头家（上家）牌明显很好，已经报单冲刺了，' + judge + '。队友还有不少牌。你自己还有' + myRemain + '张牌，散牌很多。',
+        bombCount: 1,
+        bombDetail: bomb + '（大炸）',
+        state: {
+          pos: '防守',
+          mine: myRemain + '张（散牌多）',
+          mate: '较多',
+          oppL: '报单！',
+          oppR: '较多'
+        },
+        question: '头家报单只剩一张了。要不要炸？',
+        options: [
+          {
+            text: '必须炸！头游不能让', correct: false,
+            explain: '你只有1个炸，炸了之后呢？你自己还有' + myRemain + '张散牌，队友牌也多。炸了之后牌权到手但出不完，反而把炸弹浪费了。这种时候要冷静，让一个头游，把炸弹用在更关键的地方。'
+          },
+          {
+            text: '不炸，放他头游，留炸防双带', correct: true,
+            explain: '防守的核心原则：炸弹只能用在争上游或防守对手双带的关键节点上。头家牌明显好、已经报单了，你一个炸拦不住他，不如放他头游，把炸弹留给更有把握的双带防守，争取不打下游。'
+          },
+          {
+            text: '炸，炸了出对子给队友', correct: false,
+            explain: '想法不错，但你只有一个炸，炸完就没防守能力了。而且你牌还很多，炸完上手也出不完，等于白白浪费一个炸换一手牌权，不值。'
+          }
+        ],
+        keypoint: '核心原则：只有进攻炸点和助攻炸点才值得出手。防守方牌力一般时，不可盲目炸头游。'
+      };
+    },
+    
+    // === 防守型：中局要不要炸 ===
+    defense_midgame: function(){
+      const bomb = pick(['5个9','5个10','4个A','4个K']);
+      const handQuality = pick(['中等','中下','一般']);
+      const outCard = pick(['出了三带两', '出了一副顺子', '出了连队', '出了一对2']);
+      
+      return {
+        type: 'defense',
+        tag: '防守原则',
+        title: '中局防守·该出手时才出手',
+        situation: '你是防守位置，手里有1个炸（' + bomb + '），牌力' + handQuality + '，散牌还不少。牌局中盘，下家' + outCard + '，势头很猛，感觉他牌不错。队友目前没怎么出牌。',
+        bombCount: 1,
+        bombDetail: bomb,
+        state: {
+          pos: '防守',
+          mine: '约15-18张',
+          mate: '较多（没怎么出）',
+          oppL: '中等',
+          oppR: '势头很猛'
+        },
+        question: '下家出牌很顺，你要不要炸一下压压他的气势？',
+        options: [
+          {
+            text: '炸！不能让他这么顺', correct: false,
+            explain: '防守不是乱炸。你只有一个炸，炸了就没防守能力了。而且你牌力' + handQuality + '，炸完之后散牌怎么出？为了"压气势"就炸一个，太浪费了。'
+          },
+          {
+            text: '不炸，再看看', correct: true,
+            explain: '防守的正确姿势：先观察，后出手。你只有一个炸，必须用在刀刃上——要么是队友要冲刺时你帮他开路，要么是对手要双带时你精准拦截。现在才中盘，还有的是时间，不急。'
+          },
+          {
+            text: '炸了出对子让队友接', correct: false,
+            explain: '你不知道队友能不能接对子，也不知道队友牌好不好。在没摸清队友牌力的情况下，贸然炸了出"你以为队友能接的牌"，很可能两头落空。'
+          }
+        ],
+        keypoint: '核心原则：防守方的炸弹要省着用，每一个炸都要产生实际价值，不能为了"打乱节奏"这种虚的东西浪费炸弹。'
+      };
+    },
+    
+    // === 记牌型：判断有没有炸 ===
+    memory_bomb_count: function(){
+      const bombRank = pick(['A','K','Q','J']);
+      const bombCount = rand(4,5);
+      const context = pick([
+        'A已经出了7个（总共8个），还剩1个',
+        'K已经出了6个，还剩2个',
+        'Q出了5个，还剩3个',
+        'J出了8个，用完了'
+      ]);
+      const bigCards = pick(['大王已出、小王已出', '大王已出、小王还在', '2还剩3个', '2还剩1个']);
+      
+      return {
+        type: 'memory',
+        tag: '记牌逻辑',
+        title: '记牌判断·对手还有炸吗',
+        situation: '牌局后盘。通过记牌你算出：' + bigCards + '。' + context + '。你手里有' + bombCount + '个' + bombRank + '的炸弹。下家剩' + rand(6,9) + '张，出了一手三带两后说"报双"。',
+        bombCount: bombCount,
+        bombDetail: bombCount + '个' + bombRank,
+        state: {
+          pos: '对家',
+          mine: '约12张',
+          mate: '约10张',
+          oppL: '报双！',
+          oppR: '约8张'
+        },
+        question: '下家报双（剩两张），他手里还有炸弹吗？',
+        options: [
+          {
+            text: '有，很可能还有小炸', correct: false,
+            explain: '报双通常是两手牌（比如一个对子+另一个牌型），不代表有炸弹。而且根据记牌：' + context + '，' + bombCount + '个' + bombRank + '在你手里，大牌也出了不少了。下家剩两张牌，有炸弹的概率很低。'
+          },
+          {
+            text: '大概率没有，应该是两手牌', correct: true,
+            explain: '根据记牌分析：' + context + '，再加上大牌已经出了不少（' + bigCards + '）。下家剩两张报双，大概率是两手整牌（比如一对+一单，或者三带+一单等等），而不是炸弹。如果有炸弹他应该会直接炸了冲刺。'
+          },
+          {
+            text: '不确定，随便打', correct: false,
+            explain: '掼蛋的记牌就是为了减少不确定性。通过记大牌、记关键牌的数量，完全可以大致推断对手有没有炸、有多大的炸。"随便打"就是放弃了记牌的优势。'
+          }
+        ],
+        keypoint: '核心原则：记牌是决策的基础。平时积累记牌与牌感，关键时刻才能做出准确判断。'
+      };
+    },
+    
+    // === 综合：牌力评估 ===
+    general_evaluate: function(){
+      const fires = rand(2,3);
+      const bigCards = pick(['有大王','有大王和2','有小王和2','有2个2']);
+      const handType = pick(['牌型整','散牌不少','一般般','有一手长顺']);
+      
+      return {
+        type: 'mid',
+        tag: '中等牌局',
+        title: '牌力评估·定位决定打法',
+        situation: '你起手有' + fires + '个炸弹，' + bigCards + '，整体' + handType + '。打了几轮之后，你感觉对手两家牌都还不错，队友牌一般。你自己还有12-15张牌。',
+        bombCount: fires,
+        bombDetail: fires + '把炸弹',
+        state: {
+          pos: '中家位置',
+          mine: '12-15张',
+          mate: '一般',
+          oppL: '不错',
+          oppR: '不错'
+        },
+        question: '这种牌力定位下，你的策略应该是？',
+        options: [
+          {
+            text: '全力冲头游', correct: false,
+            explain: fires + '个炸 + ' + handType + ' + 队友一般，这个牌力还不够"全力冲"的级别。全力冲刺需要至少3个大炸+牌型很整+队友能配合。你这牌属于中等，冲不动的。'
+          },
+          {
+            text: '能进则进，该守就守', correct: true,
+            explain: fires + '个炸 + ' + handType + '，属于中等牌力。中等牌的核心策略就是"见机行事"——有机会就往前冲，没机会就做好防守。不要硬冲，也不能全放，灵活调整。'
+          },
+          {
+            text: '完全防守，保队友', correct: false,
+            explain: '你有' + fires + '个炸弹，牌力还可以，没必要完全放弃自己打防守。而且队友牌一般，你全防守也未必能保得住他。中等牌要"攻守兼备"。'
+          }
+        ],
+        keypoint: '核心原则：先定位（牌力如何），再定策略（攻/守/助）。定位错了，后面全错。'
+      };
+    },
+    
+    // === 综合：双带判断 ===
+    general_double_belt: function(){
+      const position = pick(['二游位置','三游位置']);
+      const mateSituation = pick(['队友剩不多了', '队友已经报双', '队友牌还多']);
+      const enemySituation = pick(['对手下家剩8张', '对手上家剩7张', '对手各剩5-6张']);
+      
+      return {
+        type: 'mid',
+        tag: '综合判断',
+        title: '双带时机·什么时候送',
+        situation: '你在' + position + '，手里有2个炸弹，还有一对对子可以送。' + mateSituation + '，' + enemySituation + '。目前牌权在你手上，你可以选择出对子送队友，或者先出别的。',
+        bombCount: 2,
+        bombDetail: '2把炸弹',
+        state: {
+          pos: position,
+          mine: '约12张',
+          mate: mateSituation,
+          oppL: '几张',
+          oppR: '几张'
+        },
+        question: '这时候你应该怎么打？',
+        options: [
+          {
+            text: '立刻出对子送队友', correct: false,
+            explain: '双带不是越早点越好。如果队友还没到冲刺阶段，你提前送对子反而可能帮倒忙——队友接了之后牌更散了。或者对手有更大的对子压上去，你白送一次牌权。'
+          },
+          {
+            text: '先出别的，等队友报牌后再送', correct: true,
+            explain: '双带的最佳时机是"队友报单/报对之后"，而不是之前。在队友明确告诉你他剩几张、要什么之前，不要轻易送牌，不然容易送错。先把自己的牌出顺，等队友报牌了再精准送牌。'
+          },
+          {
+            text: '直接炸了冲自己的', correct: false,
+            explain: '你在' + position + '，还有2个炸和不少散牌，冲不动的。越是这个时候越要冷静判断自己的定位——二游三游位置，牌力中等，应该以配合队友为主，而不是自己硬冲。'
+          }
+        ],
+        keypoint: '核心原则：双带要等队友报牌后再送，精准传牌比盲目送牌有效得多。'
+      };
+    }
+    
+  };
+  
+  // 可用的生成器列表
+  const generatorList = Object.keys(questionGenerators);
+  
+  // ========== 生成一轮题目 ==========
+  function generateRound(count){
+    const pool = [];
+    // 每种类型至少出几道，保证覆盖面
+    const attackGens = generatorList.filter(g=>g.startsWith('attack'));
+    const assistGens = generatorList.filter(g=>g.startsWith('assist'));
+    const defenseGens = generatorList.filter(g=>g.startsWith('defense'));
+    const memoryGens = generatorList.filter(g=>g.startsWith('memory'));
+    const generalGens = generatorList.filter(g=>g.startsWith('general'));
+    
+    // 分配：进攻3道，助攻2道，防守2道，记牌1道，综合2道 = 10道
+    const selected = [];
+    selected.push(...shuffle(attackGens).slice(0,3));
+    selected.push(...shuffle(assistGens).slice(0,2));
+    selected.push(...shuffle(defenseGens).slice(0,2));
+    selected.push(...shuffle(memoryGens).slice(0,1));
+    selected.push(...shuffle(generalGens).slice(0,2));
+    
+    // 打乱顺序
+    const shuffled = shuffle(selected);
+    
+    // 生成题目
+    return shuffled.slice(0, count).map(genKey => {
+      const q = questionGenerators[genKey]();
+      q.id = genKey;
+      // 给选项加ABC标签
+      q.options = shuffle(q.options);
+      const labels = ['A','B','C'];
+      q.options.forEach((opt,i)=>{
+        opt.label = labels[i];
+      });
+      return q;
+    });
+  }
+  
+  // ========== 渲染手牌 ==========
+  function renderPoker(rank, suit){
+    if(rank === '大王') return '<div class="poker joker-red"><div class="suit">🃏</div><div class="rank">大王</div></div>';
+    if(rank === '小王') return '<div class="poker joker-black"><div class="suit">🃏</div><div class="rank">小王</div></div>';
+    const isRed = (suit === '♥' || suit === '♦');
+    return '<div class="poker '+(isRed?'red':'')+'"><div class="suit">'+suit+'</div><div class="rank">'+rank+'</div></div>';
+  }
+  
+  function renderHandVisual(q){
+    let html = '';
+    const suits = ['♠','♥','♦','♣'];
+    const allRanks = ['3','4','5','6','7','8','9','10','J','Q','K','A','2'];
+    
+    // 根据题目类型生成一些示意牌
+    // 生成炸弹的可视化
+    // 从 bombDetail 提取
+    const bombText = q.bombDetail;
+    
+    // 先放炸弹
+    // 简单处理：放6-10张示意牌，包含炸弹的牌
+    const displayCards = [];
+    
+    // 添加炸弹示意（渲染4-5张）
+    if(bombText.includes('个')){
+      const match = bombText.match(/(\d+)个([0-9JQKA2]+)/);
+      if(match){
+        const n = Math.min(parseInt(match[1]), 5); // 最多显示5张
+        const rank = match[2];
+        for(let i=0;i<n;i++){
+          displayCards.push({rank:rank, suit:suits[i%4]});
+        }
+      }
+    }
+    if(bombText.includes('王炸')){
+      displayCards.push({rank:'大王', suit:'♠'});
+      displayCards.push({rank:'小王', suit:'♠'});
+    }
+    if(bombText.includes('大王')){
+      displayCards.push({rank:'大王', suit:'♠'});
+    }
+    
+    // 添加一些其他示意牌
+    const otherRanks = shuffle(allRanks).slice(0,8);
+    otherRanks.forEach(r=>{
+      displayCards.push({rank:r, suit:pick(suits)});
+    });
+    
+    // 渲染前12张，多了省略
+    displayCards.slice(0,12).forEach(c=>{
+      html += renderPoker(c.rank, c.suit);
+    });
+    if(displayCards.length > 12){
+      html += '<div class="poker more">+'+(displayCards.length-12)+'</div>';
+    }
+    
+    return html;
+  }
+  
+  // ========== 游戏逻辑 ==========
+  let questions = [];
+  let curIdx = 0;
+  let score = 0;
+  let answers = [];
+  
+  function start(){
+    document.getElementById('startPage').style.display = 'none';
+    document.getElementById('resultPage').classList.remove('show');
+    document.getElementById('quizArea').style.display = 'block';
+    
+    questions = generateRound(10);
+    curIdx = 0;
+    score = 0;
+    answers = [];
+    
+    document.getElementById('totalCount').textContent = questions.length;
+    document.getElementById('curTotal').textContent = questions.length;
+    
+    renderQ();
+  }
+  
+  function tagClass(type){
+    if(type === 'attack') return 'tag-attack';
+    if(type === 'assist') return 'tag-assist';
+    if(type === 'defense') return 'tag-defense';
+    if(type === 'memory') return 'tag-memory';
+    return 'tag-mid';
+  }
+  
+  function typeName(type){
+    const map = { attack:'进攻炸', assist:'助攻炸', defense:'防守炸', memory:'记牌判断', mid:'综合判断' };
+    return map[type] || type;
+  }
+  
+  function renderQ(){
+    const q = questions[curIdx];
+    document.getElementById('curIdx').textContent = curIdx + 1;
+    
+    let html = '<div class="card">';
+    html += '<span class="card-tag '+tagClass(q.type)+'">'+q.tag+'</span>';
+    html += '<h2>'+q.question+'</h2>';
+    html += '<div class="situation">'+q.situation+'</div>';
+    
+    html += '<div class="hand"><div class="hand-label">🃏 手牌示意</div><div class="hand-cards">';
+    html += renderHandVisual(q);
+    html += '</div></div>';
+    
+    html += '<div class="bomb-info">💣 炸弹：<b>'+q.bombDetail+'</b></div>';
+    
+    html += '<div class="game-state">';
+    html += '<div class="state-item"><div class="lbl">位置</div><div class="val">'+q.state.pos+'</div></div>';
+    html += '<div class="state-item"><div class="lbl">你剩</div><div class="val">'+q.state.mine+'</div></div>';
+    html += '<div class="state-item"><div class="lbl">队友</div><div class="val">'+q.state.mate+'</div></div>';
+    html += '<div class="state-item"><div class="lbl">对手(上/下)</div><div class="val">'+q.state.oppL+' / '+q.state.oppR+'</div></div>';
+    html += '</div>';
+    
+    html += '<div class="options">';
+    q.options.forEach((opt, i) => {
+      html += '<button class="opt-btn" onclick="choose('+i+')">';
+      html += '<span class="opt-label">'+opt.label+'.</span> '+opt.text;
+      html += '</button>';
+    });
+    html += '</div>';
+    
+    html += '<div class="analysis" id="analysis">';
+    html += '<h3>💡 解析</h3>';
+    html += '<p id="aText"></p>';
+    html += '<div class="key-point" id="keyPoint"></div>';
+    html += '</div>';
+    
+    html += '<button class="next-btn" id="nextBtn" onclick="nextQ()">下一题 →</button>';
+    html += '</div>';
+    
+    document.getElementById('quizCard').innerHTML = html;
+  }
+  
+  window.choose = function(idx){
+    const q = questions[curIdx];
+    const opts = document.querySelectorAll('.opt-btn');
+    const analysis = document.getElementById('analysis');
+    const nextBtn = document.getElementById('nextBtn');
+    
+    opts.forEach(o=>o.style.pointerEvents='none');
+    
+    const selected = q.options[idx];
+    if(selected.correct){
+      opts[idx].classList.add('correct');
+      score++;
+      answers.push({correct:true, q:q, selected:selected});
+    } else {
+      opts[idx].classList.add('wrong');
+      answers.push({correct:false, q:q, selected:selected});
+      opts.forEach((o,i)=>{
+        if(q.options[i].correct) o.classList.add('correct');
+      });
+    }
+    
+    document.getElementById('aText').textContent = selected.explain;
+    document.getElementById('keyPoint').textContent = '💡 ' + q.keypoint;
+    analysis.classList.add('show');
+    nextBtn.classList.add('show');
+    
+    document.getElementById('score').textContent = score;
+  };
+  
+  window.nextQ = function(){
+    curIdx++;
+    if(curIdx >= questions.length){
+      showResult();
+    } else {
+      renderQ();
+    }
+  };
+  
+  function showResult(){
+    document.getElementById('quizArea').style.display = 'none';
+    const rp = document.getElementById('resultPage');
+    rp.classList.add('show');
+    
+    const total = questions.length;
+    const pct = Math.round(score/total*100);
+    document.getElementById('finalScore').textContent = score + ' / ' + total;
+    
+    let level = '';
+    if(pct >= 90) level = '🏆 炸点大师 — 对炸弹的理解已经炉火纯青了！';
+    else if(pct >= 75) level = '👍 炸点高手 — 大部分情况判断准确，继续精进！';
+    else if(pct >= 60) level = '🎯 入门水平 — 基本概念掌握，还需多练习进阶技巧';
+    else level = '📚 继续学习 — 炸弹原则还需要多理解，再试一轮？';
+    document.getElementById('resultLevel').textContent = level;
+    
+    // 分类统计
+    const stats = {};
+    answers.forEach(a=>{
+      const t = a.q.type;
+      if(!stats[t]) stats[t] = {total:0, correct:0};
+      stats[t].total++;
+      if(a.correct) stats[t].correct++;
+    });
+    
+    let statsHtml = '';
+    Object.keys(stats).forEach(t=>{
+      const s = stats[t];
+      const pct2 = Math.round(s.correct/s.total*100);
+      statsHtml += '<div class="summary-row"><span>'+typeName(t)+'</span><span style="color:'+(pct2>=70?'#4ade80':'#f87171')+'">'+s.correct+'/'+s.total+' · '+pct2+'%</span></div>';
+    });
+    document.getElementById('categoryStats').innerHTML = statsHtml;
+    
+    // 错题复盘
+    const wrongs = answers.filter(a=>!a.correct);
+    let wrongHtml = '';
+    if(wrongs.length === 0){
+      wrongHtml = '<div style="text-align:center;padding:20px;color:#4ade80">🎉 全对！没有错题</div>';
+    } else {
+      wrongs.forEach((w,i)=>{
+        const q = w.q;
+        wrongHtml += '<div class="review-item wrong">';
+        wrongHtml += '<div class="ri-title"><span class="ri-tag" style="background:rgba(239,68,68,.2);color:#f87171">'+q.tag+'</span>'+q.title+'</div>';
+        wrongHtml += '<div class="ri-explain">你的选择：'+w.selected.text+'</div>';
+        // 找到正确答案
+        const correctOpt = q.options.find(o=>o.correct);
+        if(correctOpt){
+          wrongHtml += '<div class="ri-explain" style="color:#86efac">正确答案：'+correctOpt.label+'. '+correctOpt.text+'</div>';
+        }
+        wrongHtml += '<div class="ri-key">💡 '+q.keypoint+'</div>';
+        wrongHtml += '</div>';
+      });
+    }
+    document.getElementById('wrongReview').innerHTML = wrongHtml;
+  }
+  
+  window.startQuiz = function(){ start(); };
+  window.backToStart = function(){
+    document.getElementById('resultPage').classList.remove('show');
+    document.getElementById('quizArea').style.display = 'none';
+    document.getElementById('startPage').style.display = 'block';
+  };
+  
+  // 暴露给全局
+  window.choose = choose;
+  window.nextQ = nextQ;
+  window.startQuiz = start;
+  window.backToStart = backToStart;
+  
+})();
+</script>
+</body>
+</html>
