@@ -1,0 +1,934 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>智能家居AI Agent开放社区 · 中国机电设备工程协会</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
+    background:#0a0e1a;color:#e2e8f0;line-height:1.7;-webkit-font-smoothing:antialiased;
+    overflow-x:hidden}
+
+  /* ===== 导航 ===== */
+  .nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:rgba(10,14,26,.8);backdrop-filter:blur(16px);
+    border-bottom:1px solid rgba(255,255,255,.06);
+    padding:12px 24px;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px}
+  .nav-logo .dot{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#ef4444)}
+  .nav-links{display:flex;gap:20px;font-size:13px;color:#94a3b8}
+  .nav-links a{color:#94a3b8;text-decoration:none;transition:color .2s;cursor:pointer}
+  .nav-links a:hover{color:#fff}
+
+  /* ===== Hero ===== */
+  .hero{
+    padding:120px 24px 80px;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 0%, rgba(245,158,11,.12) 0%, transparent 60%),
+      radial-gradient(ellipse 80% 40% at 50% 100%, rgba(59,130,246,.08) 0%, transparent 70%);
+    text-align:center;position:relative;overflow:hidden;
+  }
+  .hero::before{
+    content:'';position:absolute;inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
+    background-size:60px 60px;
+    mask-image:radial-gradient(ellipse 60% 60% at 50% 50%, #000 30%, transparent 80%);
+  }
+  .hero-badge{
+    display:inline-block;padding:6px 14px;
+    background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);
+    border-radius:20px;font-size:12px;color:#fbbf24;font-weight:500;
+    margin-bottom:20px;position:relative;z-index:1;
+  }
+  .hero h1{
+    font-size:clamp(28px,5vw,48px);font-weight:800;
+    background:linear-gradient(135deg,#fff 0%,#f59e0b 50%,#ef4444 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    margin-bottom:16px;letter-spacing:-.5px;
+    position:relative;z-index:1;
+  }
+  .hero .subtitle{
+    font-size:clamp(14px,2vw,17px);color:#94a3b8;max-width:680px;
+    margin:0 auto 36px;line-height:1.8;
+    position:relative;z-index:1;
+  }
+  .hero-stats{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+    max-width:800px;margin:0 auto;position:relative;z-index:1;
+  }
+  .stat-card{
+    background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+    border-radius:12px;padding:16px 10px;
+  }
+  .stat-card .num{
+    font-size:26px;font-weight:800;
+    background:linear-gradient(135deg,#fbbf24,#f59e0b);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    line-height:1.2;margin-bottom:4px;
+  }
+  .stat-card .label{font-size:11px;color:#64748b}
+
+  /* ===== 通用章节 ===== */
+  section{padding:72px 24px;max-width:1200px;margin:0 auto}
+  .section-label{
+    font-size:12px;color:#f59e0b;font-weight:600;letter-spacing:2px;
+    margin-bottom:10px;text-transform:uppercase;
+  }
+  .section-title{
+    font-size:clamp(22px,3.5vw,32px);font-weight:700;color:#f1f5f9;
+    margin-bottom:12px;letter-spacing:-.3px;
+  }
+  .section-desc{
+    color:#94a3b8;font-size:14px;max-width:680px;margin-bottom:40px;line-height:1.8;
+  }
+
+  /* ===== 痛点 ===== */
+  .pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .pain-card{
+    background:rgba(239,68,68,.04);
+    border:1px solid rgba(239,68,68,.12);
+    border-radius:12px;padding:20px;
+    transition:all .3s ease;
+  }
+  .pain-card:hover{border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.06)}
+  .pain-icon{font-size:28px;margin-bottom:10px}
+  .pain-card h3{font-size:15px;color:#f1f5f9;margin-bottom:8px;font-weight:600}
+  .pain-card p{font-size:12px;color:#94a3b8;line-height:1.7}
+
+  /* ===== 四方角色 ===== */
+  .role-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:40px}
+  .role-card{
+    background:rgba(255,255,255,.02);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:12px;padding:18px 14px;
+    text-align:center;transition:all .3s ease;
+  }
+  .role-card:hover{border-color:rgba(245,158,11,.25);transform:translateY(-3px)}
+  .role-emoji{font-size:32px;margin-bottom:8px}
+  .role-card h3{font-size:14px;color:#f1f5f9;margin-bottom:6px;font-weight:600}
+  .role-card .pos{font-size:11px;color:#f59e0b;margin-bottom:8px;font-weight:500}
+  .role-card p{font-size:11px;color:#64748b;line-height:1.6}
+
+  /* ===== 架构 ===== */
+  .arch-stack{
+    background:rgba(255,255,255,.02);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:14px;padding:24px;
+    display:flex;flex-direction:column;gap:10px;
+  }
+  .arch-layer{
+    background:linear-gradient(135deg,rgba(59,130,246,.08),rgba(59,130,246,.02));
+    border:1px solid rgba(59,130,246,.15);
+    border-radius:10px;padding:14px 18px;
+    display:flex;align-items:center;gap:16px;
+    transition:all .3s ease;
+  }
+  .arch-layer:hover{border-color:rgba(59,130,246,.35);background:rgba(59,130,246,.12)}
+  .arch-layer.core{
+    background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(245,158,11,.04));
+    border-color:rgba(245,158,11,.3);
+  }
+  .arch-layer .ln{
+    width:28px;height:28px;border-radius:50%;
+    background:rgba(255,255,255,.08);
+    display:flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:700;color:#94a3b8;flex-shrink:0;
+  }
+  .arch-layer.core .ln{background:rgba(245,158,11,.2);color:#fbbf24}
+  .arch-layer .lt{flex:1}
+  .arch-layer .lt h4{font-size:14px;color:#f1f5f9;font-weight:600;margin-bottom:2px}
+  .arch-layer .lt p{font-size:11px;color:#64748b}
+
+  /* ===== Token经济 ===== */
+  .token-flow{
+    background:rgba(245,158,11,.03);
+    border:1px solid rgba(245,158,11,.15);
+    border-radius:14px;padding:28px;
+    margin-bottom:24px;
+  }
+  .flow-steps{
+    display:flex;flex-direction:column;align-items:center;gap:12px;
+    position:relative;
+  }
+  .flow-step{
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:10px;padding:12px 20px;
+    text-align:center;font-size:13px;color:#e2e8f0;font-weight:500;
+    width:100%;max-width:420px;
+  }
+  .flow-arrow{color:#f59e0b;font-size:18px}
+  .split-box{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
+    width:100%;max-width:600px;
+  }
+  .split-item{
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:8px;padding:14px 8px;text-align:center;
+  }
+  .split-item .sp{font-size:22px;font-weight:800;color:#fbbf24;margin-bottom:2px}
+  .split-item .sn{font-size:11px;color:#94a3b8}
+
+  .compliance-note{
+    background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.15);
+    border-radius:10px;padding:16px 20px;
+    display:flex;gap:12px;align-items:flex-start;
+  }
+  .compliance-note .ci{font-size:20px;flex-shrink:0}
+  .compliance-note .ct{font-size:12px;color:#86efac;line-height:1.7}
+  .compliance-note b{color:#4ade80}
+
+  /* ===== Agent社区 ===== */
+  .community-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .comm-card{
+    background:rgba(255,255,255,.02);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:12px;padding:22px;
+  }
+  .comm-card h3{
+    font-size:15px;color:#f1f5f9;margin-bottom:10px;font-weight:600;
+    display:flex;align-items:center;gap:8px;
+  }
+  .comm-card ul{list-style:none}
+  .comm-card li{
+    font-size:12px;color:#94a3b8;padding:5px 0;
+    padding-left:16px;position:relative;line-height:1.6;
+  }
+  .comm-card li::before{
+    content:'';position:absolute;left:0;top:12px;
+    width:5px;height:5px;border-radius:50%;
+    background:#f59e0b;
+  }
+
+  /* ===== 厂家接入 ===== */
+  .mfg-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .tier-card{
+    background:rgba(255,255,255,.02);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:12px;padding:20px 16px;
+    position:relative;overflow:hidden;
+  }
+  .tier-card.gold{border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.04)}
+  .tier-card.silver{border-color:rgba(148,163,184,.2)}
+  .tier-card.bronze{border-color:rgba(180,83,9,.2)}
+  .tier-name{font-size:11px;color:#64748b;margin-bottom:4px;font-weight:500}
+  .tier-title{font-size:16px;color:#f1f5f9;font-weight:700;margin-bottom:10px}
+  .tier-card.gold .tier-title{color:#fbbf24}
+  .tier-card ul{list-style:none}
+  .tier-card li{
+    font-size:11px;color:#94a3b8;padding:4px 0;
+    padding-left:14px;position:relative;line-height:1.6;
+  }
+  .tier-card li::before{content:'✓';position:absolute;left:0;color:#22c55e;font-size:10px}
+
+  /* ===== 里程碑 ===== */
+  .timeline{
+    position:relative;padding-left:30px;
+  }
+  .timeline::before{
+    content:'';position:absolute;left:10px;top:8px;bottom:8px;
+    width:2px;background:linear-gradient(180deg,#f59e0b,#3b82f6,#22c55e);
+    border-radius:2px;
+  }
+  .phase{margin-bottom:28px;position:relative}
+  .phase::before{
+    content:'';position:absolute;left:-26px;top:6px;
+    width:14px;height:14px;border-radius:50%;
+    background:#0a0e1a;border:3px solid #f59e0b;
+  }
+  .phase-header{
+    display:flex;align-items:baseline;gap:12px;margin-bottom:8px;
+  }
+  .phase-title{font-size:16px;color:#f1f5f9;font-weight:600}
+  .phase-time{font-size:11px;color:#f59e0b;font-weight:500;
+    padding:2px 8px;background:rgba(245,158,11,.1);border-radius:4px}
+  .phase-list{list-style:none}
+  .phase-list li{
+    font-size:12px;color:#94a3b8;padding:3px 0;line-height:1.7;
+    padding-left:14px;position:relative;
+  }
+  .phase-list li::before{content:'▸';position:absolute;left:0;color:#64748b;font-size:10px;top:4px}
+
+  /* ===== 数据亮点 ===== */
+  .data-section{
+    background:linear-gradient(180deg,rgba(245,158,11,.03) 0%,transparent 100%);
+    border-top:1px solid rgba(255,255,255,.04);
+    border-bottom:1px solid rgba(255,255,255,.04);
+  }
+  .data-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .data-card{
+    text-align:center;padding:24px 16px;
+    background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);
+    border-radius:12px;
+  }
+  .data-card .dn{
+    font-size:36px;font-weight:800;
+    background:linear-gradient(135deg,#fbbf24,#ef4444);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    line-height:1.1;margin-bottom:6px;
+  }
+  .data-card .dl{font-size:12px;color:#94a3b8;line-height:1.6}
+  .data-card .ds{font-size:10px;color:#64748b;margin-top:4px}
+
+  /* ===== 组织架构 ===== */
+  .org-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .org-card{
+    background:rgba(255,255,255,.02);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:12px;padding:18px;
+  }
+  .org-card h3{font-size:14px;color:#f1f5f9;margin-bottom:8px;font-weight:600;
+    display:flex;align-items:center;gap:8px}
+  .org-card ul{list-style:none}
+  .org-card li{
+    font-size:12px;color:#94a3b8;padding:4px 0;line-height:1.6;
+    padding-left:14px;position:relative;
+  }
+  .org-card li::before{content:'•';position:absolute;left:0;color:#3b82f6}
+
+  /* ===== 合规 ===== */
+  .defense-layers{display:flex;flex-direction:column;gap:10px}
+  .defense-layer{
+    background:rgba(34,197,94,.04);
+    border:1px solid rgba(34,197,94,.15);
+    border-radius:10px;padding:14px 18px;
+    display:flex;align-items:center;gap:14px;
+  }
+  .defense-layer .dnum{
+    width:32px;height:32px;border-radius:50%;
+    background:rgba(34,197,94,.15);
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;font-weight:700;color:#4ade80;flex-shrink:0;
+  }
+  .defense-layer .dt h4{font-size:13px;color:#f1f5f9;margin-bottom:2px;font-weight:600}
+  .defense-layer .dt p{font-size:11px;color:#64748b}
+
+  /* ===== 财务 ===== */
+  .revenue-table{
+    width:100%;border-collapse:collapse;
+    background:rgba(255,255,255,.02);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:12px;overflow:hidden;
+  }
+  .revenue-table th{
+    background:rgba(255,255,255,.04);
+    padding:12px 14px;text-align:left;
+    font-size:12px;color:#f1f5f9;font-weight:600;
+    border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  .revenue-table td{
+    padding:10px 14px;font-size:12px;color:#94a3b8;
+    border-bottom:1px solid rgba(255,255,255,.03);
+  }
+  .revenue-table tr:last-child td{border-bottom:none}
+  .revenue-table td.hl{color:#fbbf24;font-weight:600}
+  .revenue-table tr.total td{
+    background:rgba(245,158,11,.06);
+    font-weight:600;color:#f1f5f9;
+  }
+
+  /* ===== CTA ===== */
+  .cta-section{
+    text-align:center;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 50%, rgba(245,158,11,.1) 0%, transparent 60%);
+  }
+  .cta-section h2{
+    font-size:clamp(22px,3.5vw,28px);font-weight:700;
+    background:linear-gradient(135deg,#fff,#fbbf24);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    margin-bottom:12px;
+  }
+  .cta-section p{color:#94a3b8;font-size:14px;margin-bottom:24px;max-width:520px;margin-left:auto;margin-right:auto}
+  .cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .cta-btn{
+    padding:12px 28px;border-radius:10px;
+    font-size:14px;font-weight:600;text-decoration:none;
+    transition:all .2s;
+  }
+  .cta-btn.primary{
+    background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;
+    box-shadow:0 4px 14px rgba(245,158,11,.3);
+  }
+  .cta-btn.secondary{
+    background:rgba(255,255,255,.05);color:#e2e8f0;
+    border:1px solid rgba(255,255,255,.1);
+  }
+  .cta-btn:hover{transform:translateY(-2px)}
+
+  /* ===== Footer ===== */
+  footer{
+    padding:30px 24px;text-align:center;
+    border-top:1px solid rgba(255,255,255,.04);
+    font-size:11px;color:#475569;
+  }
+
+  /* ===== 响应式 ===== */
+  @media(max-width:768px){
+    .nav-links{display:none}
+    .hero-stats{grid-template-columns:repeat(2,1fr)}
+    .pain-grid{grid-template-columns:1fr}
+    .role-grid{grid-template-columns:repeat(2,1fr)}
+    .community-grid{grid-template-columns:1fr}
+    .mfg-tiers{grid-template-columns:1fr}
+    .data-grid{grid-template-columns:1fr}
+    .org-grid{grid-template-columns:1fr}
+    .split-box{grid-template-columns:repeat(2,1fr)}
+    section{padding:48px 16px}
+    .hero{padding:90px 16px 60px}
+  }
+</style>
+</head>
+<body>
+
+<!-- 导航 -->
+<div class="nav">
+  <div class="nav-logo"><div class="dot"></div>智能家居AI Agent开放社区</div>
+  <div class="nav-links">
+    <a onclick="scrollTo('pain')">行业痛点</a>
+    <a onclick="scrollTo('arch')">技术架构</a>
+    <a onclick="scrollTo('token')">Token经济</a>
+    <a onclick="scrollTo('community')">开放社区</a>
+    <a onclick="scrollTo('roadmap')">落地路径</a>
+  </div>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-badge">中国机电设备工程协会 · 专业委员会筹建方案</div>
+  <h1>让每一台智能家居设备<br>都拥有自己的AI Agent</h1>
+  <p class="subtitle">
+    以AI词元（Token）为统一计量单位，以开放社区为生态载体，<br>
+    构建协会主导、厂家参与、开发者共创、用户共享的四方闭环
+  </p>
+  <div class="hero-stats">
+    <div class="stat-card">
+      <div class="num">1.25万亿</div>
+      <div class="label">2026市场规模（元）</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">4.2亿</div>
+      <div class="label">用户规模（户）</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">16%</div>
+      <div class="label">设备渗透率</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">449亿</div>
+      <div class="label">Agent市场（2026）</div>
+    </div>
+  </div>
+</div>
+
+<!-- 行业痛点 -->
+<section id="pain">
+  <div class="section-label">行业痛点</div>
+  <h2 class="section-title">万亿市场，为什么还不够智能？</h2>
+  <p class="section-desc">
+    智能家居市场已突破万亿，但产业协同不足、协议碎片化、AI赋能浅层化三大瓶颈，制约行业从"单品智能"迈向"全屋智能"。
+  </p>
+  <div class="pain-grid">
+    <div class="pain-card">
+      <div class="pain-icon">🔗</div>
+      <h3>没有统一入口</h3>
+      <p>小米用Miloco、讯飞用SpaceMind、百度用小度——每换一个品牌换一套Agent体验。开发者面对数十个互不兼容的设备API，开发成本极高。</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">🧑‍💻</div>
+      <h3>没有开放社区</h3>
+      <p>所有智能家居Agent能力都由厂家自研自闭，缺乏类似GPT Store或Coze插件市场的开放生态。独立开发者无法发布和销售自己的Agent作品。</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">💰</div>
+      <h3>没有统一计量</h3>
+      <p>大模型调用以Token为基本单位，但各平台各自定价各自消耗，没有跨平台、跨Agent的统一计量体系。厂家对AI使用成本"心里没数"。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 数据亮点 -->
+<div class="data-section">
+  <section style="padding:56px 24px">
+    <div class="data-grid">
+      <div class="data-card">
+        <div class="dn">3200+</div>
+        <div class="dl">品牌被困在<br>各家"围墙花园"</div>
+        <div class="ds">鸿蒙智家3200+品牌、米家3000+设备</div>
+      </div>
+      <div class="data-card">
+        <div class="dn">14,000+</div>
+        <div class="dl">Matter认证产品<br>硬件互联已统一</div>
+        <div class="ds">但Agent层的统一标准仍是空白</div>
+      </div>
+      <div class="data-card">
+        <div class="dn">22亿个</div>
+        <div class="dl">2030年全球<br>日活AI Agent</div>
+        <div class="ds">IDC预测，年均复合增长率超50%</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- 解决方案：四方生态 -->
+<section id="roles">
+  <div class="section-label">生态架构</div>
+  <h2 class="section-title">四方角色，Token为纽带</h2>
+  <p class="section-desc">
+    协会搭平台、开发者造Agent、厂家出设备、用户享服务——Token作为统一的计量单位和价值载体，让每一方都在生态中获得明确的收益。
+  </p>
+  <div class="role-grid">
+    <div class="role-card">
+      <div class="role-emoji">🏛️</div>
+      <h3>协会</h3>
+      <div class="pos">平台运营 · 标准制定</div>
+      <p>制定Agent标准、运营开放平台、维护Token经济体系、保障数据安全合规</p>
+    </div>
+    <div class="role-card">
+      <div class="role-emoji">🧑‍💻</div>
+      <h3>开发者</h3>
+      <div class="pos">Agent创造者</div>
+      <p>在开放社区开发发布各类智能家居Agent，按使用量获得Token分成</p>
+    </div>
+    <div class="role-card">
+      <div class="role-emoji">🏭</div>
+      <h3>厂家</h3>
+      <div class="pos">设备能力提供方</div>
+      <p>接入标准SDK开放设备接口，设备被Agent调用即获得Token分成</p>
+    </div>
+    <div class="role-card">
+      <div class="role-emoji">👨‍👩‍👧</div>
+      <h3>用户</h3>
+      <div class="pos">Agent消费者</div>
+      <p>使用各类Agent管理家居设备，享受跨品牌统一体验的智能生活</p>
+    </div>
+  </div>
+</section>
+
+<!-- 技术架构 -->
+<section id="arch">
+  <div class="section-label">技术架构</div>
+  <h2 class="section-title">五层架构，统一网关为核心枢纽</h2>
+  <p class="section-desc">
+    从设备端到模型层、从Token计量到数据闭环，形成完整的"端-边-云-模型-数据"协同体系。
+  </p>
+  <div class="arch-stack">
+    <div class="arch-layer">
+      <div class="ln">5</div>
+      <div class="lt">
+        <h4>社区市场层</h4>
+        <p>Agent市场 · 开发者社区 · 评价体系 · 排行榜与推荐</p>
+      </div>
+    </div>
+    <div class="arch-layer">
+      <div class="ln">4</div>
+      <div class="lt">
+        <h4>Token计量结算层</h4>
+        <p>统一词元计量 · 实时消耗追踪 · 自动分润清算 · 数据贡献积分</p>
+      </div>
+    </div>
+    <div class="arch-layer core">
+      <div class="ln">3</div>
+      <div class="lt">
+        <h4>统一AI Agent网关（核心枢纽）</h4>
+        <p>多模型路由 · MCP工具管理 · 权限控制 · 安全过滤 · 全链路可观测</p>
+      </div>
+    </div>
+    <div class="arch-layer">
+      <div class="ln">2</div>
+      <div class="lt">
+        <h4>Agent运行时层</h4>
+        <p>沙箱隔离执行 · 设备调用审计 · 资源配额 · 控制/推理双通道</p>
+      </div>
+    </div>
+    <div class="arch-layer">
+      <div class="ln">1</div>
+      <div class="lt">
+        <h4>设备接入层</h4>
+        <p>Matter原生接入 · API网关 · 桥接适配 · 轻量Agent SDK</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Token经济 -->
+<section id="token">
+  <div class="section-label">Token经济</div>
+  <h2 class="section-title">Token = AI词元，不是虚拟货币</h2>
+  <p class="section-desc">
+    Token是大模型调用的计量单位，与人民币固定锚定，不交易、不炒作、不升值——本质是预付费计量单位，类比手机话费，完全合法合规。
+  </p>
+
+  <div class="token-flow">
+    <div class="flow-steps">
+      <div class="flow-step">用户充值购买Token（1元 = 1,000 Token 锚定）</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step">消费Agent（每次对话/任务消耗Token）</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step" style="background:rgba(245,158,11,.06);border-color:rgba(245,158,11,.2)">
+        Token自动分润 · 四方共赢
+      </div>
+      <div class="split-box">
+        <div class="split-item">
+          <div class="sp">50%</div>
+          <div class="sn">开发者</div>
+        </div>
+        <div class="split-item">
+          <div class="sp">20%</div>
+          <div class="sn">大模型方</div>
+        </div>
+        <div class="split-item">
+          <div class="sp">15%</div>
+          <div class="sn">设备厂家</div>
+        </div>
+        <div class="split-item">
+          <div class="sp">15%</div>
+          <div class="sn">平台运营</div>
+        </div>
+      </div>
+      <div class="flow-arrow">↻</div>
+      <div class="flow-step">开发者获益 → 更多优质Agent → 吸引更多用户 → 生态正循环</div>
+    </div>
+  </div>
+
+  <div class="compliance-note">
+    <div class="ci">✅</div>
+    <div class="ct">
+      <b>合规说明：</b>Token（词元）是大模型API调用的计量单位，以人民币计价、不可流通不可转售，
+      法律性质等同于云服务预付费额度，与银发〔2026〕42号文禁止的虚拟货币、RWA代币化有本质区别。
+      对标模式：阿里云百炼Token计费、扣子平台积分体系。
+    </div>
+  </div>
+</section>
+
+<!-- Agent开放社区 -->
+<section id="community">
+  <div class="section-label">开放社区</div>
+  <h2 class="section-title">Agent由社区开发，生态靠共创繁荣</h2>
+  <p class="section-desc">
+    对标GPT Store和Coze插件市场，打造智能家居领域的开发者生态——让每一个开发者都能为智能家居写Agent、卖Agent、赚Token。
+  </p>
+  <div class="community-grid">
+    <div class="comm-card">
+      <h3>🏪 Agent市场</h3>
+      <ul>
+        <li>8大场景分类：照明、环境、安防、能源、娱乐、康养、教育、家务</li>
+        <li>三级能力体系：L2基础控制 / L3场景联动 / L4主动智能</li>
+        <li>排行榜、评分、推荐算法、官方认证标签</li>
+        <li>开发者自主定价 / 免费+高级功能付费</li>
+      </ul>
+    </div>
+    <div class="comm-card">
+      <h3>🛠️ 开发者工具</h3>
+      <ul>
+        <li>标准Agent SDK：设备调用API / 上下文管理 / 持久化存储</li>
+        <li>在线调试平台：沙箱环境、模拟设备、实时日志</li>
+        <li>MCP协议兼容：直接复用现有MCP工具生态</li>
+        <li>模板库：场景模板、行业模板、快速启动脚手架</li>
+      </ul>
+    </div>
+    <div class="comm-card">
+      <h3>🎯 激励体系</h3>
+      <ul>
+        <li>Token分成：用户消费Token的50%直接归开发者</li>
+        <li>赏金任务（Bounty）：厂家发布需求，开发者竞标解决</li>
+        <li>官方扶持计划：种子基金、流量扶持、技术培训</li>
+        <li>贡献积分：文档贡献、Bug报告、代码审查均可赚Token</li>
+      </ul>
+    </div>
+    <div class="comm-card">
+      <h3>⚖️ 社区治理</h3>
+      <ul>
+        <li>提案投票机制：重大决策由Token持有者参与投票</li>
+        <li>标准制定参与：活跃开发者可进入技术标准委员会</li>
+        <li>三级认证：基础安全认证 / 隐私保护认证 / 官方金牌认证</li>
+        <li>争议仲裁：由协会组织专家委员会裁定</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 厂家接入 -->
+<section id="mfg">
+  <div class="section-label">厂家体系</div>
+  <h2 class="section-title">为什么厂家愿意加入？</h2>
+  <p class="section-desc">
+    零成本获得AI Agent能力、设备增值变现、数据反哺产品优化——加入生态的收益远大于成本。
+  </p>
+  <div class="mfg-tiers">
+    <div class="tier-card bronze">
+      <div class="tier-name">基础接入</div>
+      <div class="tier-title">免费入驻</div>
+      <ul>
+        <li>标准SDK / API接入</li>
+        <li>基础Agent能力（语音对话）</li>
+        <li>统一Token计量</li>
+        <li>设备调用分润（15%）</li>
+        <li>开发者社区可见</li>
+      </ul>
+    </div>
+    <div class="tier-card silver">
+      <div class="tier-name">认证厂家</div>
+      <div class="tier-title">认证会员</div>
+      <ul>
+        <li>基础接入全部权益</li>
+        <li>官方认证标签 + 推荐位</li>
+        <li>联合品牌Agent定制</li>
+        <li>数据看板与分析报告</li>
+        <li>优先参与标准制定</li>
+      </ul>
+    </div>
+    <div class="tier-card gold">
+      <div class="tier-name">理事单位</div>
+      <div class="tier-title">战略伙伴</div>
+      <ul>
+        <li>认证厂家全部权益</li>
+        <li>理事会席位 + 投票权</li>
+        <li>联合实验室 / 数据共享</li>
+        <li>行业模型联合训练</li>
+        <li>定制化技术支持团队</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 落地路径 -->
+<section id="roadmap">
+  <div class="section-label">落地路径</div>
+  <h2 class="section-title">36个月，三阶段推进</h2>
+  <p class="section-desc">
+    从协会注册到技术底座，从社区爆发到生态成熟，按7个关键里程碑稳步推进。
+  </p>
+  <div class="timeline">
+    <div class="phase">
+      <div class="phase-header">
+        <span class="phase-time">第一阶段 0-6个月</span>
+        <span class="phase-title">筑基启动期</span>
+      </div>
+      <ul class="phase-list">
+        <li>完成专委会注册备案，组建核心团队</li>
+        <li>技术底座MVP：统一AI网关 + Token计量系统</li>
+        <li>首批10家战略合作厂家试点接入</li>
+        <li>种子开发者计划：100个首批Agent上架</li>
+        <li>发布《智能家居Agent接入标准V1.0》团体标准</li>
+      </ul>
+    </div>
+    <div class="phase">
+      <div class="phase-header">
+        <span class="phase-time">第二阶段 6-18个月</span>
+        <span class="phase-title">生态爆发期</span>
+      </div>
+      <ul class="phase-list">
+        <li>Agent市场正式上线，开发者注册量破万</li>
+        <li>上架Agent数量突破1,000个，覆盖8大场景</li>
+        <li>厂家接入50+，设备型号覆盖500+</li>
+        <li>用户规模突破100万，日均Token消耗破亿</li>
+        <li>启动数据回流计划，行业模型V1.0训练完成</li>
+        <li>盈亏平衡（约第18个月）</li>
+      </ul>
+    </div>
+    <div class="phase">
+      <div class="phase-header">
+        <span class="phase-time">第三阶段 18-36个月</span>
+        <span class="phase-title">生态成熟期</span>
+      </div>
+      <ul class="phase-list">
+        <li>厂家接入200+，覆盖主流智能家居品牌</li>
+        <li>Agent数量突破10,000个，开发者社区10万+</li>
+        <li>行业专用大模型V2.0发布，准确率领先通用模型30%+</li>
+        <li>平台年交易额8-15亿元，协会年收入1.2-2.5亿元</li>
+        <li>推动标准升级为国家标准 / 行业标准</li>
+        <li>启动海外拓展，对标Matter全球生态</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 组织治理 -->
+<section id="org">
+  <div class="section-label">组织架构</div>
+  <h2 class="section-title">协会主导，市场化运营</h2>
+  <p class="section-desc">
+    "专业委员会 + 运营公司"双轮驱动——协会定标准、保中立，运营公司做技术、搞服务。
+  </p>
+  <div class="org-grid">
+    <div class="org-card">
+      <h3>🏛️ 专业委员会</h3>
+      <ul>
+        <li>主任委员 / 副主任委员（协会领导+行业专家）</li>
+        <li>理事会（理事单位厂家代表）</li>
+        <li>秘书处（日常运营管理）</li>
+        <li>顾问委员会（院士、学者、资深专家）</li>
+      </ul>
+    </div>
+    <div class="org-card">
+      <h3>📋 技术标准委员会</h3>
+      <ul>
+        <li>Agent接入标准制定与更新</li>
+        <li>Token计量标准定义</li>
+        <li>安全与隐私技术标准</li>
+        <li>Matter/MCP协议适配组</li>
+      </ul>
+    </div>
+    <div class="org-card">
+      <h3>🤝 生态合作委员会</h3>
+      <ul>
+        <li>厂家拓展与合作伙伴管理</li>
+        <li>大模型厂商战略合作</li>
+        <li>高校与科研机构合作</li>
+        <li>产业基金对接</li>
+      </ul>
+    </div>
+    <div class="org-card">
+      <h3>🧑‍💻 社区治理委员会</h3>
+      <ul>
+        <li>开发者社区运营与规则制定</li>
+        <li>Agent市场审核与争议仲裁</li>
+        <li>开源项目管理</li>
+        <li>社区贡献激励体系</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 合规安全 -->
+<section id="compliance">
+  <div class="section-label">合规安全</div>
+  <h2 class="section-title">三道防线，确保安全合规</h2>
+  <p class="section-desc">
+    Token合规、数据安全、隐私保护——每一道防线都有明确的技术和制度保障。
+  </p>
+  <div class="defense-layers">
+    <div class="defense-layer">
+      <div class="dnum">1</div>
+      <div class="dt">
+        <h4>Token合规：明确不是虚拟货币</h4>
+        <p>三不原则：不交易、不转让、不升值。固定锚定人民币，本质是预付费计量额度（类比手机话费、游戏点券）。</p>
+      </div>
+    </div>
+    <div class="defense-layer">
+      <div class="dnum">2</div>
+      <div class="dt">
+        <h4>数据安全：技术防护 + 隐私计算</h4>
+        <p>敏感数据本地处理（边缘网关）、全链路加密、差分隐私、联邦学习，数据不出域、可用不可见。</p>
+      </div>
+    </div>
+    <div class="defense-layer">
+      <div class="dnum">3</div>
+      <div class="dt">
+        <h4>合规治理：协会背书 + 审计监督</h4>
+        <p>行业主管部门指导、协会合规委员会日常监督、第三方定期审计，确保符合数安法、个保法、生成式AI管理办法。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 商业模式 -->
+<section id="finance">
+  <div class="section-label">商业模式</div>
+  <h2 class="section-title">多元化收入，第18个月盈亏平衡</h2>
+  <p class="section-desc">
+    五大收入来源，前三年从建设投入到生态变现稳步过渡，第三年进入规模化盈利期。
+  </p>
+  <table class="revenue-table">
+    <thead>
+      <tr>
+        <th>收入来源</th>
+        <th>第一年</th>
+        <th>第二年</th>
+        <th>第三年</th>
+        <th>说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Token交易服务费</td>
+        <td class="hl">120万</td>
+        <td class="hl">1,800万</td>
+        <td class="hl">8,000万</td>
+        <td>Token交易额的12-15%抽成</td>
+      </tr>
+      <tr>
+        <td>厂家认证费</td>
+        <td>80万</td>
+        <td>500万</td>
+        <td>1,200万</td>
+        <td>认证会员年费 + 理事单位会费</td>
+      </tr>
+      <tr>
+        <td>企业版/定制服务</td>
+        <td>150万</td>
+        <td>1,200万</td>
+        <td>3,500万</td>
+        <td>大型厂家专属定制、私有化部署</td>
+      </tr>
+      <tr>
+        <td>数据增值服务</td>
+        <td>-</td>
+        <td>200万</td>
+        <td>2,000万</td>
+        <td>行业模型授权、数据洞察报告</td>
+      </tr>
+      <tr>
+        <td>培训与咨询</td>
+        <td>50万</td>
+        <td>300万</td>
+        <td>800万</td>
+        <td>开发者培训、厂家AI转型咨询</td>
+      </tr>
+      <tr class="total">
+        <td>合计</td>
+        <td class="hl">约400万</td>
+        <td class="hl">约4,000万</td>
+        <td class="hl">约1.55亿</td>
+        <td>第三年平台交易额8-15亿</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>加入智能家居AI Agent开放社区</h2>
+  <p>一起构建万亿智能家居市场的AI基础设施，让每一台设备都拥有智能，让每一个开发者都能创造价值。</p>
+  <div class="cta-btns">
+    <a class="cta-btn primary" onclick="scrollTo('org')">了解专委会架构</a>
+    <a class="cta-btn secondary" onclick="scrollTo('roadmap')">查看落地路径</a>
+  </div>
+</section>
+
+<footer>
+  中国机电设备工程协会 · 智能家居AI Agent专业委员会（筹）<br>
+  本方案为内部策划草案，数据来源于公开资料整理
+</footer>
+
+<script>
+function scrollTo(id){
+  const el=document.getElementById(id);
+  if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+// 简单滚动动画
+const obs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.style.opacity=1;
+      e.target.style.transform='translateY(0)';
+    }
+  });
+},{threshold:0.08});
+document.querySelectorAll('section > div, .pain-grid, .role-grid, .arch-stack, .token-flow, .community-grid, .mfg-tiers, .timeline, .org-grid, .defense-layers, .revenue-table, .data-grid').forEach(el=>{
+  el.style.opacity=0;
+  el.style.transform='translateY(20px)';
+  el.style.transition='all .6s ease';
+  obs.observe(el);
+});
+</script>
+</body>
+</html>
